@@ -1,0 +1,40 @@
+/*setta il tasto invio per il login*/
+
+$('#slick-login').keydown(function(e){
+    if(e.which === 13){ //Enter key
+        $('#login_button').click();
+    }
+});
+
+/*effettua il post al server che controlla la correttezza dei parametri*/
+
+function login_send(var1, var2) {
+   alert("provs2");
+	 $.ajax({
+		headers: { 
+   Accept : "application/json", "Content-Type": "application/json; charset=utf-8"
+			},
+		type: "POST",				
+		async: false,
+		data : JSON.stringify({ "username" : var1, "password": var2 }),
+		url: "/login/",
+		dataType: "json",
+		success: function(data){
+			str = JSON.stringify(data);
+			obj = JSON.parse(str);
+			if (obj.result.substring(0, 1) == "L") { /*Result inizia con L ("Login effettuato..."):
+									il login è andato a buon fine*/
+				$(".open").removeClass("open");
+				window.location.href = "/landing.php"; /
+			}
+			else {
+			alert("prova fallita");
+				/*/$('#error-content').css('color','red');
+				$('#error-content').html("Coppia username/password non valida, riprovare.");
+				$('#username').focus(function() { $('#error-content').empty(); });
+				$('#password').focus(function() { $('#error-content').empty(); });
+				*/
+			}
+		}
+	});
+}
