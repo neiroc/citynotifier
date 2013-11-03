@@ -39,14 +39,14 @@
           <a class="navbar-brand" href="http://ltw1324.web.cs.unibo.it">City Notifier</a>
         </div>
         <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
+          <form method="post" id="login" class="navbar-form navbar-right" >
             <div class="form-group">
-              <input id="username" type="text" placeholder="Utente" class="form-control">
+              <input name="username" id="username" type="text" placeholder="Utente" class="form-control">
             </div>
             <div class="form-group">
-              <input id="password" type="password" placeholder="Password" class="form-control">
+              <input name="password" id="password" type="password" placeholder="Password" class="form-control">
             </div>
-            <button type="submit" class="btn btn-success" onclick="login_send(this.form.username.value, this.form.password.value)">Accedi</button>
+            <button type="submit" id="submit" class="btn btn-success" >Accedi</button>
           </form>
         </div><!--/.navbar-collapse -->
       </div>
@@ -57,6 +57,7 @@
       <div class="container">
         <h1>CITY NOTIFIER</h1>
         <p>Questo è un notificatore cittadino. Un progetto di tecnologie web.  </p>
+								<div id="messaggio"> apparira un messaggio </div>
         <p><a class="btn btn-primary btn-lg" role="button">Approfondisci &raquo;</a></p>
       </div>
     </div>
@@ -66,7 +67,7 @@
       <div class="row">
         <div class="col-md-4">
           <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+          <p>Donec id elit non mi porta gravida at epparira get metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-default" href="#" role="button">Dettagli &raquo;</a></p>
         </div>
         <div class="col-md-4">
@@ -92,9 +93,9 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="js/jquery.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-	<script src="js/login_handler.js"></script>
+				<script src="js/login.js"></script>
   </body>
 </html>
 
