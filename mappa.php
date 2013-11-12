@@ -47,6 +47,8 @@
             <li id="bar_username" class="active"><a href="#">Home</a></li>
             <li><a href="#mappa">Mappa</a></li>
             <li><a href="#tabella">Tabella</a></li>
+			<li><a href="#search">Search</a></li>
+			<li><a href="#segnala">Segnala</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
