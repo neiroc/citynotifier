@@ -26,12 +26,6 @@ var map = new google.maps.Map(document.getElementById("gmap"),
 }
 google.maps.event.addDomListener(window, 'load', initialize);
 
-	navigator.geolocation.getCurrentPosition(
-		gotPosition,
-		errorGettingPosition,
-		{'enableHighAccuracy':true,'timeout':10000,'maximumAge':0}
-	);
-
 // Rileva mia posizione
 		function gotPosition(pos)  {
 			var outputStr =

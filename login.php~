@@ -34,10 +34,6 @@ if(isset($_POST['username']) && isset($_POST['password']))
 				$re = json_encode($result);echo $re;
 		}
 
-}else{					
-$result['result'] = "405 : ViolentMethodForbidden";
-$re = json_encode($result);
-echo $re;
 }
 
 ?> 
