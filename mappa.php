@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="shortcut icon" href="ico/favicon.png">
-	<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+
 
 
 
@@ -30,7 +30,7 @@
     <![endif]-->
   </head>
 
-	<body onload="geo_and_call()">
+	<body>
 
     <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
@@ -63,11 +63,14 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
   	<script src="js/geo.js"></script>
-
-
+	<script src="js/map.js"></script>
+	<script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzoBwjcMDm7YmdVppL9e3V3aXyY1rYieI&sensor=true">
+    </script>
+	
   </body>
 </html>
 
