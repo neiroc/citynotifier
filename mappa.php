@@ -46,9 +46,20 @@
           <ul class="nav navbar-nav">
             <li id="bar_username" class="active"><a href="#">Home</a></li>
             <li><a href="#mappa">Mappa</a></li>
-            <li><a href="#tabella">Tabella</a></li>
-			<li><a href="#search">Search</a></li>
-			<li><a href="#segnala">Segnala</a></li>
+            <li><a id="table" href="#myModal" role="button" data-toggle="modal">
+					Table
+				</a>
+			</li>
+			<li class="dropdown">
+				<a id="search" role="button" data-toggle="dropdown" href="#" >Search
+					<b class="caret"></b>
+				</a>
+			</li>
+			<li class="dropdown">
+				<a id="notify" role="button" data-toggle="dropdown" href="#" >Notify
+					<b class="caret"></b>
+				</a>
+			</li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -58,12 +69,34 @@
       <div class="starter-template">
        <div id="gmap"> </div>
       </div>
+
+	<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+		
+
   
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="js/jquery-2.0.3.js"></script>
     <script src="js/bootstrap.min.js"></script>
   	<script src="js/geo.js"></script>
 	<script src="js/map.js"></script>
