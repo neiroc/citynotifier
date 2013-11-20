@@ -45,7 +45,7 @@
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li id="bar_username" class="active"><a href="#">Home</a></li>
-            <li><a href="#mappa">Mappa</a></li>
+            <li><a href="#mappa">Map</a></li>
             <li><a id="table" href="#myModal" role="button" data-toggle="modal">
 					Table
 				</a>
@@ -54,13 +54,34 @@
 				<a id="search" role="button" data-toggle="dropdown" href="#" >Search
 					<b class="caret"></b>
 				</a>
+				<ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Another action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
+          </ul>
 			</li>
 			<li class="dropdown">
 				<a id="notify" role="button" data-toggle="dropdown" href="#" >Notify
 					<b class="caret"></b>
 				</a>
+				<ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Another action</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
+          </ul>
 			</li>
           </ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li id="fat-menu" class="dropdown">
+					<a href="#" id="account" role="button" data-toggle="dropdown">Account
+						<b class="caret"></b>
+					</a>
+				</li>
+			</ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
@@ -76,14 +97,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+        <h4 class="modal-title" id="myModalLabel">List of Events</h4>
       </div>
       <div class="modal-body">
         ...
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->

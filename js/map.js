@@ -21,7 +21,6 @@ $(document).ready(function(){
 });
 $('.dropdown-toggle').dropdown()
 $('#myModal').on('show.bs.modal', function(){
-	console.log("diocristo")
 	
 })
 
