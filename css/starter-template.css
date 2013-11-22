@@ -20,3 +20,7 @@ body {
 	margin-left: auto;
 	background: red;
 }	
+
+#logout {
+	margin-top:10px;
+}

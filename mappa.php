@@ -76,10 +76,11 @@
 			</li>
           </ul>
 			<ul class="nav navbar-nav navbar-right">
-				<li id="fat-menu" class="dropdown">
-					<a href="#" id="account" role="button" data-toggle="dropdown">Account
-						<b class="caret"></b>
-					</a>
+				<li>
+					<button type="button" class="btn btn-danger" id="logout">
+						<span class="glyphicon glyphicon-off"></span>
+						Logout
+					</button>
 				</li>
 			</ul>
         </div><!--/.nav-collapse -->
@@ -92,22 +93,22 @@
       </div>
 
 	<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">List of Events</h4>
-      </div>
-      <div class="modal-body">
-        ...
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+		<div class="modal-content">
+		  <div class="modal-header">
+		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		    <h4 class="modal-title" id="myModalLabel">List of Events</h4>
+		  </div>
+		  <div class="modal-body">
+		    ...
+		  </div>
+		  <div class="modal-footer">
+		    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
 
 		
 
@@ -117,9 +118,11 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="js/jquery-2.0.3.js"></script>
+	<script src="js/jquery.cookie.js"></script>
     <script src="js/bootstrap.min.js"></script>
   	<script src="js/geo.js"></script>
 	<script src="js/map.js"></script>
+	<script src="js/logout.js"></script>
 	<script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzoBwjcMDm7YmdVppL9e3V3aXyY1rYieI&sensor=true">
     </script>
