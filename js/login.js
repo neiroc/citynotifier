@@ -16,8 +16,8 @@ $(document).ready(function() {
 			console.log(e.message);
 			},
 		});
-		jQuery.cookie('user_id', userid, {expires:30});
-		jQuery.cookie('username', username, {expires:30});	
+		//jQuery.cookie('user_id', userid, {expires:30});
+		//jQuery.cookie('username', username, {expires:30});	
 
 		return false; // avoid to execute the actual submit of the form.
 	});					
