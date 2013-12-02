@@ -101,10 +101,20 @@
 		    <h4 class="modal-title" id="myModalLabel">List of Events</h4>
 		  </div>
 		  <div class="modal-body">
-		    ...
+		  	<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>Type/Subtype</th>
+						<th>Date</th>
+						<th>Location</th>
+						<th>Reliability</th>
+						<th>Status</th>
+					</tr>
+				</thead>
+			</table>
 		  </div>
 		  <div class="modal-footer">
-		    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
 		  </div>
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
