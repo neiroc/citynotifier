@@ -1,0 +1,4 @@
+RewriteEngine On
+RewriteRule richieste richieste.php 
+RewriteRule login login.php
+
