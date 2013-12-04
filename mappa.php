@@ -54,25 +54,108 @@
 				<a id="search" role="button" data-toggle="dropdown" href="#" >Search
 					<b class="caret"></b>
 				</a>
-				<ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Another action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
-          </ul>
+				<ul class="dropdown-menu">
+					<form>
+						<fieldset>
+							<div class="control-group">
+								<select class="selectpicker" id="searchType" autocomplete="off">
+                                	<option disabled selected>Select type</option>
+									<option>All</option>
+                                	<option id="street-problem">Problemi stradali</option>
+                                    <option id="emergency">Emergenze sanitarie</option>
+                                    <option id="boh">Reati</option>
+                                    <option id="mah">Problemi ambientali</option>
+                                    <option id="blabla">Eventi pubblici</option>
+								</select>
+							</div>
+							<div class="control-group">
+                            	<select class="selectpicker" id="searchSubType" autocomplete="off">
+                            	    <option disabled selected>Select subtype</option>
+									<option>All</option>
+									<option id="street-problem">incidente</option>
+									<option id="street-problem">buca</option>
+									<option id="street-problem">coda</option>
+									<option id="street-problem">lavori in corso</option>
+									<option id="street-problem">strada impraticabile</option>
+									<option id="emergency">incidente</option>
+									<option id="emergency">malore</option>
+									<option id="emergency">ferito</option>
+									<option id="boh">furto</option>
+									<option id="boh">attentato</option>
+									<option id="mah">incendio</option>
+									<option id="mah">tornado</option>
+									<option id="mah">neve</option>
+									<option id="mah">alluvione</option>
+									<option id="blabla">partita</option>
+									<option id="blabla">manifestazione</option>
+									<option id="blabla">concerto</option>
+                            	</select>
+                            </div>
+							<div class="control-group">
+								<select class="selectpicker" id="searchSubType" autocomplete="off">
+									<option selected disabled> Status</option>
+									<option>Open</option>
+									<option>Closed</option>
+									<option>Skeptical</option>
+								</select>
+							</div>
+							<div class="input-append control-group">
+                            	<input type="text" id="searchAddress" placeholder="Address"
+										autocomplete="off"></input>
+                                	<button id="addressButtonSearch" class="btn" type="button">
+                                	    <i id="addressMarkerSearch" class="icon-map-marker"></i>
+                                    </button>
+                            </div>
+						</fieldset>
+					</form>
+            
+   				</ul>
 			</li>
 			<li class="dropdown">
-				<a id="notify" role="button" data-toggle="dropdown" href="#" >Notify
+				<a id="notify" role="button" data-toggle="dropdown" href="#">Notify
 					<b class="caret"></b>
 				</a>
-				<ul id="menu3" class="dropdown-menu" role="menu" aria-labelledby="drop6">
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Another action</a></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Something else here</a></li>
-            <li role="presentation" class="divider"></li>
-            <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Separated link</a></li>
-          </ul>
+				<ul class="dropdown-menu">
+					<form>
+						<fieldset>
+							<div class="control-group">
+								<select class="selectpicker" id="searchType" autocomplete="off">
+                                	<option disabled selected>Select type</option>
+									<option>All</option>
+                                	<option id="street-problem">Problemi stradali</option>
+                                    <option id="emergency">Emergenze sanitarie</option>
+                                    <option id="boh">Reati</option>
+                                    <option id="mah">Problemi ambientali</option>
+                                    <option id="blabla">Eventi pubblici</option>
+								</select>
+							</div>
+							<div class="control-group">
+                            	<select class="selectpicker" id="searchSubType" autocomplete="off">
+                            	    <option disabled selected>Select subtype</option>
+									<option>All</option>
+									<option id="street-problem">incidente</option>
+									<option id="street-problem">buca</option>
+									<option id="street-problem">coda</option>
+									<option id="street-problem">lavori in corso</option>
+									<option id="street-problem">strada impraticabile</option>
+									<option id="emergency">incidente</option>
+									<option id="emergency">malore</option>
+									<option id="emergency">ferito</option>
+									<option id="boh">furto</option>
+									<option id="boh">attentato</option>
+									<option id="mah">incendio</option>
+									<option id="mah">tornado</option>
+									<option id="mah">neve</option>
+									<option id="mah">alluvione</option>
+									<option id="blabla">partita</option>
+									<option id="blabla">manifestazione</option>
+									<option id="blabla">concerto</option>
+                            	</select>
+                            </div>
+						</fieldset>
+					</form>
+						           
+          		</ul>
 			</li>
           </ul>
 			<ul class="nav navbar-nav navbar-right">
@@ -127,7 +210,7 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="js/jquery-2.0.3.js"></script>
+	 <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/jquery.cookie.js"></script>
     <script src="js/bootstrap.min.js"></script>
   	<script src="js/geo.js"></script>
