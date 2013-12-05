@@ -213,12 +213,14 @@
 	 <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/jquery.cookie.js"></script>
     <script src="js/bootstrap.min.js"></script>
-  	<script src="js/geo.js"></script>
+	
 	<script src="js/map.js"></script>
+  	<script src="js/geo.js"></script>
 	<script src="js/logout.js"></script>
 	<script type="text/javascript"
       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzoBwjcMDm7YmdVppL9e3V3aXyY1rYieI&sensor=true">
     </script>
+	<script src="js/global.js"></script>
 	
   </body>
 </html>

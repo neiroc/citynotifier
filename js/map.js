@@ -1,6 +1,9 @@
+var lastLatitude;
+var lastLongitude;
+
 $(document).ready(function(){
 	var mapOptions = {
-	  		center: new google.maps.LatLng(44.496138,11.342325),
+	  		center: cityCenter,
 	  		zoom: 14,
 	  		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
@@ -10,10 +13,14 @@ $(document).ready(function(){
 	geoLocal();
 
 	google.maps.event.addListener(map, 'click', function(event) {
-		newLatitude = event.latLng.lat();
-        newLongitude = event.latLng.lng();
+		 
+		lastLatitude = event.latLng.lat();
+        lastLongitude = event.latLng.lng();
+		jQuery.cookie('lastLatitude', lastLatitude, {expires:30});	
+		jQuery.cookie('lastLongitude', lastLongitude, {expires:30});
+		
 
-		var markerPosition = new google.maps.LatLng(newLatitude, newLongitude);
+		var markerPosition = new google.maps.LatLng(lastLatitude, lastLongitude);
 
 		getMarker(markerPosition);
 	});
