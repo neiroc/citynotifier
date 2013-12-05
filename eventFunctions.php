@@ -1,6 +1,5 @@
 <?php
 
-getLocalEvents();
 
 //prendi dati locali
 function getLocalEvents()
