@@ -7,6 +7,13 @@ $('#logout').on('click', function(){
 		//data: null,
 		//success:function(json){	
 			//if(json.result=="OK")	
+				jQuery.removeCookie('latitude');
+				jQuery.removeCookie('longitude');
+				jQuery.removeCookie('centerLatitude');
+				jQuery.removeCookie('centerLongitude');
+				jQuery.removeCookie('lastLatitude');
+				jQuery.removeCookie('lastLongitude');
+				jQuery.removeCookie('username');
 				location.href="index.html";
 			//else 
 				//alert(json.result); 		
@@ -15,8 +22,7 @@ $('#logout').on('click', function(){
 			//console.log(e.message);
 		//},
 	//});
-		jQuery.removeCookie('user_id');
-		jQuery.removeCookie('username');
+		
 		//return false; // avoid to execute the actual submit of the form.
 });					
 

@@ -17,10 +17,15 @@ function geoLocal(){
 function showPosition (position){
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
+	//cancella cookie default
+	jQuery.removeCookie('centerLatitude');
+	jQuery.removeCookie('centerLongitude');
+	//salvo le coordinate
 	var myPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 	jQuery.cookie('latitude', latitude, {expires:30});	
 	jQuery.cookie('longitude', longitude, {expires:30});
 	getMarker(myPosition);
+	//sposto la mappa in base alla mia posizione
 	map.setCenter(myPosition);	
 }
 
@@ -30,10 +35,6 @@ function errorGettingPosition(err) {
 	if(err.code == 1) {
 		alternLoc();
 		alert("L'utente non ha autorizzato la geolocalizzazione");
-		//jQuery.cookie('newLatitude', newLatitude, {expires:30});	
-		//jQuery.cookie('newLongitude', newLongitude, {expires:30});
-		//var newMarkPos = new google.maps.LatLng(newLatitude, newLongitude);
-		//getMarker(newMarkPos);
 	}
 	else if(err.code == 2) {
 		alternLoc();
@@ -50,7 +51,7 @@ function errorGettingPosition(err) {
 
 //Crea marker
 function getMarker(myPosition){
-
+	//se c'è un marker precedente
 	if(marker){
 		marker.setMap(null);
 		map.panTo(myPosition);
@@ -64,19 +65,22 @@ function getMarker(myPosition){
 }
 
 function alternLoc(){
-	
+	//controlla se ci sono i cookie
 	if (jQuery.cookie('lastLatitude') && jQuery.cookie('lastLongitude')){
+		//prende coordinate dai cookie
 		var newMarkPos = new google.maps.LatLng(jQuery.cookie('lastLatitude'), jQuery.cookie('lastLongitude'));
 		getMarker(newMarkPos);
 	}
 	else {
+		//prende coordinate default
 		centerLatitude = cityCenter.lat();
 		centerLongitude = cityCenter.lng();
+		//crea cookie
 		jQuery.cookie('centerLatitude', centerLatitude, {expires:30});	
 		jQuery.cookie('centerLongitude', centerLongitude, {expires:30});
+		//prende posizione default
 		var newMarkPos = cityCenter;
 		getMarker(newMarkPos);
-		console.log("porcoddio2222222")
 	}
 }
 

@@ -213,7 +213,7 @@
 	 <script src="js/jquery-2.0.3.js"></script>
 	<script src="js/jquery.cookie.js"></script>
     <script src="js/bootstrap.min.js"></script>
-	
+	<script src="js/login.js"></script>
 	<script src="js/map.js"></script>
   	<script src="js/geo.js"></script>
 	<script src="js/logout.js"></script>
