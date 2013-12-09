@@ -1,19 +1,21 @@
 $(document).ready(function() {
 	$("#login").submit(function() {
-		console.log($('#username').val())
-		var url = "login.php"; // the script where you handle the form input.
+		console.log($('#username').val());
+		var url = "/cgi-bin/login.php"; // the script where you handle the form input.
 		$.ajax({
 			type: "POST",
 			url: url,
 			data: $("#login").serialize(), // serializes the form's elements.
 			dataType: 'json',
 			success:function(json){	
-				if(json.result=="OK"){	
+				if(json.result==="login effettuato con successo"){	
 					jQuery.cookie('username', $('#username').val(), {expires:30});
 					//console.log($('#username').val())
-					location.href="mappa.php";
+					console.log("daje")
+					location.href="../mappa.html";
 				}
 				else {
+				
 					alert(json.result);
 				} 		
 			},
