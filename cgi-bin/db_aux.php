@@ -12,7 +12,7 @@ function connect_db(){
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
       }
     
-    echo "connected<br>";
+    //echo "connected<br>";
     
     return $con;
 
