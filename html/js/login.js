@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	$("#login").submit(function() {
 		console.log($('#username').val());
-		var url = "/cgi-bin/login.php"; // the script where you handle the form input.
+		var url = "HTTP_HOST"+"login/"; // the script where you handle the form input.
 		$.ajax({
 			type: "POST",
 			url: url,

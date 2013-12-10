@@ -1,4 +1,8 @@
 RewriteEngine On
-RewriteRule richieste requests.php 
-
-
+RewriteRule richieste requests.php
+RewriteRule login/ /cgi-bin/login.php
+RewriteRule logout/ /cgi-bin/logout.php
+#RewriteCond %{HTTP_HOST} ^(www\.http://ltw1324\.web\.cs\.unibo\.it)(:80)? [NC]
+#RewriteRule ^(.*) http://http://ltw1324.web.cs.unibo.it/$1 [R=301,L]
+RewriteCond %{HTTP_HOST} ^(www\.localhost)(:80)? [NC]
+RewriteRule ^(.*) http://localhost/$1 [R=301,L]
