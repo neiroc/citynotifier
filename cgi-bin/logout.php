@@ -1,4 +1,5 @@
  <?php
+ echo "diocan";
  console.log("logout");
 if(isset($_POST[])){
  	console.log("logout");

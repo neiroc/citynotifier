@@ -1,22 +1,51 @@
 $(document).ready(function() {
 	$("#login").submit(function() {
-		console.log($('#username').val());
-		var url = "HTTP_HOST"+"login/"; // the script where you handle the form input.
+		
+		var loginj = {
+			
+			username: $('#username').val(),
+			password: $('#password').val()
+		}
+		
+		var login_aux = JSON.stringify(loginj);
+		//console.log(loginj);
+		//console.log(login_aux);
+		
+		var host = "http://localhost/login/" ;
+		
+		var path = "SERVER"+"login/" ;
+		//console.log(host+" "+path);
+		var url = "SERVER"+"login/"; // url dello script remoto
+		
 		$.ajax({
-			type: "POST",
-			url: url,
-			data: $("#login").serialize(), // serializes the form's elements.
+
+			url: url, //url a cui fare la chiamata
+
+			//async: true, //chiamata asincrona
+
+			type: "POST",// metodo della chiamata
+			
+			contentType: "application/json; charset=utf-8",
+
+			data: JSON.stringify(loginj), // json with user and pass
+
 			dataType: 'json',
-			success:function(json){	
-				if(json.result==="login effettuato con successo"){	
+
+			success:function(call){	
+
+				if(call.result==="login effettuato con successo"){	
+
 					jQuery.cookie('username', $('#username').val(), {expires:30});
+
 					//console.log($('#username').val())
+
 					console.log("daje")
+
 					location.href="../mappa.html";
 				}
 				else {
 				
-					alert(json.result);
+					alert(call.result);
 				} 		
 			},
 			error: function(e){

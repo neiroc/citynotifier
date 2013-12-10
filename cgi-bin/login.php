@@ -5,13 +5,17 @@ require 'db_aux.php';
 //controllo che i campi siano stati inseriti correttamente
 
 //NOTA: CONTROLLARE IL FLUSSO 
-if(isset($_POST['username']) && isset($_POST['password']))	{
-	
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-}
-	
-	
+//if(isset($_POST['json'])){
+	var_dump($_POST);
+	$login=json_decode($_POST['json']);
+	//echo $login->page;
+	$username = $login['username'];
+	$password = $login['password'];
+	//console.log($username);
+	//console.log($password);
+//}
+	echo $username;
+	echo $password;
 //connessione con il db
 $con=connect_db();
     
