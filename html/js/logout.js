@@ -3,9 +3,17 @@ $('#logout').on('click', function(){
 	var url = "logout/";
 	$.ajax({
 		type: "POST",
+		
+		async: true,
+		
+		contentType: "application/json; charset=utf-8",
+		
 		url:url,
+		
 		data: null,
+		
 		dataType: 'json',
+		
 		success:function(json){	
 			if(json.result==="logout effettuato con successo"){	
 			console.log("sfinteriiii");

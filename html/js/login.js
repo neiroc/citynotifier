@@ -15,13 +15,13 @@ $(document).ready(function() {
 		
 		var path = "SERVER"+"login/" ;
 		//console.log(host+" "+path);
-		var url = "SERVER"+"login/"; // url dello script remoto
+		var url = "login/"; // url dello script remoto
 		
 		$.ajax({
 
 			url: url, //url a cui fare la chiamata
 
-			//async: true, //chiamata asincrona
+			async: true, //chiamata asincrona
 
 			type: "POST",// metodo della chiamata
 			
@@ -36,8 +36,6 @@ $(document).ready(function() {
 				if(call.result==="login effettuato con successo"){	
 
 					jQuery.cookie('username', $('#username').val(), {expires:30});
-
-					//console.log($('#username').val())
 
 					console.log("daje")
 
