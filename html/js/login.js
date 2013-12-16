@@ -39,7 +39,7 @@ $(document).ready(function() {
 
 					console.log("daje")
 
-					location.href="../mappa.html";
+					location.href="mappa.html";
 				}
 				else {
 				
