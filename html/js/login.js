@@ -47,7 +47,7 @@ $(document).ready(function() {
 				} 		
 			},
 			error: function(e){
-			console.log(e.message);
+				console.log(e.message);
 			},
 		});
 		return false; // avoid to execute the actual submit of the form.
