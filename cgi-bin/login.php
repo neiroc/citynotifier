@@ -21,7 +21,10 @@ $con=connect_db();
 $query="SELECT id_utente,username,user_pass FROM Utenti where username='".$username."' AND user_pass='".$password."';";
 	
 $risposta = mysqli_query($con,$query);
-		
+
+//chiudo la connessione con il db server	
+mysqli_close($con);
+
 if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row['user_pass']==$password)){
 						
 	$result['result'] = "login effettuato con successo";//risposta positiva
@@ -39,8 +42,5 @@ else{
 	echo $re;
 
 }
-   
-//chiudo la connessione con il db server	
-mysqli_close($con);
 
 ?> 

@@ -1,5 +1,4 @@
 RewriteEngine On
-RewriteRule richieste/ /cgi-bin/requests.php
+RewriteRule richieste /cgi-bin/requests.php
 RewriteRule login/ /cgi-bin/login.php
 RewriteRule logout/ /cgi-bin/logout.php
-
