@@ -11,11 +11,11 @@ $(document).ready(function() {
 		//console.log(loginj);
 		//console.log(login_aux);
 		
-		var host = "http://localhost/login/" ;
-		
+		var host = "http://"+document.location.hostname ;
+		//console.log("l'host è: " + host);
 		var path = "SERVER"+"login/" ;
 		//console.log(host+" "+path);
-		var url = "login/"; // url dello script remoto
+		var url = host+"/login/"; // url dello script remoto
 		
 		$.ajax({
 
@@ -53,3 +53,4 @@ $(document).ready(function() {
 		return false; // avoid to execute the actual submit of the form.
 	});					
 });
+
