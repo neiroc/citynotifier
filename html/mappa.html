@@ -49,6 +49,7 @@
 					Table
 				</a>
 			</li>
+			<!--search menu-->
 			<li class="dropdown">
 				<a id="search" role="button" data-toggle="dropdown" href="#" >Search
 					<b class="caret"></b>
@@ -56,7 +57,7 @@
 				<ul class="dropdown-menu">
 					<form>
 						<fieldset>
-							<!--type menu-->
+							<!--type form-->
 							<div class="control-group open">
 								<select class="selectpicker" id="searchType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
@@ -105,11 +106,22 @@
 							<div class="input-append control-group">
                             	<input type="text" id="searchAddress" placeholder="Address"
 										autocomplete="off">
+									<div class="btn-group btn-group-sm">
+										<button type="button" id="searchLoc">
+											Go
+										</button>
+									</div>
 								</input>
                            	</div>
                            <!--date form-->
 							<input type="text" value="02-16-2012" class="datepicker" id="datepickerid"></input>
 							<span class="glyphicon glyphicon-calendar"></span>
+							<!--range form-->
+							<div class="input-append control-group">
+                            	<input type="text" id="searchRange" placeholder="Range"
+										autocomplete="off">
+								</input>
+                           	</div>
 							<!--search button-->
 							<div class="btn-group">
   								<button type="button" class="btn btn-inverse"
@@ -122,6 +134,7 @@
             
    				</ul>
 			</li>
+			<!--notify menu-->
 			<li class="dropdown">
 				<a id="notify" role="button" data-toggle="dropdown" href="#">Notify
 					<b class="caret"></b>
@@ -130,7 +143,7 @@
 					<form>
 						<fieldset>
 							<div class="control-group">
-								<select class="selectpicker" id="searchType" autocomplete="off">
+								<select class="selectpicker" id="notifyType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
 									<option>All</option>
                                 	<option id="street-problem">Problemi stradali</option>
@@ -141,7 +154,7 @@
 								</select>
 							</div>
 							<div class="control-group">
-                            	<select class="selectpicker" id="searchSubType" autocomplete="off">
+                            	<select class="selectpicker" id="notifySubType" autocomplete="off">
                             	    <option disabled selected>Select subtype</option>
 									<option>All</option>
 									<option id="street-problem">incidente</option>
@@ -169,7 +182,7 @@
 								</input>
                            	</div>
 							<div class="input-append control-group">
-                            	<input type="text" id="description" placeholder="Description"
+                            	<input type="text" id="notifyDescription" placeholder="Description"
 										autocomplete="off">
 								</input>
                            	</div>

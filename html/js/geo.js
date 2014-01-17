@@ -1,4 +1,5 @@
 var marker;
+var circle;
 
 
 //Funzione di geolocalizzazione
@@ -25,6 +26,7 @@ function showPosition (position){
 	jQuery.cookie('latitude', latitude, {expires:30});	
 	jQuery.cookie('longitude', longitude, {expires:30});
 	getMarker(myPosition);
+	getCircle(myPosition);
 	//sposto la mappa in base alla mia posizione
 	map.setCenter(myPosition);	
 }
@@ -57,11 +59,11 @@ function getMarker(myPosition){
 		map.panTo(myPosition);
 	}
 	marker = new google.maps.Marker({
-			map:map,
-			draggable:true,
-			animation: google.maps.Animation.DROP,
-			position: myPosition
-		});
+		map:map,
+		draggable:true,
+		animation: google.maps.Animation.DROP,
+		position: myPosition
+	});
 }
 
 function alternLoc(){
@@ -69,7 +71,9 @@ function alternLoc(){
 	if (jQuery.cookie('lastLatitude') && jQuery.cookie('lastLongitude')){
 		//prende coordinate dai cookie
 		var newMarkPos = new google.maps.LatLng(jQuery.cookie('lastLatitude'), jQuery.cookie('lastLongitude'));
+		getCircle(newMarkPos);
 		getMarker(newMarkPos);
+		map.setCenter(newMarkPos);	
 	}
 	else {
 		//prende coordinate default
@@ -80,9 +84,30 @@ function alternLoc(){
 		jQuery.cookie('centerLongitude', centerLongitude, {expires:30});
 		//prende posizione default
 		var newMarkPos = cityCenter;
+		getCircle(cityCenter);
 		getMarker(newMarkPos);
+		map.setCenter(cityCenter);	
 	}
 }
 
+function getCircle(circleCenter){
+	
+	if (circle){
+		circle.setMap(null);
+	}
+	var circleOptions = {
+    	strokeColor: '#FF0000',
+		strokeOpacity: 0.8,
+		strokeWeight: 2,
+		fillColor: '#FF0000',
+		fillOpacity: 0.35,
+		map: map,
+		center: circleCenter,
+		radius: 2000, //metri
+		editable: true
+    };
+    // Add the circle for this city to the map.
+    circle = new google.maps.Circle(circleOptions);
+}
 
 

@@ -1,7 +1,10 @@
 var lastLatitude;
 var lastLongitude;
+var geocoder;
 
 $(document).ready(function(){
+
+	geocoder = new google.maps.Geocoder();
 	var mapOptions = {
 	  		center: cityCenter,
 	  		zoom: 14,
@@ -9,20 +12,7 @@ $(document).ready(function(){
 	};
 	map = new google.maps.Map(document.getElementById("gmap"), mapOptions);
 
-	console.log("porcoddio");
-	var circleOptions = {
-    	strokeColor: '#FF0000',
-		strokeOpacity: 0.8,
-		strokeWeight: 2,
-		fillColor: '#FF0000',
-		fillOpacity: 0.35,
-		map: map,
-		center: cityCenter,
-		radius: 2000
-    };
-    // Add the circle for this city to the map.
-    cityCircle = new google.maps.Circle(circleOptions);
-
+	getCircle()
 	//funzione di geolocalizzazione
 	geoLocal();
 	//riceve l'evento se mi sposto sulla mappa
@@ -42,6 +32,8 @@ $(document).ready(function(){
 		//mette il marker
 		var markerPosition = new google.maps.LatLng(lastLatitude, lastLongitude);
 		getMarker(markerPosition);
+		getCircle(markerPosition);
+		
 	});
 
 });
