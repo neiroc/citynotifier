@@ -149,8 +149,8 @@ $array = json_decode($ris, true); //decodifica json in un array
 					$events[] = $ev; 						
 					} 
 			}
-			$res =array('events' => $events); 
-			echo json_encode($res);
+			
+			echo json_encode($result);
 }
 
 

@@ -1,6 +1,6 @@
 //formato calendario
 $('.datepicker').datepicker({
-	format: "dd mm yyyy"
+	format: "dd MM yyyy"
 });
 
 //mantiene il dropdown aperto pur cliccando sul calendario
