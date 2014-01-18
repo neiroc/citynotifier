@@ -12,7 +12,7 @@ $(document).ready(function(){
 	};
 	map = new google.maps.Map(document.getElementById("gmap"), mapOptions);
 
-	
+	//getCircle()
 	//funzione di geolocalizzazione
 	geoLocal();
 	//riceve l'evento se mi sposto sulla mappa
