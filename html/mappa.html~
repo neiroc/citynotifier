@@ -61,7 +61,7 @@
 							<div class="control-group open">
 								<select class="selectpicker" id="searchType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
-									<option>All</option>
+									<option>all</option>
                                 	<option id="street-problem">Problemi stradali</option>
                                     <option id="emergency">Emergenze sanitarie</option>
                                     <option id="boh">Reati</option>

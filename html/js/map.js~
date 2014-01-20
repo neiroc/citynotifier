@@ -19,7 +19,7 @@ $(document).ready(function(){
 	google.maps.event.addListener(map, 'click', function(event) {
 		//salva le coordinate della mia nuova posizione
 		lastLatitude = event.latLng.lat();
-        lastLongitude = event.latLng.lng();
+    lastLongitude = event.latLng.lng();
 		//cancella cookie default
 		jQuery.removeCookie('centerLatitude');
 		jQuery.removeCookie('centerLongitude');
@@ -76,14 +76,24 @@ $("#searchbutton").click(function(e){
 	//prendo data (devo convertirla in unixtime
 	var data = $('#datepickerid').val();
 	//prendo le coordinate.ATTENZIONE: assumono valori solo dopo aver cliccato sulla mappa. vedere geolocal.
+	if(lastLatitude == undefined){ 
+	var lat = latitude;
+	var lng = longitude;
+	}else
+	{ 
 	var lat = lastLatitude;
 	var lng = lastLongitude;
+	}
+	
+	//prendo raggio di ricerca
+	var radius = $('#searchRange').val();
 	//trasformo data in unixtme. ATTENZIONE: settare fuso orario corretto
 	var unixdata = new Date(data).getTime() / 1000;	
 	var oggi = Math.round((new Date()).getTime() / 1000);
-	//console.log(oggi);
+	console.log(lat);
+	console.log(lng);
 
-	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=2000&timemin="+ unixdata + "&timemax="+ oggi + "&status="+status;
+	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ oggi + "&status="+status;
 
 				$.ajax({
 					url: url,
@@ -92,9 +102,9 @@ $("#searchbutton").click(function(e){
 					dataType:'json',
 					success: function(data){
 									//for each event add a Marker
-									$(data).each(function(i, src) {
+									$(data.events).each(function(i, src) {
 									showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type);
-												});
+										//		});
 					console.log(data);
 									} //chiudi function data
 					});//fine chiamata ajax

@@ -1,10 +1,17 @@
 <?php
 
 require "db_aux.php";  
-//getRemoteEvents();
-//getLocalEvents();
+
+//getRemoteEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
+//getLocalEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
+
+//VARIABILI GLOBALI
+$l_events = array();
+$new_events = array();
+
 function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
+
 // CONNECT TO THE DATABASE -- nascondere questi parametri
 $DB_NAME = 'techweb';
 $DB_HOST = 'localhost';
@@ -17,7 +24,7 @@ $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 			printf("Connect failed: %s\n", mysqli_connect_error());
 			exit();
 			}
-$radius = 500;
+//$radius = 500;
 //$dist = 6000;//setta distanza. verrà passata tramite $_GET['param']
 $query="SELECT Evento.*, Notifiche.*, ( 6371 * acos( cos( radians($lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
 
@@ -71,7 +78,7 @@ while ($row = $result->fetch_assoc()) {
 					'freshness'=> intval($freshness), 
 					'status'=> $status,
 					"reliability"=>floatval($reliability),
-					'numbers_of_notifications'=> intval($notifications),
+					'number_of_notifications'=> intval($notifications),
 					'locations'=> $coordinate[$event_id]
 					);
 }
@@ -85,13 +92,14 @@ $result = array('request_time' => time(),
 								'events' => $list_events);
 header('Content-Type: application/json');
 
-//return $radius;
 return json_encode($result);
 }
 
 /*CHIAMATA REMOTA E AGGREGAZIONE DATI***********************/
 
 function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
+global $new_events;
+global $l_events;
 
 $m_curl = curl_multi_init();
 $handles = array();
@@ -105,9 +113,8 @@ $array = json_decode($ris, true); //decodifica json in un array
 
 	foreach($array['server'] as $url)
 	{
-	$urls = $url."/richieste?scope=local&type=all&subtype=all&lat=44.49895&lng=11.341896=&radius=5000&timemin=1329346800&timemax=1390054040&status=all";
+	$urls = $url."/richieste?scope=".$scope."&type=".$type."&subtype=".$subtype."&lat=".$lat."&lng=".$lng."&radius=".$radius."&timemin=".$timeMin."&timemax=".$timeMax."&status=".$status;
 
-	//request to server -- replace parameters
 
 	$cURL = curl_init();
 
@@ -138,19 +145,21 @@ $array = json_decode($ris, true); //decodifica json in un array
 		}
     		curl_multi_remove_handle($m_curl, $handles[$i]);
 		}
-
 			
-			$events = array();
+			$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status),true);
+			//print_r($l_events);
 			foreach ($result as $r) {
 			$json = json_decode($r,true);
 					foreach($json['events'] as $event){
-					//passo ogni evento a lo confronto con i dati locali. MODIFICARE PARAMETERS
-					$ev = compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
-					$events[] = $ev; 						
-					} 
+					//passo ogni evento remoto e lo confronto con i dati locali. MODIFICARE PARAMETERS
+					compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
+					}
+
 			}
-			$res =array('events' => $events); 
-			echo json_encode($res);
+
+			$l_events['events'] += $new_events;			
+			echo json_encode($l_events);
+			
 }
 
 
@@ -159,41 +168,38 @@ $array = json_decode($ris, true); //decodifica json in un array
 */
 function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
-$l_events = getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
-$l_request = json_decode($l_events,true);
-	
-
-	foreach($l_request['events'] as $v)
+global $l_events;
+global $new_events;
+$found = false;
+//print_r($l_events);
+	foreach($l_events['events'] as &$v)
 	{
-
 	$l_lat = $v['locations'][0]['lat'];
 	$l_lng = $v['locations'][0]['lng'];
 	$r_lat = $evento['locations'][0]['lat'];
 	$r_lng = $evento['locations'][0]['lng'];
   $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
+	
+		if(!$found){	
+			//se la distanza dell'evento remoto con gli eventi locali è < 200 metri e tipo e sottotipo sono gli stessi AGGREGO
+			if($dist <= 200 && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
+			{
+				$found = true;
 		
-		//se la distanza dell'evento remoto con gli eventi locali è < 200 metri e tipo e sottotipo sono gli stessi AGGREGO
-		if($dist <= 200 && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
-		{
-		
-			//aggrega evento remoto con locale. aggiungi descrizione e locations
-      foreach($evento['description'] as $value) {
-			array_push($v['description'], $value);
-			}
+				//aggrega evento remoto con locale. aggiungi descrizione e locations
+				$v['description'] = array_merge($v['description'], $evento['description']); 
 			
-			foreach($evento['locations'] as $value) {
-			array_push($v['locations'], $value);
-			}
+				$v['locations'] = array_merge($v['locations'], $evento['locations']);
 			
-			//calcolare reliability
-			$v['numbers_of_notifications'] = count($v['description']);
-			$v['freshness'] = max($v['freshness'], $evento['freshness']);
-
-		return $v;
+				//calcolare reliability
+				$v['number_of_notifications'] = count($v['description']);
+				$v['freshness'] = max($v['freshness'], $evento['freshness']);
+	
+			}
 		}
-	}//Se alla fine del ciclo l'evento remoto non corrisponde a nessuno locale lo aggiungo
-return $evento;	
-}//
+	}//Se alla fine del ciclo l'evento remoto non corrisponde a nessuno locale lo aggiungo ad una nuova lista eventi
+ if(!$found) $new_events[] = $evento;	
+}
 
 
 /*

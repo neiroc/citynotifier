@@ -1,0 +1,138 @@
+<?php
+/*
+*  Viene effettutato il get per la ricerca degli eventi.
+*/
+require '../data/private.php';
+require '../data/eventfunctions.php';
+
+$local_tmp = array();
+
+/*Effettua i get in parallelo ai server*/
+function parallelGet($myCatalogo, $myTimeout) {
+	global $localServer;
+	$data = simplexml_load_file($myCatalogo);
+	$groups = $data->xpath('//server');
+	$mh = curl_multi_init();
+	$handles = array();
+	$result = array();
+
+	foreach($groups as $group) {
+		/*se non é il server locale crea la query e inviala asincronicamente*/
+		if (strcmp($group['url'], $localServer) != 0) {
+			$url = $group['url'] . "/richieste?scope=local&type=" . $_GET['type'] . 
+					"&subtype=" . $_GET['subtype'] . "&lat=".$_GET['lat'] .
+					"&lng=" . $_GET['lng'] . "&radius=" . $_GET['radius'] . 
+					"&timemin=" . $_GET['timemin'] . "&timemax=" . $_GET['timemax'] . 
+					"&status=". $_GET['status'];
+			$ch = curl_init();
+			$opt = array(
+        			CURLOPT_URL => $url,
+        			CURLOPT_HEADER => FALSE,
+        			CURLOPT_RETURNTRANSFER => TRUE,
+       		 		CURLOPT_TIMEOUT => $myTimeout,
+				CURLOPT_FAILONERROR => TRUE,
+				CURLOPT_HTTPHEADER => array('Accept: application/json')
+			);	
+			curl_setopt_array($ch, $opt);
+   			curl_multi_add_handle($mh, $ch);
+   			$handles[] = $ch;
+		}
+	}
+	
+	$running = null;
+	
+	do {
+		curl_multi_exec($mh, $running);
+	} while ($running > 0);
+
+	for($i = 0; $i < count($handles); $i++) {
+    		if ($handles[$i]) {
+			$out = curl_multi_getcontent($handles[$i]);
+    			if ($out) $result[] = $out;
+		}
+    		curl_multi_remove_handle($mh, $handles[$i]);
+	}
+	return $result; /*restituisce un array di risposte dal server*/
+}
+
+
+/*Questa funzione confronta un evento remoto con i propri local_tmp; se non esiste lo aggiunge così com'è, altrimenti se riconosce di averlo, lo mergia con tutte le operazioni necessarie */
+function merge_with_local($remoto) {
+	global $local_tmp;
+	$found = false;
+	foreach ($local_tmp['events'] as &$l_event) {
+		if (!$found) {
+			/*NON va aggiunto, aggiorno i dati local_tmp*/
+			if (are_the_same($l_event, $remoto)) { 
+				$found = true;
+				/*le location e le descrizioni si uniscono*/
+				$l_event['locations'] = array_merge($l_event['locations'], $remoto['locations']); 
+				$l_event['description'] = array_merge($l_event['description'], $remoto['description']);
+				/*Calcolo nuova reliability*/
+				$l_event['reliability'] = ($l_event['reliability']*$l_event['number_of_notifications'] +
+							  $remoto['reliability']*$remoto['number_of_notifications']) /
+							  ($l_event['number_of_notifications'] + $remoto['number_of_notifications']);
+				$l_event['number_of_notifications'] += $remoto['number_of_notifications'];
+				$l_event['freshness'] = max($l_event['freshness'], $remoto['freshness']);
+				break;
+			}
+		}
+	}
+	/*Se dopo il ciclo $found è ancora falso, si tratta di un nuovo evento e lo aggiungo ai miei local_tmp*/
+	if (!$found) $local_tmp['events'][] = $remoto;
+}
+
+
+				//	-	--@§§§ INIZIO CODICE §§§@--	-	\\
+
+if (!($_SERVER['REQUEST_METHOD'] === 'GET')) {
+	echo "Errore 405: metodo non permesso.";
+	exit;
+}
+
+/*restituisce TRUE se la query è senza errori*/
+if (!check_request()) { 
+	echo "Errore 406. Parametri della query non compatibili.";
+	exit;
+}
+
+header("Content-type: application/json; charset=utf-8");
+
+if(strcmp($_GET["scope"], "remote") == 0) {
+	global $catalogo, $timeout, $local_tmp;
+	$now = time();
+	$string = '{ "request_time": ' . $now . ', "result": "Saluti dal gruppo JEDHI!",
+		  "from_server": "http://ltw1311.web.cs.unibo.it", "events": [ ';
+	$risposte = parallelGet($catalogo, $timeout);
+	$local_tmp = json_decode(db_get(), true);
+	$fin = array();
+	foreach ($risposte as $r) {
+   		$j = json_decode($r, true);
+		if ($j && $j['from_server']) { //scartiamo le risposte anonime
+			$fin = $j['events'];
+			if ($fin) {
+				foreach ($fin as $i) { 
+					/*setto l'id degli eventi remoti = alla provenienza*/	
+					$i['event_id'] = $j['from_server']; 
+					/*MERGING*/
+					$id = merge_with_local(&$i);
+				}
+			}
+		}
+	}
+	for ($i = 0; $i < count($local_tmp['events']); $i++) {
+				$evento = json_encode($local_tmp['events'][$i]);
+				$string = $string . $evento . ",";
+			}
+	$string = substr($string, 0, -1); /*toglie l'ultimo carattere: la virgola non va alla fine
+					  se non ci sono eventi, toglie uno spazio*/
+	$string = $string . ' ] }';
+	echo $string;
+}
+
+else if(strcmp($_GET["scope"], "local") == 0) {
+	$res = db_get();
+	echo $res;
+}
+
+?>
