@@ -37,22 +37,38 @@ $time = time();
 $con = connect_db();
 
 //controllo se esiste un evento simile
+
 //da fare
 
-//altrimenti inserisco il nuovo evento e la relativa notifica
+//altrimenti inserisco(creo) il nuovo evento e la relativa notifica
 
 if($subtype =! Null){
 
-	$query = "INSERT INTO evento (type, subtype, start_time, last_time, status, lat_med, lng_med) VALUES ('".$type."','".$subtype."','".$time."','".$time."','".$status."','".$lat."','".$lng."');"
+	$insert = "INSERT INTO evento (type, subtype, start_time, last_time, status, lat_med, lng_med) VALUES ('".$type."','".$subtype."','".$time."','".$time."','".$status."','".$lat."','".$lng."');"
 }
 else{
 
-	$query = "INSERT INTO evento (type, start_time, last_time, status, lat_med, lng_med) VALUES ('".$type."','".$time."','".$time."','".$status."','".$lat."','".$lng."');"
+	$insert = "INSERT INTO evento (type, start_time, last_time, status, lat_med, lng_med) VALUES ('".$type."','".$time."','".$time."','".$status."','".$lat."','".$lng."');"
 }
 
-if( !mysqli_query($con,$query)){
+//farsi restituire i dati da questa merda di mysqli
+if( !mysqli_query($con,$insert)){
 
 }
+
+//dopo aver creato l'evento inserisco la notifica
+
+//recupero l'id_event
+
+//recupero id_utente
+
+// inserisco notifica
+
+//chiudo connessione al db
+mysqli_close($con);
+
+//risposta al client
+
 
 
 ?>
