@@ -22,7 +22,7 @@ if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) a
         $timeMax = $_GET['timemax'];
         $status = $_GET['status'];
 			if($scope == "local"){
-			echo getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
+			getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
 			} 
 
 }//chiudo if

@@ -3,7 +3,7 @@
 require "db_aux.php";  
 
 //getRemoteEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
-//getLocalEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
+//echo getLocalEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
 
 //VARIABILI GLOBALI
 $l_events = array();
@@ -11,6 +11,7 @@ $new_events = array();
 
 function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
+$list_events = array();
 
 // CONNECT TO THE DATABASE -- nascondere questi parametri
 $DB_NAME = 'techweb';
@@ -24,9 +25,10 @@ $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 			printf("Connect failed: %s\n", mysqli_connect_error());
 			exit();
 			}
-//$radius = 500;
-//$dist = 6000;//setta distanza. verrà passata tramite $_GET['param']
-$query="SELECT Evento.*, Notifiche.*, ( 6371 * acos( cos( radians($lat) ) * cos( radians( lat ) ) * cos( radians( lng ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
+
+
+$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
+
 
 /********************* Check parameters 
  if($get_type!="all"){
@@ -42,46 +44,54 @@ $query="SELECT Evento.*, Notifiche.*, ( 6371 * acos( cos( radians($lat) ) * cos(
 	
 $result = $mysqli->query($query) or die($mysqli->error.__LINE__);
 
-$query2 = "SELECT * FROM Notifiche";
-$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
+//If result is not empty
+if($result->num_rows){
+ 
+$list_events = array();
+	//Another query
+	$query2 = "SELECT * FROM Notifiche";
+	$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
 	
-//Request time
-date_default_timezone_set("Europe/Rome");
+	//Set Time Zone
+	date_default_timezone_set("Europe/Rome");
+
+	//Get Data from DB and construct the json response 
+	while ($row = $result->fetch_assoc()) {
+			$event_id = $row['id_event'];
+			//$id = $row['id'];
+			$user_id = $row['id_utente'];
+			$type = $row['type'];
+			$subtype = $row['subtype'];
+			$start_time = $row['start_time'];
+			$freshness = $row['last_time'];
+			$status = $row['status'];
+			$reliability = $row['event_reliability'];
+			$notifications = $row['notifications'];
+		 
+	 		//Adds descriptions and locations
+			while($row2 = $result2->fetch_assoc()){
+						$i=$row2['id_event'];
+						$list_descr[$i][]=$row2['description'];
+						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
+						}
+
+			//Array Events
+			 $list_events[] = array(
+						'event_id'=>'ltw1324_'.$event_id,
+						'type'=>array("type"=> $type,"subtype"=>$subtype), 
+						'description'=> $list_descr[$event_id],
+						'start_time'=> intval($start_time), 
+						'freshness'=> intval($freshness), 
+						'status'=> $status,
+						"reliability"=>floatval($reliability),
+						'number_of_notifications'=> intval($notifications),
+						'locations'=> $coordinate[$event_id]
+						);
+	}
+
+}//if end
 
 
-//Get Data from DB and construct the json response 
-while ($row = $result->fetch_assoc()) {
-		$event_id = $row['id_event'];
-		//$id = $row['id'];
-		$user_id = $row['id_utente'];
-		$type = $row['type'];
-		$subtype = $row['subtype'];
-		$start_time = $row['start_time'];
-	  $freshness = $row['last_time'];
-		$status = $row['status'];
-		$reliability = $row['event_reliability'];
-		$notifications = $row['notifications'];
-   
- 		//Adds descriptions and locations
-		while($row2 = $result2->fetch_assoc()){
-					$i=$row2['id_event'];
-					$list_descr[$i][]=$row2['description'];
-					$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
-					}
-
-		//Array Events
-		$list_events[] = array(
-					'event_id'=>'ltw1324_'.$event_id,
-					'type'=>array("type"=> $type,"subtype"=>$subtype), 
-					'description'=> $list_descr[$event_id],
-					'start_time'=> intval($start_time), 
-					'freshness'=> intval($freshness), 
-					'status'=> $status,
-					"reliability"=>floatval($reliability),
-					'number_of_notifications'=> intval($notifications),
-					'locations'=> $coordinate[$event_id]
-					);
-}
 
 //Returns the json
 $messaggio = "Messaggio di servizio";
@@ -107,7 +117,7 @@ $result = array();
 $res = array();
 
 
-$ris = file_get_contents('../data/server.json','r');//prende il contenuto di json
+$ris = file_get_contents('../data/server.json','r'); //prende il contenuto di json
 $array = json_decode($ris, true); //decodifica json in un array
 
 

@@ -1,6 +1,7 @@
 var lastLatitude;
 var lastLongitude;
 var geocoder;
+var markersArray = [];
 
 $(document).ready(function(){
 
@@ -33,13 +34,12 @@ $(document).ready(function(){
 		var markerPosition = new google.maps.LatLng(lastLatitude, lastLongitude);
 		getMarker(markerPosition);
 		getCircle(markerPosition);
-		
 	});
 
 });
+
 $('.dropdown-toggle').dropdown()
-$('#myModal').on('show.bs.modal', function(){
-	
+$('#myModal').on('show.bs.modal', function(){	
 });
 
 
@@ -54,7 +54,7 @@ function showOnMap(lat,lng,id,type){
 				title:id
 				//animation: google.maps.Animation.BOUNCE
 		});
-
+markersArray.push(marker);
 var contentString = '<b>'+type+'</b>'+ '<br>'+id+'<br>'+'<p>Descrizione di evento, quel pezzo di merda mi ha tagliato la strada </p>';
 var infowindow = new google.maps.InfoWindow({
     content: contentString,
@@ -66,7 +66,16 @@ google.maps.event.addListener(marker, 'click', function() {
 });
 }
 
+//Remove Markers from Map
+function clearOverlays() {
+  for (var i = 0; i < markersArray.length; i++ ) {
+    markersArray[i].setMap(null);
+  }
+  markersArray.length = 0;
+}
+
 $("#searchbutton").click(function(e){
+	clearOverlays();
 	//prendo tipo
 	var type = $('#searchType').val();
 	//prendo sottotipo
@@ -86,7 +95,7 @@ $("#searchbutton").click(function(e){
 	}
 	
 	//prendo raggio di ricerca
-	var radius = $('#searchRange').val();
+	var radius = circle.getRadius();
 	//trasformo data in unixtme. ATTENZIONE: settare fuso orario corretto
 	var unixdata = new Date(data).getTime() / 1000;	
 	var oggi = Math.round((new Date()).getTime() / 1000);
@@ -105,7 +114,7 @@ $("#searchbutton").click(function(e){
 									$(data.events).each(function(i, src) {
 									showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type);
 												});
-					console.log(data);
+					console.log(circle.getRadius());
 									} //chiudi function data
 					});//fine chiamata ajax
 

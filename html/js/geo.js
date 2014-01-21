@@ -103,7 +103,7 @@ function getCircle(circleCenter){
 		fillOpacity: 0.35,
 		map: map,
 		center: circleCenter,
-		radius: 2000, //metri
+		radius: 1000, //metri
 		editable: true
     };
     // Add the circle for this city to the map.
