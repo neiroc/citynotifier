@@ -11,8 +11,6 @@ $(document).ready(function(){
 	  		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
 	map = new google.maps.Map(document.getElementById("gmap"), mapOptions);
-
-	getCircle()
 	//funzione di geolocalizzazione
 	geoLocal();
 	//riceve l'evento se mi sposto sulla mappa
@@ -38,7 +36,11 @@ $(document).ready(function(){
 
 });
 $('.dropdown-toggle').dropdown()
-$('#myModal').on('show.bs.modal', function(){
-	
+
+//rende visibile la tabella
+$('#table').on('click', function(){
+	$('#myModal').modal({backdrop:false})
 })
+
+
 

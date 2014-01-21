@@ -45,7 +45,8 @@
 			<a class="navbar-brand" href="#">City Notifier</a>
             <li id="bar_username" class="active"><a href="#">Home</a></li>
             <li><a href="#mappa">Map</a></li>
-            <li><a id="table" href="#myModal" role="button" data-toggle="modal">
+            <li>
+				<a id="table" href="#myModal" role="button" data-toggle="modal">
 					Table
 				</a>
 			</li>
@@ -62,11 +63,11 @@
 								<select class="selectpicker" id="searchType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
 									<option>All</option>
-                                	<option id="street-problem">Problemi stradali</option>
-                                    <option id="emergency">Emergenze sanitarie</option>
-                                    <option id="boh">Reati</option>
-                                    <option id="mah">Problemi ambientali</option>
-                                    <option id="blabla">Eventi pubblici</option>
+                                	<option>Problemi stradali</option>
+                                    <option>Emergenze sanitarie</option>
+                                    <option>Reati</option>
+                                    <option>Problemi ambientali</option>
+                                    <option>Eventi pubblici</option>
 								</select>
 							</div>
 							<!--subtype form-->
@@ -74,28 +75,28 @@
                             	<select class="selectpicker" id="searchSubType" autocomplete="off">
                             	    <option disabled selected>Select subtype</option>
 									<option>All</option>
-									<option id="street-problem">incidente</option>
-									<option id="street-problem">buca</option>
-									<option id="street-problem">coda</option>
-									<option id="street-problem">lavori in corso</option>
-									<option id="street-problem">strada impraticabile</option>
-									<option id="emergency">incidente</option>
-									<option id="emergency">malore</option>
-									<option id="emergency">ferito</option>
-									<option id="boh">furto</option>
-									<option id="boh">attentato</option>
-									<option id="mah">incendio</option>
-									<option id="mah">tornado</option>
-									<option id="mah">neve</option>
-									<option id="mah">alluvione</option>
-									<option id="blabla">partita</option>
-									<option id="blabla">manifestazione</option>
-									<option id="blabla">concerto</option>
+									<option>incidente</option>
+									<option>buca</option>
+									<option>coda</option>
+									<option>lavori in corso</option>
+									<option>strada impraticabile</option>
+									<option>incidente</option>
+									<option>malore</option>
+									<option>ferito</option>
+									<option>furto</option>
+									<option>attentato</option>
+									<option>incendio</option>
+									<option>tornado</option>
+									<option>neve</option>
+									<option>alluvione</option>
+									<option>partita</option>
+									<option>manifestazione</option>
+									<option>concerto</option>
                             	</select>
                             </div>
 							<!--status menu-->
 							<div class="control-group">
-								<select class="selectpicker" id="searchSubType" autocomplete="off">
+								<select class="selectpicker" id="searchStatus" autocomplete="off">
 									<option selected disabled> Status</option>
 									<option>Open</option>
 									<option>Closed</option>
@@ -146,34 +147,33 @@
 								<select class="selectpicker" id="notifyType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
 									<option>All</option>
-                                	<option id="street-problem">Problemi stradali</option>
-                                    <option id="emergency">Emergenze sanitarie</option>
-                                    <option id="boh">Reati</option>
-                                    <option id="mah">Problemi ambientali</option>
-                                    <option id="blabla">Eventi pubblici</option>
+                                	<option>Problemi stradali</option>
+                                    <option>Emergenze sanitarie</option>
+                                    <option>Reati</option>
+                                    <option>Problemi ambientali</option>
+                                    <option>Eventi pubblici</option>
 								</select>
 							</div>
 							<div class="control-group">
                             	<select class="selectpicker" id="notifySubType" autocomplete="off">
                             	    <option disabled selected>Select subtype</option>
-									<option>All</option>
-									<option id="street-problem">incidente</option>
-									<option id="street-problem">buca</option>
-									<option id="street-problem">coda</option>
-									<option id="street-problem">lavori in corso</option>
-									<option id="street-problem">strada impraticabile</option>
-									<option id="emergency">incidente</option>
-									<option id="emergency">malore</option>
-									<option id="emergency">ferito</option>
-									<option id="boh">furto</option>
-									<option id="boh">attentato</option>
-									<option id="mah">incendio</option>
-									<option id="mah">tornado</option>
-									<option id="mah">neve</option>
-									<option id="mah">alluvione</option>
-									<option id="blabla">partita</option>
-									<option id="blabla">manifestazione</option>
-									<option id="blabla">concerto</option>
+									<option>incidente</option>
+									<option>buca</option>
+									<option>coda</option>
+									<option>lavori in corso</option>
+									<option>strada impraticabile</option>
+									<option>incidente</option>
+									<option>malore</option>
+									<option>ferito</option>
+									<option>furto</option>
+									<option>attentato</option>
+									<option>incendio</option>
+									<option>tornado</option>
+									<option>neve</option>
+									<option>alluvione</option>
+									<option>partita</option>
+									<option>manifestazione</option>
+									<option>concerto</option>
                             	</select>
                             </div>
 							<div class="input-append control-group">
@@ -217,7 +217,7 @@
       </div>
 
 	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
 	  <div class="modal-dialog">
 		<div class="modal-content">
 		  <div class="modal-header">
@@ -238,7 +238,7 @@
 			</table>
 		  </div>
 		  <div class="modal-footer">
-		    <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+		   	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 		  </div>
 		</div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
