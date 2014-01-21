@@ -42,3 +42,7 @@ body {
 .datepicker-dropdown{
 	width:21%;
 }
+
+#searchSubType option[disabled]{
+	display:none;
+}

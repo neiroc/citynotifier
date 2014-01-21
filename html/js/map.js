@@ -37,10 +37,13 @@ $(document).ready(function(){
 	});
 
 });
-
+//attiva il dropdown
 $('.dropdown-toggle').dropdown()
-$('#myModal').on('show.bs.modal', function(){	
-});
+
+//rende visibile la tabella
+$('#table').on('click', function(){
+	$('#myModal').modal({backdrop:false})
+})
 
 
 function showOnMap(lat,lng,id,type){
