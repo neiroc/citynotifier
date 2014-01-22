@@ -37,10 +37,13 @@ $(document).ready(function(){
 	});
 
 });
-
+//attiva il dropdown
 $('.dropdown-toggle').dropdown()
-$('#myModal').on('show.bs.modal', function(){	
-});
+
+//rende visibile la tabella
+$('#table').on('click', function(){
+	$('#myModal').modal({backdrop:false})
+})
 
 
 function showOnMap(lat,lng,id,type){
@@ -55,7 +58,7 @@ function showOnMap(lat,lng,id,type){
 				//animation: google.maps.Animation.BOUNCE
 		});
 markersArray.push(marker);
-var contentString = '<b>'+type+'</b>'+ '<br>'+id+'<br>'+'<p>Descrizione evento</p><br>Inizio Evento<br>Fine Evento<br> Open / Closed / Skeptical';
+var contentString = '<b>'+type+'</b>'+ '<br>'+id+'<br>'+'<p>Descrizione di evento, quel pezzo di merda mi ha tagliato la strada </p>';
 var infowindow = new google.maps.InfoWindow({
     content: contentString,
 		maxWidth: 200
