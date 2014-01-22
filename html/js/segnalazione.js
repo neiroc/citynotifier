@@ -1,23 +1,22 @@
 $(document).ready(function() {
-	$("#segnalazione").submit(function() {
+	$('#notifybutton').on('click', function() {
 
 
 		var segnalazionej = {
 
-			type = {
+			type : {
 
-				type = $('#type').val(),
-				subtype = $('#subtype').val() 
-			}
+				type : $('#notifyType').val(),
+				subtype : $('#notifySubType').val() 
+			},
 
-			lat = $('#lat').val(),
+			lat : $('#lat').val(),
 
-			lng = $('#lng').val(),
+			lng : $('#lng').val(),
 
-			description = $('#description').val(),
+			description : $('#description').val(),
 
-			username = jQuery.cookie('username')
-		
+			username : jQuery.cookie('username')
 		}
 
 		var host = "http://"+document.location.hostname ;

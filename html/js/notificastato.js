@@ -1,18 +1,18 @@
 $(document).ready(function() {
-	$("#notifica_stato").submit(function() {
+	$("#notificastato").submit(function() {//da cambiare
 
 
 		var notificaj = {
 
-			event_id = $('#event_id').val(),
+			event_id : $('#event_id').val(),
 
-			lat = $('#lat').val(),
+			lat : $('#lat').val(),
 
-			lng = $('#lng').val(),
+			lng : $('#lng').val(),
 
-			description = $('#description').val(),
+			description : $('#notifyDescription').val(),
 
-			username = jQuery.cookie('username')
+			username : jQuery.cookie('username')
 		
 		}
 
