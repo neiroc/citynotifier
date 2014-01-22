@@ -46,3 +46,7 @@ body {
 #searchSubType option[disabled]{
 	display:none;
 }
+
+#notifySubType option[disabled]{
+	display:none;
+}
