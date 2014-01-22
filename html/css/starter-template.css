@@ -43,6 +43,6 @@ body {
 	width:21%;
 }
 
-#searchSubType option[disabled]{
+select option[disabled]{
 	display:none;
 }
