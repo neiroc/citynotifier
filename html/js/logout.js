@@ -16,13 +16,19 @@ $('#logout').on('click', function(){
 		
 		success:function(json){	
 			if(json.result==="logout effettuato con successo"){	
-			console.log("sfinteriiii");
-				jQuery.removeCookie('latitude');
-				jQuery.removeCookie('longitude');
-				jQuery.removeCookie('centerLatitude');
-				jQuery.removeCookie('centerLongitude');
-				jQuery.removeCookie('lastLatitude');
-				jQuery.removeCookie('lastLongitude');
+				if (jQuery.cookie('latitude')){
+					jQuery.removeCookie('latitude');
+					jQuery.removeCookie('longitude');
+				}
+				else {
+					jQuery.removeCookie('lastLatitude');
+					jQuery.removeCookie('lastLongitude');
+				}
+				jQuery.removeCookie('radius');
+				jQuery.removeCookie('type');	
+				jQuery.removeCookie('subtype');
+				jQuery.removeCookie('status');
+				jQuery.removeCookie('data');
 				jQuery.removeCookie('username');
 				location.href="index.html";
 			}

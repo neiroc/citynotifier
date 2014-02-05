@@ -1,5 +1,7 @@
 var marker;
 var circle;
+var latitude;
+var longitude;
 
 
 //Funzione di geolocalizzazione
@@ -15,35 +17,39 @@ function geoLocal(){
 }
 
 //Trova la mia posizione
-function showPosition (position){
-	latitude = position.coords.latitude;
-	longitude = position.coords.longitude;
-	//cancella cookie default
-	jQuery.removeCookie('centerLatitude');
-	jQuery.removeCookie('centerLongitude');
-	//salvo le coordinate
-	var myPosition = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	jQuery.cookie('latitude', latitude, {expires:30});	
-	jQuery.cookie('longitude', longitude, {expires:30});
-	getMarker(myPosition);
-	getCircle(myPosition);
-	//sposto la mappa in base alla mia posizione
-	map.setCenter(myPosition);	
+function showPosition (pos){
+	
+	//prendo le coordinate del coordinate di geolocalizzazione
+	latitude = pos.coords.latitude;
+	longitude = pos.coords.longitude;
+	
+	myPosition = new google.maps.LatLng(latitude, longitude);
+	
+	//date le coordinate, restituisce l'indirizzo e lo inserisce nel form del menu notify
+	geocodePosition(myPosition);
+	
+	//inserisce il cerchio con centro in myPosition
+	distanceWidget = new DistanceWidget(map, myPosition)
+	radiusWidgetCheck = true;
+	radiusWidget.set('distance', RADIUS);
+	radiusWidget.center_changed();
+	$('#searchRange').val(RADIUS + " km ");
+
 }
 
 //Gestione errori
 function errorGettingPosition(err) {
 
 	if(err.code == 1) {
-		alternLoc();
+		centerLoc();
 		alert("L'utente non ha autorizzato la geolocalizzazione");
 	}
 	else if(err.code == 2) {
-		alternLoc();
+		centerLoc();
 		alert("Posizione non disponibile");
 	}
 	else if(err.code == 3) {
-		alternLoc();
+		centerLoc();
 		alert("Timeout");
 	}
 	else {
@@ -64,50 +70,79 @@ function getMarker(myPosition){
 		animation: google.maps.Animation.DROP,
 		position: myPosition
 	});
+	
+	google.maps.event.addListener(marker,'dragend', dragMark)
+}
+
+function dragMark(event){
+	
+	//salva le coordinate della mia nuova posizione
+	lastLatitude = event.latLng.lat();
+    lastLongitude = event.latLng.lng();
+
+    var markerPosition = new google.maps.LatLng(lastLatitude, lastLongitude)
+	// aggiorno l'indirizzo
+    geocodePosition(markerPosition);
 }
 
 function alternLoc(){
-	//controlla se ci sono i cookie
-	if (jQuery.cookie('lastLatitude') && jQuery.cookie('lastLongitude')){
-		//prende coordinate dai cookie
-		var newMarkPos = new google.maps.LatLng(jQuery.cookie('lastLatitude'), jQuery.cookie('lastLongitude'));
-		getCircle(newMarkPos);
-		getMarker(newMarkPos);
-		map.setCenter(newMarkPos);	
-	}
-	else {
-		//prende coordinate default
-		centerLatitude = cityCenter.lat();
-		centerLongitude = cityCenter.lng();
-		//crea cookie
-		jQuery.cookie('centerLatitude', centerLatitude, {expires:30});	
-		jQuery.cookie('centerLongitude', centerLongitude, {expires:30});
+	
+	//prende coordinate dai cookie
+	var newMarkPos = new google.maps.LatLng(jQuery.cookie('lastLatitude'), jQuery.cookie('lastLongitude'));
+	
+	getMarker(newMarkPos);
+	//range=jQuery.cookie('radius', radius, {expires:30});
+	distanceWidget = new DistanceWidget(map, newMarkPos);
+	radiusWidgetCheck = true
+	
+	map.setCenter(newMarkPos);	
+	geocodePosition(newMarkPos);
+	
+	//radiusWidget.set('distance', range);
+	$('#searchRange').val(jQuery.cookie('radius') + " km ")
+}
+	
+function centerLoc() {
+		
 		//prende posizione default
 		var newMarkPos = cityCenter;
-		getCircle(cityCenter);
-		getMarker(newMarkPos);
-		map.setCenter(cityCenter);	
-	}
-}
-
-function getCircle(circleCenter){
+		
+		distanceWidget = new DistanceWidget(map, newMarkPos);
+		radiusWidgetCheck = true;
 	
-	if (circle){
-		circle.setMap(null);
-	}
-	var circleOptions = {
-    strokeColor: '#FF0000',
-		strokeOpacity: 0.8,
-		strokeWeight: 2,
-		fillColor: '#FF0000',
-		fillOpacity: 0.35,
-		map: map,
-		center: circleCenter,
-		radius: 1000, //metri
-		editable: true
-    };
-    // Add the circle for this city to the map.
-    circle = new google.maps.Circle(circleOptions);
+		radiusWidget.set('distance', RADIUS);
+		radiusWidget.center_changed();
+		
+		map.setCenter(cityCenter);
+		geocodePosition(cityCenter);
 }
 
+/**
+* Get address from coordinates
+* @param latlng point
+* ASYNCHRONOUS
+*/
+function geocodePosition(position){
+	geocoder.geocode({'latLng': position}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK) { 
+			// SUCCESS: get the first matching address and format it properly
+			var address = results && results[1] ? results[0].address_components[1].long_name + ", " + results[0].address_components[0].long_name: position,
+			lastAddress = results[0].address_components;
+			if(address == position)
+				geocodePosition(position); //Retry if Geocoder fails
+			else{
+				$('#notifyAddress').val(address);
+				$('#searchAddress').val(address);
+			}
+		}
+		else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {    
+		    setTimeout(function() {
+		        geocodePosition(position);
+		    }, 200);
+        }
+		else {
+		  console.log('Geocoder failed due to: ' + status);
+		}
+	});
+}
 

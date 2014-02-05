@@ -146,7 +146,7 @@
 							<div class="control-group">
 								<select class="selectpicker" id="notifyType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
-                                		<option value="problemi_stradali">Problemi stradali</option>
+                                	<option value="problemi_stradali">Problemi stradali</option>
                                     <option value="emergenze_sanitarie">Emergenze sanitarie</option>
                                     <option value="reati">Reati</option>
                                     <option value="problemi_ambientali">Problemi ambientali</option>
@@ -175,9 +175,15 @@
 									<option value="concerto">Concerto</option>
                             	</select>
                             </div>
+							<!--address form-->
 							<div class="input-append control-group">
                             	<input type="text" id="notifyAddress" placeholder="Address"
 										autocomplete="off">
+									<div class="btn-group btn-group-xs">
+										<button type="button" id="insertLoc">
+											<span class="glyphicon glyphicon-map-marker"></span>
+										</button>
+									</div>
 								</input>
                            	</div>
 							<div class="input-append control-group">
@@ -254,17 +260,18 @@
 	<script src="js/jquery.cookie.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/bootstrap-datepicker.js"></script>
-	<script src="js/login.js"></script>
-	<script src="js/map.js"></script>
-  	<script src="js/geo.js"></script>
-	<script src="js/logout.js"></script>
-	<script src="js/search.js"></script>
-	<script src="js/notifyMenu.js"></script>
 	<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzoBwjcMDm7YmdVppL9e3V3aXyY1rYieI&sensor=true">
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzoBwjcMDm7YmdVppL9e3V3aXyY1rYieI&sensor=true&libraries=visualization,places,geometry">
     </script>
 	<script src="js/global.js"></script>
+	<script src="js/geo.js"></script>
+	<script src="js/search.js"></script>
+	<script src="js/map.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/circle.js"></script>
+	<script src="js/logout.js"></script>
 	<script src="js/segnalazione.js"></script>
+	<script src="js/notifyMenu.js"></script>
 	
 	
   </body>

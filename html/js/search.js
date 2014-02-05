@@ -1,3 +1,8 @@
+var radius;
+var type;
+var subtype;
+var status;
+var data;
 //formato calendario
 $('.datepicker').datepicker({
 	format: "dd mm yyyy"
@@ -18,6 +23,7 @@ $('#searchLoc').on('click', function(){
 	codeAddress();
 });
 
+
 //nasconde i subType non correlati ai Type
 $('#searchType').on('change', function(){
 
@@ -25,19 +31,19 @@ $('#searchType').on('change', function(){
 	$('#searchSubType option:nth-child(1)').attr('selected', true);
 
 	switch ($(this).val()) {
-		case 'Problemi stradali':
-				disableOpt(1);	
+		case 'problemi_stradali':
+			disableOpt(1);	
 			break;
-		case 'Emergenze sanitarie':
+		case 'emergenze_sanitarie':
 			disableOpt(2);
 			break;
-		case 'Reati':
+		case 'reati':
 			disableOpt(3);
 			break;
-		case 'Problemi ambientali':
+		case 'problemi_ambientali':
 			disableOpt(4);
 			break;
-		case 'Eventi pubblici':
+		case 'eventi_pubblici':
 			disableOpt(5);
 			break;
 	}
@@ -48,13 +54,44 @@ function codeAddress() {
 	var address = $('#searchAddress').val();
 	geocoder.geocode( { 'address': address}, function(results, status) {
 	  	if (status == google.maps.GeocoderStatus.OK) {
-			map.setCenter(results[0].geometry.location);
-		  	getMarker(results[0].geometry.location);
-		} 
+			range = $('#searchRange').val().split(" ")[0].replace(',','.');
+			if(jQuery.isNumeric(range) && range > 0){
+				
+				//crea il cerchio
+				distanceWidget = new DistanceWidget(map, results[0].geometry.location);
+				radiusWidgetCheck = true
+				
+				//setta il raggio del cerchio			
+				radiusWidget.set('distance', range);
+				radiusWidget.center_changed();
+			}
+			else {
+				//se non è stato specificato alcun valore, prendo quello del cookie
+				if (jQuery.cookie('radius')){
+					range= jQuery.cookie('radius')
+				}
+				//altrimenti quello di default
+				else {
+					range=RADIUS;					
+				}
+				$('#searchRange').val(range + " km ");
+
+				//crea il cerchio
+				var distanceWidget = new DistanceWidget(map, results[0].geometry.location);
+				radiusWidgetCheck = true;
+				
+				//setta il raggio del cerchio			
+				radiusWidget.set('distance', range);
+				radiusWidget.center_changed();
+			}
+			
+			//scrive nel menu notify l'indirizzo cercato nel menu search (serve?)
+			$('#notifyAddress').val($('#searchAddress').val());
+			
+		}
 		else {
 			alert('Geocode was not successful for the following reason: ' + status);
 		}
-		getCircle(results[0].geometry.location);
 	});
 }
 
@@ -116,3 +153,50 @@ function disableOpt(nType){
 	break;
 	}	
 }
+
+
+/**
+ * Radius changing listener on enter pressed
+ */
+$("#search").next().on('keypress', '#searchRange', function(e) {
+	
+if (e.which === 13){
+    	var klm = $('#searchRange').val().split(" ")[0].replace(',','.');
+    	//valore inserito correttamente
+		if(jQuery.isNumeric(klm) && klm > 0) {
+			radius = klm;
+    	    radiusWidget.set('distance', klm);
+    	    radiusWidget.center_changed();
+    	    $('#searchRange').parent().removeClass("error");
+    	}
+    	else if(!(jQuery.isNumeric(klm)) || klm <= 0){
+    		//raggio errato
+			$('#searchRange').parent().addClass("error");
+			$('#searchRange').val("Insert a valid radius");
+		}
+	}	
+});
+
+$('#search').on('click', function(){
+
+	//crea la posizione del marker
+	myP = new google.maps.LatLng(lastLatitude, lastLongitude);
+	//Crea un marker se non è presente sulla mappa
+	if (!marker){
+		
+		//crea il marker
+		getMarker(myP)
+
+		//crea un nuovo cerchio
+		distanceWidget = new DistanceWidget(map, myP)
+		radiusWidgetCheck = true;
+	}
+	//Crea il cerchio se il marker è già presente
+	if (radiusWidgetCheck==false && marker){
+
+		distanceWidget = new DistanceWidget(map, myP);
+		radiusWidgetCheck = true;
+			
+	}
+})
+

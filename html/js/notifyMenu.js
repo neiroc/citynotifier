@@ -1,26 +1,36 @@
+infowindow = new google.maps.InfoWindow();
+
 //nasconde i subType non correlati ai Type
 $('#notifyType').on('change', function(){
 
 	$('#notifySubType option:nth-child(1)').attr('selected', true);
 
 	switch ($(this).val()) {
-		case 'Problemi stradali':
+		case 'problemi_stradali':
 			disableOption(1);	
 			break;
-		case 'Emergenze sanitarie':
+		case 'emergenze_sanitarie':
 			disableOption(2);
 			break;
-		case 'Reati':
+		case 'reati':
 			disableOption(3);
 			break;
-		case 'Problemi ambientali':
+		case 'problemi_ambientali':
 			disableOption(4);
 			break;
-		case 'Eventi pubblici':
+		case 'eventi_pubblici':
 			disableOption(5);
 			break;
 	}
 });
+
+//se clicco il tasto di geolocalizzazione nel menu notify
+$('#insertLoc').on('click', function(){
+	//geolocalizza
+	geoLocal();
+})
+	
+
 
 //funzione che disabilita le opzioni
 function disableOption(numType){
@@ -35,7 +45,6 @@ function disableOption(numType){
 		}
 	break;
 	case 2:
-	console.log("porcodio")
 		for (var i=2; i<=18; i++){
 			if (i!=7 && i!=8 && i!=9){
 				$("#notifySubType option:nth-child("+ i +")").prop('disabled', true);

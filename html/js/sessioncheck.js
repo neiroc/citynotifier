@@ -1,5 +1,5 @@
 $('document').ready(function(){
-	if (jQuery.cookie('username')){
+	console.log('ci sono')
+	if (jQuery.cookie('username'))
 		location.href="mappa.html"
-	}
 });
