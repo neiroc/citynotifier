@@ -28,6 +28,7 @@ mysqli_close($con);
 if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row['user_pass']==$password)){
 						
 	$result['result'] = "login effettuato con successo";//risposta positiva
+	$result['id_utente'] = $row['id_utente'];
 	header('Content-Type: application/json');	
 	$re = json_encode($result);
 	echo $re;

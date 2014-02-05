@@ -16,7 +16,7 @@ $('#logout').on('click', function(){
 		
 		success:function(json){	
 			if(json.result==="logout effettuato con successo"){	
-			console.log("sfinteriiii");
+			//console.log("sfinteriiii");
 				jQuery.removeCookie('latitude');
 				jQuery.removeCookie('longitude');
 				jQuery.removeCookie('centerLatitude');
@@ -24,6 +24,7 @@ $('#logout').on('click', function(){
 				jQuery.removeCookie('lastLatitude');
 				jQuery.removeCookie('lastLongitude');
 				jQuery.removeCookie('username');
+				jQuery.removeCookie('id_utente');
 				location.href="index.html";
 			}
 			else 

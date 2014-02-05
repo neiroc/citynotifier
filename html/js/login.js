@@ -21,7 +21,8 @@ $(document).ready(function() {
 			success:function(call){	
 				if(call.result==="login effettuato con successo"){	
 					jQuery.cookie('username', $('#username').val(), {expires:30});
-					console.log("daje")
+					jQuery.cookie('id_utente', call.id_utente, {expires:30});
+					//console.log("daje")
 					location.href="mappa.html";
 				}
 				else {

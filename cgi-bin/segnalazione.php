@@ -37,8 +37,12 @@ $time = time();
 $con = connect_db();
 
 //controllo se esiste un evento simile
+$query = "SELECT id_event FROM evento WHERE type ='".$segnalazione->{'type'}."' AND subtype ='".$segnalazione->{'subtype'}."' AND (lat_med BETWEEN "
 
-//da fare
+
+
+
+
 
 //altrimenti inserisco(creo) il nuovo evento e la relativa notifica
 
@@ -52,17 +56,19 @@ else{
 }
 
 //farsi restituire i dati da questa merda di mysqli
-if( !mysqli_query($con,$insert)){
+if(mysqli_query($con,$insert)){
+	//risultato positivo
+	$result['event_id'] = mysqli_insert_id($con); 
+	$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
+	//inserisco notifica
+}
+else{
+
+	$result['result'] =
 
 }
 
-//dopo aver creato l'evento inserisco la notifica
-
-//recupero l'id_event
-
-//recupero id_utente
-
-// inserisco notifica
+//risposta
 
 //chiudo connessione al db
 mysqli_close($con);

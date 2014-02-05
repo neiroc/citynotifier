@@ -16,7 +16,7 @@ $(document).ready(function() {
 
 			description : $('#description').val(),
 
-			username : jQuery.cookie('username')
+			id_utente : jQuery.cookie('id_utente')
 		}
 
 		var host = "http://"+document.location.hostname ;
