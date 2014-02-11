@@ -28,8 +28,10 @@ function showPosition (pos){
 	//date le coordinate, restituisce l'indirizzo e lo inserisce nel form del menu notify
 	geocodePosition(myPosition);
 	
+	getMarker(myPosition)
+		
 	//inserisce il cerchio con centro in myPosition
-	distanceWidget = new DistanceWidget(map, myPosition)
+	var distanceWidget = new DistanceWidget(map, myPosition)
 	radiusWidgetCheck = true;
 	radiusWidget.set('distance', RADIUS);
 	radiusWidget.center_changed();
@@ -92,7 +94,7 @@ function alternLoc(){
 	
 	getMarker(newMarkPos);
 	//range=jQuery.cookie('radius', radius, {expires:30});
-	distanceWidget = new DistanceWidget(map, newMarkPos);
+	var distanceWidget = new DistanceWidget(map, newMarkPos);
 	radiusWidgetCheck = true
 	
 	map.setCenter(newMarkPos);	
@@ -107,7 +109,8 @@ function centerLoc() {
 		//prende posizione default
 		var newMarkPos = cityCenter;
 		
-		distanceWidget = new DistanceWidget(map, newMarkPos);
+		getMarker(newMarkPos);
+		var distanceWidget = new DistanceWidget(map, newMarkPos);
 		radiusWidgetCheck = true;
 	
 		radiusWidget.set('distance', RADIUS);

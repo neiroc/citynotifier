@@ -1,15 +1,12 @@
 body {
-	
-  padding-top: 50px;
-
+	padding-top: 50px;
 }
 
 .starter-template {
 	height:600px;
 	width: 100%;
-	
-  padding: 15px 15px;
-  text-align: center;
+	padding: 15px 15px;
+  	text-align: center;
 	background: black;
 }
 
@@ -25,13 +22,13 @@ body {
 	margin-top:10px;	
 }
 
-.dropdown-menu{
+.dropdown-menu {
 	width:260%;
 	border-radius:5px;
 	border:1px solid;
 }
 
-#searchbutton{
+#searchbutton {
 	border:10px;
 	float:right;
 	display:block;
@@ -39,14 +36,21 @@ body {
 	clear:left;
 }
 
-.datepicker-dropdown{
+.datepicker-dropdown {
 	width:21%;
 }
 
-select option[disabled]{
+select option[disabled] {
 	display:none;
 }
 
-#insertLoc{
+#insertLoc {
 	width:28px;
+}
+
+.control-group.error input{	
+	border-bottom-color:#FF0000;
+	border-top-color:#FF0000;
+	border-left-color:#FF0000;
+	border-right-color:#FF0000;
 }

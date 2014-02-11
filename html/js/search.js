@@ -23,6 +23,14 @@ $('#searchLoc').on('click', function(){
 	codeAddress();
 });
 
+//rimuove l'errore dal form del range
+$('#searchRange').on('focus', function(){
+	$(this).parent().removeClass("error")
+})
+
+$('#searchAddress').on('focus', function(){
+	$(this).parent().removeClass("error")
+})
 
 //nasconde i subType non correlati ai Type
 $('#searchType').on('change', function(){
@@ -52,45 +60,20 @@ $('#searchType').on('change', function(){
 //funzione ricerca indirizzo
 function codeAddress() {
 	var address = $('#searchAddress').val();
+
 	geocoder.geocode( { 'address': address}, function(results, status) {
 	  	if (status == google.maps.GeocoderStatus.OK) {
-			range = $('#searchRange').val().split(" ")[0].replace(',','.');
-			if(jQuery.isNumeric(range) && range > 0){
-				
-				//crea il cerchio
-				distanceWidget = new DistanceWidget(map, results[0].geometry.location);
-				radiusWidgetCheck = true
-				
-				//setta il raggio del cerchio			
-				radiusWidget.set('distance', range);
-				radiusWidget.center_changed();
-			}
-			else {
-				//se non è stato specificato alcun valore, prendo quello del cookie
-				if (jQuery.cookie('radius')){
-					range= jQuery.cookie('radius')
-				}
-				//altrimenti quello di default
-				else {
-					range=RADIUS;					
-				}
-				$('#searchRange').val(range + " km ");
-
-				//crea il cerchio
-				var distanceWidget = new DistanceWidget(map, results[0].geometry.location);
-				radiusWidgetCheck = true;
-				
-				//setta il raggio del cerchio			
-				radiusWidget.set('distance', range);
-				radiusWidget.center_changed();
-			}
-			
+			console.log(status)
+			checkRange(results[0].geometry.location);
+						
 			//scrive nel menu notify l'indirizzo cercato nel menu search (serve?)
 			$('#notifyAddress').val($('#searchAddress').val());
-			
 		}
 		else {
-			alert('Geocode was not successful for the following reason: ' + status);
+			console.log(status)
+			$('#searchAddress').parent().addClass("error")
+			$('#searchAddress').val("Insert a valid address");
+			alert('Cannot find address');
 		}
 	});
 }
@@ -159,8 +142,10 @@ function disableOpt(nType){
  * Radius changing listener on enter pressed
  */
 $("#search").next().on('keypress', '#searchRange', function(e) {
-	
-if (e.which === 13){
+
+	var code = e.keyCode || e.which;
+
+	if (code === 13){
     	var klm = $('#searchRange').val().split(" ")[0].replace(',','.');
     	//valore inserito correttamente
 		if(jQuery.isNumeric(klm) && klm > 0) {
@@ -171,7 +156,7 @@ if (e.which === 13){
     	}
     	else if(!(jQuery.isNumeric(klm)) || klm <= 0){
     		//raggio errato
-			$('#searchRange').parent().addClass("error");
+			$('#searchRange').parent().addClass("error")
 			$('#searchRange').val("Insert a valid radius");
 		}
 	}	
@@ -188,15 +173,60 @@ $('#search').on('click', function(){
 		getMarker(myP)
 
 		//crea un nuovo cerchio
-		distanceWidget = new DistanceWidget(map, myP)
+		var distanceWidget = new DistanceWidget(map, myP)
 		radiusWidgetCheck = true;
 	}
 	//Crea il cerchio se il marker è già presente
-	if (radiusWidgetCheck==false && marker){
-
-		distanceWidget = new DistanceWidget(map, myP);
+	if (radiusWidgetCheck===false && marker){
+		var distanceWidget = new DistanceWidget(map, myP);
 		radiusWidgetCheck = true;
 			
 	}
 })
+
+
+function checkRange(results){
+	
+	getMarker(results);
+
+	//prendo il valore dal form del range
+	range = $('#searchRange').val().split(" ")[0].replace(',','.');
+	//console.log(range);
+	if(range.length === 0) {
+		console.log(range)
+		console.log("porcodio")
+		if (jQuery.cookie('radius')){
+			range = jQuery.cookie('radius')
+		}	
+		else{
+			range = RADIUS;
+		}
+		//crea il cerchio
+		var distanceWidget = new DistanceWidget(map, results);
+		radiusWidgetCheck = true;		
+		
+		//setta il raggio del cerchio			
+		radiusWidget.set('distance', range);
+		radiusWidget.center_changed();
+		
+		$('#searchRange').val(range + " km ");					
+	}
+	else if(jQuery.isNumeric(range) && range > 0){
+
+		//crea il cerchio
+		var distanceWidget = new DistanceWidget(map, results);
+		radiusWidgetCheck = true;
+		
+		//setta il raggio del cerchio			
+		radiusWidget.set('distance', range);
+		radiusWidget.center_changed();
+	}
+	//se non è stato specificato alcun valore, prendo quello del cookie altrimenti quello di default
+	else if(range<=0){
+		console.log(range)
+		radiusWidgetCheck = false;
+		$('#searchRange').parent().addClass("error")
+		$('#searchRange').val("Insert a valid radius");
+	}
+}
 
