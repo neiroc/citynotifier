@@ -34,12 +34,16 @@ if(($segnalazione->{'type'} != Null)&&($segnalazione->{'lat'} != Null)&&($segnal
 $time = time();
 
 //connessione al db
-$con = connect_db();
+if(!($con = connect_db())){
+	echo "errore di connessione al db";
+}
 
-//controllo se esiste un evento simile
-$query = "SELECT id_event FROM evento WHERE type ='".$segnalazione->{'type'}."' AND subtype ='".$segnalazione->{'subtype'}."' AND (lat_med BETWEEN "
+//controllo se esiste l'evento
+$radius = 20;
+$query = "SELECT id_event FROM evento WHERE type ='".$segnalazione->{'type'}."' AND subtype ='".$segnalazione->{'subtype'}."' AND (lat_med BETWEEN ".
 
 
+$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
 
 
 
