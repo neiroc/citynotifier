@@ -55,8 +55,11 @@ $('#table').on('click', function(){
     });
 });
 
-function showOnMap(lat,lng,id,type){
-		
+function showOnMap(lat,lng,id,type,status,inizio,ultima){
+
+var data_inizio = timeConverter(inizio);
+var data_fine = timeConverter(ultima);
+
 	var myLatlng = new google.maps.LatLng(lat,lng);
 	// Place a marker on the map
 	var marker = new google.maps.Marker({
@@ -67,10 +70,13 @@ function showOnMap(lat,lng,id,type){
 		//animation: google.maps.Animation.BOUNCE
 	});
 	markersArray.push(marker);
-	var contentString = '<b>'+type+'</b>'+ '<br>'+id+'<br>'+'<p>Descrizione evento</p><br>Inizio Evento<br>Fine Evento<br> Open / Closed / Skeptical';
+	
+	//INFOWINDOW
+	var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br> <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+
 	var infowindow = new google.maps.InfoWindow({
     	content: contentString,
-		maxWidth: 200
+		  maxWidth: 200
 	});
 	google.maps.event.addListener(marker, 'click', function() {
 		infowindow.open(map,marker);
@@ -122,18 +128,19 @@ $("#searchbutton").click(function(e){
 		success: function(data){
 			//for each event add a Marker
 			$(data.events).each(function(i, src) {
-				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type);
+				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.status,src.start_time,src.freshness);
 				//carica eventi sulla tabella. problema sicronizzazione trasformazione coordinate in indirizzo
 				eventPosition = new google.maps.LatLng(src.locations[0].lat,src.locations[0].lng);
 				//var prova = geocodePosition(eventPosition);
-			
+				
 				//console.log(prova);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status);
 			});
-			
+			console.log(data);
 		} //chiudi function data
 	});//fine chiamata ajax
 	radius = radius / 1000;
+
 });
 
 
@@ -162,5 +169,18 @@ $(window).unload(function(){
 	jQuery.cookie('status', status, {expires:30});
 	jQuery.cookie('data', data, {expires:30});
 });
+
+function timeConverter(UNIX_timestamp){
+ var a = new Date(UNIX_timestamp*1000);
+ var months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Aug','Set','Ott','Nov','Dic'];
+     var year = a.getFullYear();
+     var month = months[a.getMonth()];
+     var date = a.getDate();
+     var hour = a.getHours();
+     var min = a.getMinutes();
+     var sec = a.getSeconds();
+     var time = date+' '+month+' '+year+' ora: '+hour+':'+min+':'+sec ;
+     return time;
+ }
 
 
