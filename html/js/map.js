@@ -44,11 +44,16 @@ $(document).ready(function(){
 
 $('.dropdown-toggle').dropdown()
 
-//rende visibile la tabella
+//INSERISCI DATI NELLA TABELLA
 $('#table').on('click', function(){
-	$('#myModal').modal({backdrop:false})
-})
 
+//MOSTRA TABELLA
+	$('#myModal').modal({
+		backdrop:false
+		}).on('show', function(){ 
+		//something
+    });
+});
 
 function showOnMap(lat,lng,id,type){
 		
@@ -70,6 +75,13 @@ function showOnMap(lat,lng,id,type){
 	google.maps.event.addListener(marker, 'click', function() {
 		infowindow.open(map,marker);
 	});
+}
+
+function showOnTable(event_id,subtype,type,freshness,status){
+
+			document.getElementById('tabella').innerHTML +="<td>"+event_id+"</td><td>"+subtype+"</td><td>"+type+"</td><td>"+1+"</td><td>"+freshness+"</td><td>"+status+"</td><td>"+7+"</td>";
+			
+			
 }
 
 $("#searchbutton").click(function(e){
@@ -111,6 +123,12 @@ $("#searchbutton").click(function(e){
 			//for each event add a Marker
 			$(data.events).each(function(i, src) {
 				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type);
+				//carica eventi sulla tabella. problema sicronizzazione trasformazione coordinate in indirizzo
+				eventPosition = new google.maps.LatLng(src.locations[0].lat,src.locations[0].lng);
+				//var prova = geocodePosition(eventPosition);
+			
+				//console.log(prova);
+				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status);
 			});
 			console.log(circle.getRadius());
 		} //chiudi function data
