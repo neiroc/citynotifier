@@ -1,7 +1,10 @@
+//GLOBAL VARIABLES
 var lastLatitude;
 var lastLongitude;
 var geocoder;
 var markersArray = [];
+//var infowindow = new google.maps.InfoWindow({});
+
 
 $(document).ready(function(){
 
@@ -40,7 +43,10 @@ $(document).ready(function(){
 		getMarker(myPosition);
 	});
 
-});
+//elimina marker quando si clicca sulla mappa o su un altro marker
+//google.maps.event.addListener(map, 'click', closeInfoWindow);
+
+});//END DOCUMENT READY!
 
 $('.dropdown-toggle').dropdown()
 
@@ -55,32 +61,62 @@ $('#table').on('click', function(){
     });
 });
 
+var closeInfoWindow = function() {
+  infowindow.close();}
+
+/*Crea un marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,status,inizio,ultima){
 
 var data_inizio = timeConverter(inizio);
 var data_fine = timeConverter(ultima);
 
-	var myLatlng = new google.maps.LatLng(lat,lng);
-	// Place a marker on the map
-	var marker = new google.maps.Marker({
-		position: myLatlng,
-		map: map,
-		draggable:false,
-		title:id
-		//animation: google.maps.Animation.BOUNCE
-	});
-	markersArray.push(marker);
+var myLatlng = new google.maps.LatLng(lat,lng);
+// Place a marker on the map
+var marker = new google.maps.Marker({
+	position: myLatlng,
+	map: map,
+	draggable:false,
+	title:id
+	//animation: google.maps.Animation.BOUNCE 
+});
+//push marker in array
+markersArray.push(marker);
 	
-	//INFOWINDOW
-	var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br> <button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+//CONNTENT INFOWINDOW
+if(status == 'closed'){
+	var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><a href="http://minchia.com"> NOTIFICA </a><br> <button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;" id="notifica"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+}else{
+var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+}
 
-	var infowindow = new google.maps.InfoWindow({
+
+
+	   	var infowindow = new google.maps.InfoWindow({
     	content: contentString,
 		  maxWidth: 200
 	});
+	//var infoWindow = infowindow;
+	
+	//Add an infowindow for each marker
 	google.maps.event.addListener(marker, 'click', function() {
 		infowindow.open(map,marker);
 	});
+  
+	//egg vs chicken the infowindow html must be in DOM
+	google.maps.event.addListener(infowindow, 'domready', function() {
+			$("#notifica").click(function(e){
+				
+				$.ajax({
+				url: url,
+				type: 'GET',
+				data: $(this).serialize(),
+				dataType:'json',
+				success: function(data){}
+				});//fine ajax
+			
+			});    
+	});
+
 }
 
 function showOnTable(event_id,subtype,type,freshness,status){
@@ -90,6 +126,10 @@ function showOnTable(event_id,subtype,type,freshness,status){
 			
 }
 
+
+/*
+* OnClick start request 
+*/
 $("#searchbutton").click(function(e){
 	clearOverlays();
 	//prendo tipo
