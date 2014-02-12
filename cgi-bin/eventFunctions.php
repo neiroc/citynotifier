@@ -1,8 +1,9 @@
 <?php
 
 require "db_aux.php";  
-
-//getRemoteEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
+require "utility.php";
+ 
+///getRemoteEvents(local,all,all,44.49895,11.341896,50000,1385856000,1389312000,all);
 //echo getLocalEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
 
 //VARIABILI GLOBALI
@@ -51,9 +52,13 @@ $list_events = array();
 	//Another query
 	$query2 = "SELECT * FROM Notifiche";
 	$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
+
+  //Aggiorna Stato Eventi
+	//prend timenow e last_time dell'evento e confronta con l'ultima segnalazione per ogni evento. chiudi se sono passati 20 minuti.
 	
 	//Set Time Zone
 	date_default_timezone_set("Europe/Rome");
+	$now = time();
 
 	//Get Data from DB and construct the json response 
 	while ($row = $result->fetch_assoc()) {
@@ -75,6 +80,11 @@ $list_events = array();
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
 
+			//Update Status. modificare paramtri?
+			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
+				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);
+			}
+	
 			//Array Events
 			 $list_events[] = array(
 						'event_id'=>'ltw1324_'.$event_id,
@@ -111,14 +121,15 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 global $new_events;
 global $l_events;
 
-$m_curl = curl_multi_init();
 $handles = array();
 $result = array();
 $res = array();
 
+$m_curl = curl_multi_init();
 
-$ris = file_get_contents('../data/server.json','r'); //prende il contenuto di json
-$array = json_decode($ris, true); //decodifica json in un array
+//List of servers
+$ris = file_get_contents('../data/server.json','r'); 
+$array = json_decode($ris, true); 
 
 
 	foreach($array['server'] as $url)
@@ -132,7 +143,7 @@ $array = json_decode($ris, true); //decodifica json in un array
 			  			CURLOPT_URL => $urls,
 			  			//CURLOPT_HEADER => FALSE,
 			  			CURLOPT_RETURNTRANSFER => TRUE,
-			 		 		//CURLOPT_TIMEOUT => 5,
+			 		 		CURLOPT_TIMEOUT => 5,
 							//CURLOPT_FAILONERROR => TRUE,
 							//CURLOPT_HTTPHEADER => array('Accept: application/json')
 			);	
@@ -156,20 +167,22 @@ $array = json_decode($ris, true); //decodifica json in un array
     		curl_multi_remove_handle($m_curl, $handles[$i]);
 		}
 			
+			//Take local events	
 			$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status),true);
-			//print_r($l_events);
+
 			foreach ($result as $r) {
 			$json = json_decode($r,true);
 					foreach($json['events'] as $event){
-					//passo ogni evento remoto e lo confronto con i dati locali. MODIFICARE PARAMETERS
+					//passo ogni evento remoto e lo confronto con i dati locali. MODIFICARE PARAMETER		
+					
 					compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
 					}
-
 			}
-
-			$l_events['events'] += $new_events;			
-			echo json_encode($l_events);
+			//Merge Local with Remote Events 
+			$l_events['events'] = array_merge($l_events['events'], $new_events); 
+			//print_r($l_events);
 			
+			echo json_encode($l_events);
 }
 
 
@@ -181,13 +194,37 @@ function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$
 global $l_events;
 global $new_events;
 $found = false;
-//print_r($l_events);
+
 	foreach($l_events['events'] as &$v)
 	{
-	$l_lat = $v['locations'][0]['lat'];
-	$l_lng = $v['locations'][0]['lng'];
-	$r_lat = $evento['locations'][0]['lat'];
-	$r_lng = $evento['locations'][0]['lng'];
+
+  //calcolo di longitudine e latitudine media per gli eventi
+	$sum  = 0;
+	$sum1 = 0;
+	$i    = 0;
+
+	foreach($v['locations'] as $value) {
+		$sum  += $value['lat'];
+		$sum1 += $value['lng'];
+		$i++;	
+	}
+
+	$l_lat = $sum/$i;
+	$l_lng = $sum1/$i;
+	
+	$sum  = 0;
+	$sum1 = 0;
+	$i    = 0;
+
+	foreach($evento['locations'] as $value) {
+		$sum  += $value['lat'];
+		$sum1 += $value['lng'];
+		$i++;
+	}
+
+	$r_lat = $sum/$i;
+	$r_lng = $sum1/$i;
+
   $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
 	
 		if(!$found){	
@@ -208,22 +245,10 @@ $found = false;
 			}
 		}
 	}//Se alla fine del ciclo l'evento remoto non corrisponde a nessuno locale lo aggiungo ad una nuova lista eventi
- if(!$found) $new_events[] = $evento;	
-}
 
-
-/*
-* Funzione restituisce distanza tra le coordinate di due punti
-*/
-function distance($lat1, $lon1, $lat2, $lon2) {
-
-	$theta = $lon1 - $lon2;
-	$dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-	$dist = acos($dist);
-	$dist = rad2deg($dist);
-	$dist = $dist * 60* 1.1515* 1.609344*1000;
-	return $dist;
+ if(!$found) $new_events[] = $evento;
 
 }
+
 
 ?>
