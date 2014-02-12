@@ -58,11 +58,11 @@
 					<form>
 						<fieldset>
 							<!--type form-->
+							 Tipo :
 							<div class="control-group open">
 								<select class="selectpicker" id="searchType" autocomplete="off">
-                                	<option disabled selected>Select Type</option>
-									<option value="all">All</option>
-                                	<option value="problemi_stradali">Problemi stradali</option>
+																		<option value="all">All</option>
+                                		<option value="problemi_stradali">Problemi stradali</option>
                                     <option value="emergenze_sanitarie">Emergenze sanitarie</option>
                                     <option value="reati">Reati</option>
                                     <option value="problemi_ambientali">Problemi ambientali</option>
@@ -70,9 +70,9 @@
 								</select>
 							</div>
 							<!--subtype form-->
+							Sottotipo :
 							<div class="control-group">
-                            	<select class="selectpicker" id="searchSubType" autocomplete="off">
-                            	    <option disabled selected>Select Subtype</option>
+                <select class="selectpicker" id="searchSubType" autocomplete="off">
 									<option value="all">All</option>
 									<option value="incidente">Incidente</option>
 									<option value="buca">Buca</option>
@@ -94,9 +94,9 @@
                             	</select>
                             </div>
 							<!--status menu-->
+							Stato : 
 							<div class="control-group">
 								<select class="selectpicker" id="searchStatus" autocomplete="off">
-									<option selected disabled>Select Status</option>
 									<option value="all">All</option>									
 									<option value="open">Open</option>
 									<option value="closed">Closed</option>
@@ -104,7 +104,8 @@
 								</select>
 							</div>
 							<!--address form-->
-							<div class="control-group">
+							Indirizzo : 
+							<div class="input-append control-group">
                             	<input type="text" id="searchAddress" placeholder="Address"
 										autocomplete="off">
 									<div class="btn-group btn-group-sm">
@@ -114,11 +115,13 @@
 									</div>
 								</input>
                            	</div>
-                           <!--date form-->
-							<input type="text" value="01-01-2014" class="datepicker" id="datepickerid"></input>
+              <!--date form-->
+							Data : <br>
+							<input type="text" value="01-12-2013" class="datepicker" id="datepickerid"></input>
 							<span class="glyphicon glyphicon-calendar"></span>
 							<!--range form-->
-							<div class="control-group">
+							Raggio :
+							<div class="input-append control-group">
                             	<input type="text" id="searchRange" placeholder="Range"
 										autocomplete="off">
 								</input>
@@ -229,18 +232,20 @@
 		    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 		    <h4 class="modal-title" id="myModalLabel">List of Events</h4>
 		  </div>
-		  <div class="modal-body">
-		  	<table class="table table-striped">
+		  <div class="modal-body"><!-- MODAL BODY -->
+		  	<table id="tabella" class="table table-striped">
 				<thead>
-					<tr>
-						<th>Type/Subtype</th>
-						<th>Date</th>
-						<th>Location</th>
-						<th>Reliability</th>
-						<th>Status</th>
-					</tr>
-				</thead>
-			</table>
+						<tr>
+							<th>ID</th>
+							<th>Sottotipo</th>
+							<th>Tipo</th>
+							<th>Luogo</th>
+							<th>Data/Freschezza</th>
+							<th>Stato</th>
+							<th>Descrizione</th>
+						</tr>
+					</thead>
+				</table>
 		  </div>
 		  <div class="modal-footer">
 		    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -3229,12 +3229,12 @@ input[type="button"].btn-block {
   display: none;
   float: left;
   min-width: 160px;
-  padding: 5px 0;
+  padding: 10px 5px 20px 10px;
   margin: 2px 0 0;
   font-size: 14px;
   list-style: none;
   background-color: #ffffff;
-  border: 1px solid #cccccc;
+  border: 2px solid #cccccc;
   border: 1px solid rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
@@ -5636,6 +5636,7 @@ body.modal-open,
 }
 
 .modal-content {
+	width: 900px;
   position: relative;
   background-color: #ffffff;
   border: 1px solid #999999;
