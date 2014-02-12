@@ -105,7 +105,7 @@ $("#searchbutton").click(function(e){
 	}
 	
 	//prendo raggio di ricerca
-	radius = radiusWidget.get('distance');
+	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtme. ATTENZIONE: settare fuso orario corretto
 	var unixdata = new Date(data).getTime() / 1000;	
 	var oggi = Math.round((new Date()).getTime() / 1000);
@@ -130,10 +130,10 @@ $("#searchbutton").click(function(e){
 				//console.log(prova);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status);
 			});
-			console.log(circle.getRadius());
+			
 		} //chiudi function data
 	});//fine chiamata ajax
-	
+	radius = radius / 1000;
 });
 
 
