@@ -6,7 +6,7 @@ body {
 	height:600px;
 	width: 100%;
 	padding: 15px 15px;
-  	text-align: center;
+  text-align: center;
 	background: black;
 }
 
@@ -53,4 +53,12 @@ select option[disabled] {
 	border-top-color:#FF0000;
 	border-left-color:#FF0000;
 	border-right-color:#FF0000;
+}
+
+#info{
+text-align: left;
+}
+#info h1{
+font-size:14px;
+margin-top:5px;
 }

@@ -31,7 +31,7 @@ $(document).ready(function(){
 		
 		//salva le coordinate della mia nuova posizione
 		lastLatitude = event.latLng.lat();
-    	lastLongitude = event.latLng.lng();
+    lastLongitude = event.latLng.lng();
 				
 		myPosition = new google.maps.LatLng(lastLatitude, lastLongitude);
 		
@@ -65,7 +65,7 @@ var closeInfoWindow = function() {
   infowindow.close();}
 
 /*Crea un marker sulla mappa per ogni evento ricevuto dalla richiesta */
-function showOnMap(lat,lng,id,type,status,inizio,ultima){
+function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
 
 var data_inizio = timeConverter(inizio);
 var data_fine = timeConverter(ultima);
@@ -84,9 +84,9 @@ markersArray.push(marker);
 	
 //CONNTENT INFOWINDOW
 if(status == 'closed'){
-	var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><a href="http://minchia.com"> NOTIFICA </a><br> <button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;" id="notifica"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><textarea id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;" id="notifica"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
 }else{
-var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+var contentString = '<div id="info"> <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
 }
 
 
@@ -102,18 +102,18 @@ var contentString = '<div id="info" <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span
 		infowindow.open(map,marker);
 	});
   
-	//egg vs chicken the infowindow html must be in DOM
+	//egg vs chicken the infowindow html must be in DOM. PROBLEMA SE CI SONO PIU INFOWINDOWs APERTI PARTONO PIÙ RICHIESTE!!!
 	google.maps.event.addListener(infowindow, 'domready', function() {
 			$("#notifica").click(function(e){
-				
+				/*
 				$.ajax({
 				url: url,
 				type: 'GET',
 				data: $(this).serialize(),
 				dataType:'json',
 				success: function(data){}
-				});//fine ajax
-			
+				});//fine ajax*/
+			console.log("beellaa");
 			});    
 	});
 
@@ -141,9 +141,9 @@ $("#searchbutton").click(function(e){
 	//prendo data (devo convertirla in unixtime
 	data = $('#datepickerid').val();
 	//prendo le coordinate.ATTENZIONE: assumono valori solo dopo aver cliccato sulla mappa. vedere geolocal.
-	if(lastLatitude == undefined){ 
-		var lat = latitude;
-		var lng = longitude;
+	if(jQuery.cookie('lastLatitude')){ 
+		var lat = jQuery.cookie('lastLatitude');
+		var lng = jQuery.cookie('lastLongitude');
 	}
 	else{ 
 		var lat = lastLatitude;
@@ -168,7 +168,7 @@ $("#searchbutton").click(function(e){
 		success: function(data){
 			//for each event add a Marker
 			$(data.events).each(function(i, src) {
-				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.status,src.start_time,src.freshness);
+				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				//carica eventi sulla tabella. problema sicronizzazione trasformazione coordinate in indirizzo
 				eventPosition = new google.maps.LatLng(src.locations[0].lat,src.locations[0].lng);
 				//var prova = geocodePosition(eventPosition);
