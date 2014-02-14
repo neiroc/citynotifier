@@ -31,11 +31,18 @@ function showPosition (pos){
 	getMarker(myPosition)
 		
 	//inserisce il cerchio con centro in myPosition
-	var distanceWidget = new DistanceWidget(map, myPosition)
+	distanceWidget = new DistanceWidget(map, myPosition)
 	radiusWidgetCheck = true;
-	radiusWidget.set('distance', RADIUS);
+	if (radius){
+		range=radius;
+		radiusWidget.set('distance', range);
+	}
+	else {
+		range=RADIUS
+		radiusWidget.set('distance', range);
+	}
 	radiusWidget.center_changed();
-	$('#searchRange').val(RADIUS + " km ");
+	$('#searchRange').val(range + " km ");
 
 }
 
@@ -73,9 +80,10 @@ function getMarker(myPosition){
 		position: myPosition
 	});
 	
+	//se muovo il marker
 	google.maps.event.addListener(marker,'dragend', dragMark)
 }
-
+//aggiorna la posizione
 function dragMark(event){
 	
 	//salva le coordinate della mia nuova posizione
@@ -83,6 +91,9 @@ function dragMark(event){
     lastLongitude = event.latLng.lng();
 
     var markerPosition = new google.maps.LatLng(lastLatitude, lastLongitude)
+
+	map.panTo(markerPosition);
+
 	// aggiorno l'indirizzo
     geocodePosition(markerPosition);
 }
@@ -94,7 +105,7 @@ function alternLoc(){
 	
 	getMarker(newMarkPos);
 	//range=jQuery.cookie('radius', radius, {expires:30});
-	var distanceWidget = new DistanceWidget(map, newMarkPos);
+	distanceWidget = new DistanceWidget(map, newMarkPos);
 	radiusWidgetCheck = true
 	
 	map.setCenter(newMarkPos);	
@@ -110,10 +121,10 @@ function centerLoc() {
 		var newMarkPos = cityCenter;
 		
 		getMarker(newMarkPos);
-		var distanceWidget = new DistanceWidget(map, newMarkPos);
+		distanceWidget = new DistanceWidget(map, newMarkPos);
 		radiusWidgetCheck = true;
 	
-		radiusWidget.set('distance', RADIUS);
+		radiusWidget.set('distance', 2000);
 		radiusWidget.center_changed();
 		
 		map.setCenter(cityCenter);

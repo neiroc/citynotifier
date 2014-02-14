@@ -31,7 +31,7 @@ $(document).ready(function(){
 		
 		//salva le coordinate della mia nuova posizione
 		lastLatitude = event.latLng.lat();
-    lastLongitude = event.latLng.lng();
+    	lastLongitude = event.latLng.lng();
 				
 		myPosition = new google.maps.LatLng(lastLatitude, lastLongitude);
 		
@@ -195,14 +195,11 @@ function clearOverlays() {
 //in caso di chiusura browser senza logout, salva i cookie per il prossimo accesso
 $(window).unload(function(){
 
-	if (lastLatitude){
-		jQuery.cookie('lastLatitude', lastLatitude, {expires:30});	
-		jQuery.cookie('lastLongitude', lastLongitude, {expires:30});
-	}
-	else{
-		jQuery.cookie('latitude', latitude, {expires:30});	
-		jQuery.cookie('longitude', longitude, {expires:30});		
-	}
+
+	jQuery.cookie('lastLatitude', lastLatitude, {expires:30});	
+	jQuery.cookie('lastLongitude', lastLongitude, {expires:30});
+	jQuery.cookie('latitude', latitude, {expires:30});	
+	jQuery.cookie('longitude', longitude, {expires:30});		
 	jQuery.cookie('radius', radius, {expires:30});
 	jQuery.cookie('type', type, {expires:30});	
 	jQuery.cookie('subtype', subtype, {expires:30});

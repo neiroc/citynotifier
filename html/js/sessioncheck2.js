@@ -9,6 +9,5 @@ $('document').ready(function(){
 		radius=jQuery.cookie('radius');
 		cookiestatus=jQuery.cookie('status');
 		cookiedata=jQuery.cookie('data');
-		location.href="mappa.html"
 	}
 });

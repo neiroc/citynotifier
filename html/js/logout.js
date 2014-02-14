@@ -16,14 +16,11 @@ $('#logout').on('click', function(){
 		
 		success:function(json){	
 			if(json.result==="logout effettuato con successo"){	
-				if (jQuery.cookie('latitude')){
-					jQuery.removeCookie('latitude');
-					jQuery.removeCookie('longitude');
-				}
-				else {
-					jQuery.removeCookie('lastLatitude');
-					jQuery.removeCookie('lastLongitude');
-				}
+				
+				jQuery.removeCookie('latitude');
+				jQuery.removeCookie('longitude');
+				jQuery.removeCookie('lastLatitude');
+				jQuery.removeCookie('lastLongitude');
 				jQuery.removeCookie('radius');
 				jQuery.removeCookie('type');	
 				jQuery.removeCookie('subtype');

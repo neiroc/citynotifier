@@ -42,9 +42,7 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-			<a class="navbar-brand" href="#">City Notifier</a>
-            <li id="bar_username" class="active"><a href="#">Home</a></li>
-            <li><a href="#mappa">Map</a></li>
+			<a class="navbar-brand" href="#">City Notifier</a>    
             <li><a id="table" href="#myModal" role="button" data-toggle="modal">
 					Table
 				</a>
@@ -61,8 +59,8 @@
 							 Tipo :
 							<div class="control-group open">
 								<select class="selectpicker" id="searchType" autocomplete="off">
-																		<option value="all">All</option>
-                                		<option value="problemi_stradali">Problemi stradali</option>
+									<option value="all">All</option>
+                                	<option value="problemi_stradali">Problemi stradali</option>
                                     <option value="emergenze_sanitarie">Emergenze sanitarie</option>
                                     <option value="reati">Reati</option>
                                     <option value="problemi_ambientali">Problemi ambientali</option>
@@ -72,7 +70,7 @@
 							<!--subtype form-->
 							Sottotipo :
 							<div class="control-group">
-                <select class="selectpicker" id="searchSubType" autocomplete="off">
+                					<select class="selectpicker" id="searchSubType" autocomplete="off">
 									<option value="all">All</option>
 									<option value="incidente">Incidente</option>
 									<option value="buca">Buca</option>
@@ -115,7 +113,7 @@
 									</div>
 								</input>
                            	</div>
-              <!--date form-->
+              				<!--date form-->
 							Data : <br>
 							<input type="text" value="01-12-2013" class="datepicker" id="datepickerid"></input>
 							<span class="glyphicon glyphicon-calendar"></span>
@@ -127,7 +125,8 @@
 								</input>
                            	</div>
 							<!--search button-->
-							<div class="btn-group">
+							<br>
+							<div class="btn-group menusearch">
   								<button type="button" class="btn btn-inverse"
 									id="searchbutton">					
 								Cerca
@@ -146,6 +145,8 @@
 				<ul class="dropdown-menu">
 					<form>
 						<fieldset>
+							<!--type form-->
+							Tipo :
 							<div class="control-group">
 								<select class="selectpicker" id="notifyType" autocomplete="off">
                                 	<option disabled selected>Select type</option>
@@ -156,6 +157,8 @@
                                     <option value="eventi_pubblici">Eventi pubblici</option>
 								</select>
 							</div>
+							<!--subtype form-->
+							Sottotipo :<br>
 							<div class="control-group">
                             	<select class="selectpicker" id="notifySubType" autocomplete="off">
                             	    <option disabled selected>Select subtype</option>
@@ -179,23 +182,23 @@
                             	</select>
                             </div>
 							<!--address form-->
+							Indirizzo :<br>
 							<div class="input-append control-group">
                             	<input type="text" id="notifyAddress" placeholder="Address"
 										autocomplete="off">
-									<div class="btn-group btn-group-xs">
-										<button type="button" id="insertLoc">
-											<span class="glyphicon glyphicon-map-marker"></span>
-										</button>
-									</div>
 								</input>
                            	</div>
+							<!--description form-->
+							Descrizione :<br>
 							<div class="input-append control-group">
                             	<input type="text" id="notifyDescription" placeholder="Description"
 										autocomplete="off">
 								</input>
                            	</div>
-							<div class="btn-group">
-  								<button type="button" class="btn btn-inverse pull-right"
+							<!--notify button-->
+							<br>
+							<div class="btn-group menunotify">
+  								<button type="button" class="btn btn-inverse"
 									id="notifybutton">					
 								Notify
 								</button>
@@ -205,6 +208,13 @@
 						           
           		</ul>
 			</li>
+			<li>
+				<div class="btn-toolbar">
+					<button type="button" id="insertLoc" class="btn btn-default btn-sm">
+						<span class="glyphicon glyphicon-map-marker"></span>
+					</button>
+				</div>
+			<li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>
@@ -263,8 +273,9 @@
   <!-- Placed at the end of the document so the pages load faster -->
 	<script src="js/jquery-2.0.3.js"></script>
 	<script src="js/jquery.cookie.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/bootstrap-datepicker.js"></script>
+  	<script src="js/bootstrap.min.js"></script>
+  	<script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/sessioncheck2.js"></script>
 	<script type="text/javascript"
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAzoBwjcMDm7YmdVppL9e3V3aXyY1rYieI&sensor=true&libraries=visualization,places,geometry">
   </script>

@@ -35,7 +35,7 @@ function DistanceWidget(map, position) {
     this.bindTo('distance', radiusWidget);
     this.bindTo('bounds', radiusWidget);
 
-	// Update searchRadius on sizer dragging
+	// Update searchRange on sizer dragging
 	google.maps.event.addListener(this, 'distance_changed', function() {
 		// Get new distance
 		if(radiusWidget.get('distance') != 0)
