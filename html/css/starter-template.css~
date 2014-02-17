@@ -25,8 +25,6 @@ footer{
 	height:5%;
 	width: 100%;
 	background: #D2322D;
-	text-align: center;
-	padding: 5px 5px;
 }
 
 #logout {

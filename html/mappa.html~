@@ -235,7 +235,7 @@
       <div id="gmap"> </div>
       </div>
       
-      <footer>_FOOTER_</footer>
+      <footer>footer</footer>
 
 	<!-- Modal -->
 	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
