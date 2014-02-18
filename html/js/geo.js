@@ -50,15 +50,25 @@ function showPosition (pos){
 function errorGettingPosition(err) {
 
 	if(err.code == 1) {
-		centerLoc();
+		console.log(lastLatitude)
+		if(lastLatitude && lastLongitude)
+			alternLoc()
+		else
+			centerLoc();
 		alert("L'utente non ha autorizzato la geolocalizzazione");
 	}
 	else if(err.code == 2) {
-		centerLoc();
+		if(lastLatitude && lastLongitude)
+			alternLoc()
+		else
+			centerLoc();
 		alert("Posizione non disponibile");
 	}
 	else if(err.code == 3) {
-		centerLoc();
+		if(lastLatitude && lastLongitude)
+			alternLoc()
+		else
+			centerLoc();
 		alert("Timeout");
 	}
 	else {
@@ -101,10 +111,10 @@ function dragMark(event){
 function alternLoc(){
 	
 	//prende coordinate dai cookie
-	var newMarkPos = new google.maps.LatLng(jQuery.cookie('lastLatitude'), jQuery.cookie('lastLongitude'));
+	var newMarkPos = new google.maps.LatLng(lastLatitude, lastLongitude);
 	
 	getMarker(newMarkPos);
-	//range=jQuery.cookie('radius', radius, {expires:30});
+	
 	distanceWidget = new DistanceWidget(map, newMarkPos);
 	radiusWidgetCheck = true
 	
@@ -112,11 +122,11 @@ function alternLoc(){
 	geocodePosition(newMarkPos);
 	
 	//radiusWidget.set('distance', range);
-	$('#searchRange').val(jQuery.cookie('radius') + " km ")
+	$('#searchRange').val(radius + " km ")
 }
 	
 function centerLoc() {
-		
+		console.log("centerLoc")
 		//prende posizione default
 		var newMarkPos = cityCenter;
 		
@@ -124,7 +134,7 @@ function centerLoc() {
 		distanceWidget = new DistanceWidget(map, newMarkPos);
 		radiusWidgetCheck = true;
 	
-		radiusWidget.set('distance', 2000);
+		radiusWidget.set('distance', RADIUS);
 		radiusWidget.center_changed();
 		
 		map.setCenter(cityCenter);

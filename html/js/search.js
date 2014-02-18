@@ -152,7 +152,7 @@ $("#search").next().on('keypress', '#searchRange', function(e) {
 			radius = klm;
     	    radiusWidget.set('distance', klm);
     	    radiusWidget.center_changed();
-    	    $('#searchRange').parent().removeClass("error");
+			$('#searchRange').val(klm +" km")
     	}
     	else if(!(jQuery.isNumeric(klm)) || klm <= 0){
     		//raggio errato
@@ -195,8 +195,8 @@ function checkRange(results){
 	if(range.length === 0) {
 		console.log(range)
 		console.log("porcodio")
-		if (jQuery.cookie('radius')){
-			range = jQuery.cookie('radius')
+		if (radius){
+			range = radius
 		}	
 		else{
 			range = RADIUS;
@@ -223,7 +223,7 @@ function checkRange(results){
 	}
 	//se non è stato specificato alcun valore, prendo quello del cookie altrimenti quello di default
 	else if(range<=0){
-		console.log(range)
+		
 		radiusWidgetCheck = false;
 		$('#searchRange').parent().addClass("error")
 		$('#searchRange').val("Insert a valid radius");

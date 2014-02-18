@@ -1,6 +1,6 @@
 //GLOBAL VARIABLES
-var lastLatitude;
-var lastLongitude;
+//var lastLatitude;
+//var lastLongitude;
 var geocoder;
 var markersArray = [];
 //var infowindow = new google.maps.InfoWindow({});
@@ -17,7 +17,7 @@ $(document).ready(function(){
 	map = new google.maps.Map(document.getElementById("gmap"), mapOptions);
 	
 	//se esistono i cookie
-	if (jQuery.cookie('lastLatitude') && jQuery.cookie('lastLongitude')){
+	if (lastLatitude && lastLongitude){
 
 		//mi rimetti nell'ultima posizione disponibile
 		alternLoc();
