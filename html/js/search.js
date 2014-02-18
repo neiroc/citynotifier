@@ -180,9 +180,8 @@ $('#search').on('click', function(){
 	if (radiusWidgetCheck===false && marker){
 		distanceWidget = new DistanceWidget(map, myP);
 		radiusWidgetCheck = true;
-			
 	}
-})
+});
 
 
 function checkRange(results){

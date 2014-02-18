@@ -2,6 +2,7 @@ var marker;
 var circle;
 var latitude;
 var longitude;
+var radius;
 
 
 //Funzione di geolocalizzazione
@@ -33,14 +34,12 @@ function showPosition (pos){
 	//inserisce il cerchio con centro in myPosition
 	distanceWidget = new DistanceWidget(map, myPosition)
 	radiusWidgetCheck = true;
-	if (radius){
+	if (radius)
 		range=radius;
-		radiusWidget.set('distance', range);
-	}
-	else {
+	else 
 		range=RADIUS
-		radiusWidget.set('distance', range);
-	}
+	
+	radiusWidget.set('distance', range);
 	radiusWidget.center_changed();
 	$('#searchRange').val(range + " km ");
 
