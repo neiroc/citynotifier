@@ -61,8 +61,8 @@ function RadiusWidget(distance) {
 	});
   	
 	// Set the distance property value
-	if (jQuery.cookie('radius') && distanceDefault == RADIUS){
-		var radiusSplitted = jQuery.cookie('radius').split(" ");
+	if (JQuery.cookie('radius') && distanceDefault == RADIUS){
+		var radiusSplitted = JQuery.cookie('radius').split(" ");
 		this.set('distance', radiusSplitted[0].replace(',','.'));
 		distanceDefault = radiusSplitted[0].replace(',','.');
 	}

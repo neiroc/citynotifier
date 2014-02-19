@@ -86,7 +86,3 @@ select option[disabled] {
 	width: 60%
 }
 
-.modal-content {
-	width: 130%;
-	margin-left:-15%
-}

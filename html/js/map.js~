@@ -119,9 +119,8 @@ var contentString = '<div id="info"> <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <spa
 }
 
 function showOnTable(event_id,subtype,type,freshness,status){
-freshness = timeConverter(freshness);	
-	
-document.getElementById('tabella').innerHTML +="<td>"+event_id+"</td><td>"+subtype+"</td><td>"+type+"</td><td>"+1+"</td><td>"+freshness+"</td><td>"+status+"</td><td><button class=\"btn btn-primary\">Mostra</button></td>";
+
+			document.getElementById('tabella').innerHTML +="<td>"+event_id+"</td><td>"+subtype+"</td><td>"+type+"</td><td>"+1+"</td><td>"+freshness+"</td><td>"+status+"</td><td>"+7+"</td>";
 			
 			
 }
