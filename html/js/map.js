@@ -118,12 +118,15 @@ var contentString = '<div id="info"> <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <spa
 
 }
 
-function showOnTable(event_id,subtype,type,freshness,status){
+
+/*
+* Show Events on Table
+*/
+function showOnTable(event_id,subtype,type,freshness,status,descr){
 freshness = timeConverter(freshness);	
 	
-document.getElementById('tabella').innerHTML +="<td>"+event_id+"</td><td>"+subtype+"</td><td>"+type+"</td><td>"+1+"</td><td>"+freshness+"</td><td>"+status+"</td><td><button class=\"btn btn-primary\">Mostra</button></td>";
-			
-			
+document.getElementById('tabella').innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td>"+1+"</td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
+
 }
 
 
@@ -160,15 +163,14 @@ $("#searchbutton").click(function(e){
 		data: $(this).serialize(),
 		dataType:'json',
 		success: function(data){
-			//for each event add a Marker
+			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
 				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				//carica eventi sulla tabella. problema sicronizzazione trasformazione coordinate in indirizzo
 				eventPosition = new google.maps.LatLng(src.locations[0].lat,src.locations[0].lng);
 				//var prova = geocodePosition(eventPosition);
-				
 				//console.log(prova);
-				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status);
+				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description);
 			});
 			console.log(data);
 		} //chiudi function data
@@ -212,7 +214,7 @@ function timeConverter(UNIX_timestamp){
      var hour = a.getHours();
      var min = a.getMinutes();
      var sec = a.getSeconds();
-     var time = date+' '+month+' '+year+' ora: '+hour+':'+min+':'+sec ;
+     var time = date+' '+month+' '+year+'<br> ore: '+hour+':'+min+':'+sec ;
      return time;
  }
 
