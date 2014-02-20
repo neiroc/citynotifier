@@ -3,6 +3,8 @@ var lastLatitude;
 var lastLongitude;
 var geocoder;
 var markersArray = [];
+var id_count;
+var tabella;
 //var infowindow = new google.maps.InfoWindow({});
 
 
@@ -122,10 +124,10 @@ var contentString = '<div id="info"> <b>'+type+'</b>'+'<br>'+id+'<br>Stato: <spa
 /*
 * Show Events on Table
 */
-function showOnTable(event_id,subtype,type,freshness,status,descr){
-freshness = timeConverter(freshness);	
+function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
+freshness = timeConverter(freshness);
 	
-document.getElementById('tabella').innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td>"+1+"</td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
+tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
 
 }
 
@@ -143,6 +145,11 @@ $("#searchbutton").click(function(e){
 	status = $('#searchStatus').val();
 	//prendo data (devo convertirla in unixtime
 	data = $('#datepickerid').val();
+	
+	id_count=0;
+	tabella = $("#tabella");
+	tabella.html("<thead><tr><th>ID</th><th>Tipo/Sottotipo</th><th>Luogo</th><th>Data/Freschezza</th><th>Stato</th><th>Descrizione</th></tr></thead>");
+	
 	
 	//prendo le coordinate.ATTENZIONE: assumono valori solo dopo aver cliccato sulla mappa. vedere geolocal.	
 	var lat = lastLatitude;
@@ -170,9 +177,13 @@ $("#searchbutton").click(function(e){
 				eventPosition = new google.maps.LatLng(src.locations[0].lat,src.locations[0].lng);
 				//var prova = geocodePosition(eventPosition);
 				//console.log(prova);
-				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description);
+				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
+				console.log(id_count);
+		      id_count++;
 			});
 			console.log(data);
+			setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+		
 		} //chiudi function data
 	});//fine chiamata ajax
 	radius = radius / 1000;
