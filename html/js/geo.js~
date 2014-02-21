@@ -13,7 +13,7 @@ function geoLocal(){
     	navigator.geolocation.getCurrentPosition(showPosition, errorGettingPosition);
     }
 	else {
-		errorAlert("Your browser don't support geolocation");
+		alert("Your browser don't support geolocation");
 	}
 }
 
@@ -41,6 +41,8 @@ function showPosition (pos){
 	
 	radiusWidget.set('distance', range);
 	radiusWidget.center_changed();
+	$('#searchRange').val(range + " km ");
+
 }
 
 //Gestione errori
@@ -52,24 +54,24 @@ function errorGettingPosition(err) {
 			alternLoc()
 		else
 			centerLoc();
-		errorAlert("L'utente non ha autorizzato la geolocalizzazione");
+		alert("L'utente non ha autorizzato la geolocalizzazione");
 	}
 	else if(err.code == 2) {
 		if(lastLatitude && lastLongitude)
 			alternLoc()
 		else
 			centerLoc();
-		arrorAlert("Posizione non disponibile");
+		alert("Posizione non disponibile");
 	}
 	else if(err.code == 3) {
 		if(lastLatitude && lastLongitude)
 			alternLoc()
 		else
 			centerLoc();
-		errorAlert("Timeout");
+		alert("Timeout");
 	}
 	else {
-		errorAlert("ERRORE:" + err.message);
+		alert("ERRORE:" + err.message);
 	}	
 }
 
@@ -86,7 +88,7 @@ function getMarker(myPosition){
 		animation: google.maps.Animation.DROP,
 		position: myPosition
 	});
-	map.panTo(myPosition);
+	
 	//se muovo il marker
 	google.maps.event.addListener(marker,'dragend', dragMark)
 }
@@ -118,8 +120,8 @@ function alternLoc(){
 	map.setCenter(newMarkPos);	
 	geocodePosition(newMarkPos);
 	
-	radiusWidget.set('distance', radius);
-	//$('#searchRange').val(radius + " km ")
+	//radiusWidget.set('distance', range);
+	$('#searchRange').val(radius + " km ")
 }
 	
 function centerLoc() {
@@ -162,8 +164,7 @@ function geocodePosition(position){
 		    }, 200);
         }
 		else {
-			//errorAlert('Geocoder failed due to: ' + status)
-			console.log('Geocoder failed due to: ' + status);
+		  console.log('Geocoder failed due to: ' + status);
 		}
 	});
 }
@@ -208,7 +209,7 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 			}		
 		}
 		 console.log(res);
-		$("#tableEventAddress" + (actual + table_count)).html(res);
+		$("#tableEventAddress" + (actual + table_count)).html(res);//
 		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
 	});
 }

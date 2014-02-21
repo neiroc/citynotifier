@@ -250,8 +250,7 @@
 				<thead>
 						<tr>
 							<th>ID</th>
-							<th>Sottotipo</th>
-							<th>Tipo</th>
+							<th>Tipo/Sottotipo</th>
 							<th>Luogo</th>
 							<th>Data/Freschezza</th>
 							<th>Stato</th>
