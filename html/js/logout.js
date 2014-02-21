@@ -1,5 +1,5 @@
 $('#logout').on('click', function(){
-
+	
 	var url = "logout/";
 	$.ajax({
 		type: "POST",
@@ -14,12 +14,14 @@ $('#logout').on('click', function(){
 		
 		dataType: 'json',
 		
-		success:function(json){	
+		success:function(json){
+			
 			if(json.result==="logout effettuato con successo"){	
 				
 				jQuery.removeCookie('latitude');
 				jQuery.removeCookie('longitude');
-				jQuery.removeCookie('lastLatitude');
+				jQuery.removeCookie('lastLatitude')
+				jQuery.removeCookie('session_user');
 				jQuery.removeCookie('lastLongitude');
 				jQuery.removeCookie('radius');
 				jQuery.removeCookie('type');	
@@ -28,15 +30,16 @@ $('#logout').on('click', function(){
 				jQuery.removeCookie('data');
 				jQuery.removeCookie('username');
 				location.href="index.html";
+				
 			}
 			else 
-				alert(json.result); 		
+				errorAlert(json.result); 		
 		},
 		error: function(e){
+
 			console.log(e.message);
 		},
 	});
-		
-		//return false; // avoid to execute the actual submit of the form.
+	//return false; // avoid to execute the actual submit of the form.
 });					
 

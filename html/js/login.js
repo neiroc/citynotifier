@@ -19,13 +19,16 @@ $(document).ready(function() {
 			data: JSON.stringify(loginj), // json with user and pass
 			dataType: 'json',
 			success:function(call){	
-				if(call.result==="login effettuato con successo"){	
+				if(call.result==="login effettuato con successo"){
+					
+					session_user = "session"+$('#username').val();
+					jQuery.cookie('session_user', session_user, {expires:30});
 					jQuery.cookie('username', $('#username').val(), {expires:30});
-					console.log("daje")
 					location.href="mappa.html";
+					
 				}
 				else {
-					alert(call.result);
+					errorAlert(call.result);
 				} 		
 			},
 			error: function(e){

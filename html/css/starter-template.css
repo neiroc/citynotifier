@@ -56,8 +56,8 @@ select option[disabled] {
 }
 
 #insertLoc {
-	margin-top:30%;
-	margin-left:60%;
+	margin-top:18%;
+	margin-right:20px;
 }
 
 .control-group.error input{	

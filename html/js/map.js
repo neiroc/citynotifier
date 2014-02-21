@@ -7,7 +7,7 @@ var markersArray = [];
 
 
 $(document).ready(function(){
-
+	
 	geocoder = new google.maps.Geocoder();
 	var mapOptions = {
 	 	center: cityCenter,
@@ -191,15 +191,17 @@ function clearOverlays() {
 //in caso di chiusura browser senza logout, salva i cookie per il prossimo accesso
 $(window).unload(function(){
 
-	jQuery.cookie('lastLatitude', lastLatitude, {expires:30});	
-	jQuery.cookie('lastLongitude', lastLongitude, {expires:30});
-	jQuery.cookie('latitude', latitude, {expires:30});	
-	jQuery.cookie('longitude', longitude, {expires:30});		
-	jQuery.cookie('radius', radius, {expires:30});
-	jQuery.cookie('type', type, {expires:30});	
-	jQuery.cookie('subtype', subtype, {expires:30});
-	jQuery.cookie('status', status, {expires:30});
-	jQuery.cookie('data', data, {expires:30});
+	if (jQuery.cookie('session_user')){
+		jQuery.cookie('lastLatitude', lastLatitude, {expires:30});	
+		jQuery.cookie('lastLongitude', lastLongitude, {expires:30});
+		jQuery.cookie('latitude', latitude, {expires:30});	
+		jQuery.cookie('longitude', longitude, {expires:30});		
+		jQuery.cookie('radius', radius, {expires:30});
+		jQuery.cookie('type', type, {expires:30});	
+		jQuery.cookie('subtype', subtype, {expires:30});
+		jQuery.cookie('status', status, {expires:30});
+		jQuery.cookie('data', data, {expires:30});
+	}
 });
 
 /*

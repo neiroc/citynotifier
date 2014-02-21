@@ -13,7 +13,7 @@ function geoLocal(){
     	navigator.geolocation.getCurrentPosition(showPosition, errorGettingPosition);
     }
 	else {
-		alert("Your browser don't support geolocation");
+		errorAlert("Your browser don't support geolocation");
 	}
 }
 
@@ -41,8 +41,6 @@ function showPosition (pos){
 	
 	radiusWidget.set('distance', range);
 	radiusWidget.center_changed();
-	$('#searchRange').val(range + " km ");
-
 }
 
 //Gestione errori
@@ -54,24 +52,24 @@ function errorGettingPosition(err) {
 			alternLoc()
 		else
 			centerLoc();
-		alert("L'utente non ha autorizzato la geolocalizzazione");
+		errorAlert("L'utente non ha autorizzato la geolocalizzazione");
 	}
 	else if(err.code == 2) {
 		if(lastLatitude && lastLongitude)
 			alternLoc()
 		else
 			centerLoc();
-		alert("Posizione non disponibile");
+		arrorAlert("Posizione non disponibile");
 	}
 	else if(err.code == 3) {
 		if(lastLatitude && lastLongitude)
 			alternLoc()
 		else
 			centerLoc();
-		alert("Timeout");
+		errorAlert("Timeout");
 	}
 	else {
-		alert("ERRORE:" + err.message);
+		errorAlert("ERRORE:" + err.message);
 	}	
 }
 
@@ -88,7 +86,7 @@ function getMarker(myPosition){
 		animation: google.maps.Animation.DROP,
 		position: myPosition
 	});
-	
+	map.panTo(myPosition);
 	//se muovo il marker
 	google.maps.event.addListener(marker,'dragend', dragMark)
 }
@@ -120,8 +118,8 @@ function alternLoc(){
 	map.setCenter(newMarkPos);	
 	geocodePosition(newMarkPos);
 	
-	//radiusWidget.set('distance', range);
-	$('#searchRange').val(radius + " km ")
+	radiusWidget.set('distance', radius);
+	//$('#searchRange').val(radius + " km ")
 }
 	
 function centerLoc() {
@@ -164,7 +162,8 @@ function geocodePosition(position){
 		    }, 200);
         }
 		else {
-		  console.log('Geocoder failed due to: ' + status);
+			//errorAlert('Geocoder failed due to: ' + status)
+			console.log('Geocoder failed due to: ' + status);
 		}
 	});
 }

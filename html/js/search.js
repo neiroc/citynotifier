@@ -73,7 +73,7 @@ function codeAddress() {
 			console.log(status)
 			$('#searchAddress').parent().addClass("error")
 			$('#searchAddress').val("Insert a valid address");
-			alert('Cannot find address');
+			errorAlert('Cannot find address');
 		}
 	});
 }
