@@ -32,45 +32,59 @@ $('#searchAddress').on('focus', function(){
 	$(this).parent().removeClass("error")
 })
 
+$('#searchCity').val(cityDefault);
+
+//salva in subtype il valore selezionato
+$('#searchSubType').on('change', function(){
+	subtype=$(this).val();
+})
+
+$('#searchStatus').on('change', function(){
+	status=$(this).val();
+})
 //nasconde i subType non correlati ai Type
 $('#searchType').on('change', function(){
-
+	type=$(this).val();
+	subtype='all'
 	//reimposta il subType di default se viene cambiato il type
 	$('#searchSubType option:nth-child(1)').attr('selected', true);
 
 	switch ($(this).val()) {
 		case 'problemi_stradali':
-			disableOpt(1);	
+			disableOpt(type);	
 			break;
 		case 'emergenze_sanitarie':
-			disableOpt(2);
+			disableOpt(type);
 			break;
 		case 'reati':
-			disableOpt(3);
+			disableOpt(type);
 			break;
 		case 'problemi_ambientali':
-			disableOpt(4);
+			disableOpt(type);
 			break;
 		case 'eventi_pubblici':
-			disableOpt(5);
+			disableOpt(type);
 			break;
 	}
 });
 
 //funzione ricerca indirizzo
 function codeAddress() {
-	var address = $('#searchAddress').val();
+	var address = $('#searchAddress').val()+", "+ $('#searchCity').val();
 
 	geocoder.geocode( { 'address': address}, function(results, status) {
 	  	if (status == google.maps.GeocoderStatus.OK) {
-			console.log(status)
-			checkRange(results[0].geometry.location);
+	  		
+			if (results[0].geometry.location.lat() != cityCenter.lat() && results[0].geometry.location.lng() != cityCenter.lng()){
+
+				checkRange(results[0].geometry.location);
 						
-			//scrive nel menu notify l'indirizzo cercato nel menu search (serve?)
-			$('#notifyAddress').val($('#searchAddress').val());
+				//scrive nel menu notify l'indirizzo cercato nel menu search (serve?)
+				$('#notifyAddress').val(address);
+			}
+			else errorAlert("Indirizzo non valido")
 		}
 		else {
-			console.log(status)
 			$('#searchAddress').parent().addClass("error")
 			$('#searchAddress').val("Insert a valid address");
 			errorAlert('Cannot find address');
@@ -81,7 +95,7 @@ function codeAddress() {
 //funzione che disabilita le opzioni
 function disableOpt(nType){
 	switch(nType){
-	case 1:
+	case 'problemi_stradali':
 		for (var i=7; i<=18; i++){
 			$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
 		}
@@ -90,7 +104,7 @@ function disableOpt(nType){
 			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
 		}
 	break;
-	case 2:
+	case 'emergenze_sanitarie':
 		for (var i=2; i<=18; i++){
 			if (i!=7 && i!=8 && i!=9){
 				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
@@ -101,7 +115,7 @@ function disableOpt(nType){
 			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
 		}
 	break;
-	case 3:
+	case 'reati':
 		for (var i=2; i<=18; i++){
 			if (i!=10 && i!=11){
 				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
@@ -112,7 +126,7 @@ function disableOpt(nType){
 			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
 		}
 	break;
-	case 4:
+	case 'problemi_ambientali':
 		for (var i=2; i<=18; i++){
 			if (i!=12 && i!=13 && i!=14 && i!=15){
 				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
@@ -123,7 +137,7 @@ function disableOpt(nType){
 			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
 		}
 	break;
-	case 5:
+	case 'eventi_pubblici':
 		for (var i=2; i<=18; i++){
 			if (i!=16 && i!=17 && i!=18){
 				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
@@ -136,8 +150,6 @@ function disableOpt(nType){
 	break;
 	}	
 }
-
-
 /**
  * Radius changing listener on enter pressed
  */

@@ -228,3 +228,11 @@ function timeConverter(UNIX_timestamp){
  }
 
 
+/*$("#searchType, #searchSubType, #searchStatus, #notifyType, #notifySubType").each(function(){
+	if($(this).val("")){
+		//console.log("porcoddio")
+		$(this).val('all')
+		//console.log($(this).val())
+		type='all';
+	}
+});*/
