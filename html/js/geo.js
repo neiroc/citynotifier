@@ -186,11 +186,10 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 	geocoder.geocode({'latLng': LatLng}, function(results, status) {
     		if (status == google.maps.GeocoderStatus.OK) {		
 			if (results[0]) {
-				res = results[0].formatted_address;
-				/*
+		
 				res = results[0].address_components[1].long_name + " n." +
-				      results[0].address_components[0].long_name + ", " +
-				      results[0].address_components[2].long_name;*/
+				      results[0].address_components[0].long_name + ",<br> " +
+				      results[0].address_components[2].long_name;
 			}
 			else res = "Indirizzo non trovato.";
 		}
