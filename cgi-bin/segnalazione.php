@@ -53,7 +53,7 @@ if(($segnalazione->{'lat'} != Null) && ($segnalazione->{'lng'} != Null)){
 				//skeptical
 			}
 			else{
-				//aggiungere contatore?
+				
 				$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES (".$id_utente.", ".$id_evento.", ".$lat.", ".$lng.", ".$time.", 'open', '".$description."');";
 				mysqli_query($con,$insert);
 
