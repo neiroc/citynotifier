@@ -17,9 +17,9 @@ $('#logout').on('click', function(){
 		
 		dataType: 'json',
 		
-		success:function(json){
+		success:function(call){
 			
-			if(json.result==="logout effettuato con successo"){	
+			if(call.result==="logout effettuato con successo"){	
 
 				jQuery.removeCookie('latitude');
 				jQuery.removeCookie('longitude');
@@ -34,14 +34,14 @@ $('#logout').on('click', function(){
 				jQuery.removeCookie('username');
 				jQuery.removeCookie('id_utente');
 				location.href="index.html";
-				
+				successAlert(call.result);
 			}
 			else 
-				errorAlert(json.result); 		
+				errorAlert(call.result); 		
 		},
 		error: function(e){
 
-			console.log(e.message);
+			errorAlert("errore di connessione al server");
 		},
 	});
 	//return false; // avoid to execute the actual submit of the form.

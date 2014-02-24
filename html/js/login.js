@@ -26,7 +26,7 @@ $(document).ready(function() {
 					jQuery.cookie('username', $('#username').val(), {expires:30});
 
 					jQuery.cookie('id_utente', call.id_utente, {expires:30});
-					//console.log("daje")
+					
 
 					location.href="mappa.html";
 					
@@ -36,7 +36,7 @@ $(document).ready(function() {
 				} 		
 			},
 			error: function(e){
-				console.log(e.message);
+				errorAlert("errore di connessione al server");
 			},
 		});
 		return false; // avoid to execute the actual submit of the form.

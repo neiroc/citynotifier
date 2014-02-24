@@ -16,6 +16,13 @@ if(($login->{'username'} != Null)&&($login->{'password'} != Null)){
 	
 //connessione con il db
 $con=connect_db();
+
+if($con == False) {
+	$result['result'] = "Credenziali Errate";//risposta negativa
+	header('Content-Type: application/json');
+	$re = json_encode($result);
+	echo $re;
+}
 	
 //interrogo il db e controllo se i dati di accesso corrispondono		
 $query="SELECT id_utente,username,user_pass FROM Utenti where username='".$username."' AND user_pass='".$password."';";

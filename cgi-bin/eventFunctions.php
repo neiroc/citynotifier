@@ -15,7 +15,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 $list_events = array();
 
 // CONNECT TO THE DATABASE -- nascondere questi parametri
-$DB_NAME = 'techweb';
+/*$DB_NAME = 'techweb';
 $DB_HOST = 'localhost';
 $DB_USER = 'root';
 $DB_PASS = 'pass';
@@ -26,7 +26,14 @@ $mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
 			printf("Connect failed: %s\n", mysqli_connect_error());
 			exit();
 			}
+*/
 
+$mysqli = connectdb();
+
+if($mysqli == False){
+	printf("Connect failed: %s\n", mysqli_connect_error());
+			exit();
+}
 
 $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
 

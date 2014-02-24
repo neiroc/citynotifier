@@ -28,20 +28,26 @@ if(($segnalazione->{'type'} != Null)&&($segnalazione->{'lat'} != Null)&&($segnal
 	else{
 		$description = Null;
 	}
-	$id_utente = segnalazione->{'id_utente'};
+	$id_utente = $segnalazione->{'id_utente'};
 	
 	//definisco il tempo della segnalazione
 	$time = time();
 
 	//connessione al db
-	if(!($con = connect_db())){
+	$con = connect_db();
+	if($con == False){
 		$result['result'] = "errore di connessione al db server";
 	}
 	else{
 		//definisco il radius in base al tipo di evento
-		//############################## DA FINIRE
-		if($type == )
+		//############################################################################ DA FINIRE
+		/*switch ($type){
 
+			case ""
+
+
+		}*/
+		$radius = 20;
 
 		//controllo se esiste l'evento
 
@@ -51,20 +57,20 @@ if(($segnalazione->{'type'} != Null)&&($segnalazione->{'lat'} != Null)&&($segnal
 
 			if($row = mysqli_fetch_array($rispostadb)){
 
-				$id_evento = row['id_event'];
+				$id_evento = $row['id_event'];
 
-				if((row['status']=='closed')&&(row['last_time'] < $time)){//#########################################SKEPTICAL
+				if(($row['status']=='closed')&&($row['last_time'] < $time)){//#########################################SKEPTICAL
 					//skeptical
 				}
 				else{
 					//aggiungere contatore?
-					$insert = "INSERT INTO notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $id_evento, $lat, $lng, $time, 'open', $description);"
+					$insert = "INSERT INTO notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $id_evento, $lat, $lng, $time, 'open', $description);";
 					mysqli_query($con,$insert);
 
-					$lat = ($lat + row['lat_med'])/2;
-					$lng = ($lat + row['lng_med'])/2;
+					$lat = ($lat + $row['lat_med'])/2;
+					$lng = ($lat + $row['lng_med'])/2;
 
-					$update_query = "UPDATE evento SET lat_med = $lat, lng_med = $lng, last_time = $time  WHERE id_event = $id_evento;"
+					$update_query = "UPDATE evento SET lat_med = $lat, lng_med = $lng, last_time = $time  WHERE id_event = $id_evento;";
 					mysqli_query($con,$update_query);
 
 					//risposta positiva
@@ -86,7 +92,7 @@ if(($segnalazione->{'type'} != Null)&&($segnalazione->{'lat'} != Null)&&($segnal
 				
 				$new_id = mysqli_insert_id($con);
 				//inserisco notifica
-				$insert = "INSERT INTO notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $new_id, $lat, $lng, $time, 'open', $description);"
+				$insert = "INSERT INTO notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $new_id, $lat, $lng, $time, 'open', $description);";
 				mysqli_query($con,$insert);
 
 				//risultato positivo

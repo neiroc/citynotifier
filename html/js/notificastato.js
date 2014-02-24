@@ -40,15 +40,15 @@ $(document).ready(function() {
 
 				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
 
-					alert(call.result);//da finire
+					successAlert(call.result);//da finire
 				}
 				else {
 				
-					alert(call.result);
+					errorAlert(call.result);
 				} 		
 			},
 			error: function(e){
-				console.log(e.message);
+				errorAlert("errore di connessione al server");
 			},
 		});
 		return false; // avoid to execute the actual submit of the form.

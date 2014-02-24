@@ -39,7 +39,7 @@ if(($notifica->{'id_evento'} != Null)&&($notifica->{'id_utente'} != Null)&&($not
 
 			if($row = mysqli_fetch_array($rispostadb)){
 
-				if((row['status']=='closed')&&($status == 'open')&&(row['last_time'] < $time)){//###################################SKEPTICAL
+				if(($row['status']=='closed')&&($status == 'open')&&($row['last_time'] < $time)){//###################################SKEPTICAL
 					//skeptical
 				}
 				else{
@@ -48,8 +48,8 @@ if(($notifica->{'id_evento'} != Null)&&($notifica->{'id_utente'} != Null)&&($not
 					$insert = "INSERT INTO notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $id_evento, $lat, $lng, $time, $status, $description);"
 					mysqli_query($con,$insert);
 
-					$lat = ($lat + row['lat_med'])/2;
-					$lng = ($lat + row['lng_med'])/2;
+					$lat = ($lat + $row['lat_med'])/2;
+					$lng = ($lat + $row['lng_med'])/2;
 
 					$update_query = "UPDATE evento SET lat_med = $lat, lng_med = $lng, last_time = $time  WHERE id_event = $id_evento;"
 					mysqli_query($con,$update_query);
