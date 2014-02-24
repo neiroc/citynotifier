@@ -1,6 +1,8 @@
 $(document).ready(function() {
 	$('#notifybutton').on('click', function() {
 
+		console.log($('#notifyDescription').val());
+		console.log($('#notifySubType').val() );
 
 		var segnalazionej = {
 
@@ -10,18 +12,18 @@ $(document).ready(function() {
 				subtype : $('#notifySubType').val() 
 			},
 
-			lat : $('#lat').val(),
+			lat : jQuery.cookie('lastLatitude'), //$('#lat').val(),
 
-			lng : $('#lng').val(),
+			lng : jQuery.cookie('lastLongitude'), //$('#lng').val(),
 
-			description : $('#description').val(),
+			description : $('#notifyDescription').val(),
 
 			id_utente : jQuery.cookie('id_utente')
 		}
 
 		var host = "http://"+document.location.hostname ;
 
-		var url = host+"/segnalazione/" 
+		var url = host+"/segnalazione/"; 
 
 		$.ajax({
 
@@ -38,7 +40,8 @@ $(document).ready(function() {
 			dataType: 'json',
 
 			success:function(call){	
-
+				//call = JSON.parse(call);
+				//console.log(call.result);
 				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
 
 					successAlert(call.result);

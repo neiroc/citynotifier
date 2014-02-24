@@ -18,7 +18,7 @@ if(($login->{'username'} != Null)&&($login->{'password'} != Null)){
 $con=connect_db();
 
 if($con == False) {
-	$result['result'] = "Credenziali Errate";//risposta negativa
+	$result['result'] = "Errore di connessione al db server";//risposta negativa
 	header('Content-Type: application/json');
 	$re = json_encode($result);
 	echo $re;
@@ -46,7 +46,7 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 else{
             
 	$result['result'] = "Credenziali Errate";//risposta negativa
-	header('Content-Type: application/json');
+	header('Content-Type: application/json; charset=utf-8');
 	$re = json_encode($result);
 	echo $re;
 

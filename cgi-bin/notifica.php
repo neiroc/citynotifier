@@ -33,7 +33,7 @@ if(($notifica->{'id_evento'} != Null)&&($notifica->{'id_utente'} != Null)&&($not
 	else{
 		//recupero info riguardo l'evento
 
-		$query = "SELECT evento.* FROM evento WHERE id_utente = '".$id_utente."';";
+		$query = "SELECT Evento.* FROM Evento WHERE id_utente = '".$id_utente."';";
 
 		if( $rispostadb = mysqli_query($con,$query)){
 
@@ -45,13 +45,13 @@ if(($notifica->{'id_evento'} != Null)&&($notifica->{'id_utente'} != Null)&&($not
 				else{
 					//aggiungo notifica
 					//aggiungere contatore?
-					$insert = "INSERT INTO notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $id_evento, $lat, $lng, $time, $status, $description);"
+					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ($id_utente, $id_evento, $lat, $lng, $time, $status, $description);"
 					mysqli_query($con,$insert);
 
 					$lat = ($lat + $row['lat_med'])/2;
 					$lng = ($lat + $row['lng_med'])/2;
 
-					$update_query = "UPDATE evento SET lat_med = $lat, lng_med = $lng, last_time = $time  WHERE id_event = $id_evento;"
+					$update_query = "UPDATE Evento SET lat_med = $lat, lng_med = $lng, last_time = $time  WHERE id_event = $id_evento;"
 					mysqli_query($con,$update_query);
 
 					//risposta positiva
@@ -80,7 +80,7 @@ else{
 
 //risposta al client
 $re = json_encode($result);
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 echo $re;
 
 ?>
