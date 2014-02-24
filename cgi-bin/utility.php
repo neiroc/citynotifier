@@ -5,12 +5,11 @@
 function updateStatus($now,$freshness,$event_id,$mysqli){
 			
 				$diff = $now - $freshness;
-				if($diff < 1200) break;
-		  		else{
+				if($diff > 1200) {
 						$updateStatusQuery = "UPDATE Evento SET status=\"closed\" WHERE id_event=".$event_id;
 						$updateResult = $mysqli->query($updateStatusQuery);
 						return "closed";
-					}
+				}
 }
 
 

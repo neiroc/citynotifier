@@ -12,9 +12,9 @@ $(document).ready(function() {
 				subtype : $('#notifySubType').val() 
 			},
 
-			lat : jQuery.cookie('lastLatitude'), //$('#lat').val(),
+			lat : jQuery.cookie('latitude'), //$('#lat').val(),
 
-			lng : jQuery.cookie('lastLongitude'), //$('#lng').val(),
+			lng : jQuery.cookie('longitude'), //$('#lng').val(),
 
 			description : $('#notifyDescription').val(),
 

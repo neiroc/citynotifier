@@ -30,9 +30,53 @@ if(($segnalazione->{'lat'} != Null) && ($segnalazione->{'lng'} != Null)){
 	else{
 		//definisco il radius in base al tipo di evento
 		//############################################################################ DA FINIRE
-		/*switch ($type){
+		/*switch ($subtype){
 
-			case ""
+			case "coda" : {
+				$radius =  ;
+				break;
+			}
+			case "lavori_in_corso" : {
+				$radius =  ;
+				break;
+			}
+			case "strada_impraticabile" : {
+				$radius =  ;
+				break;
+			}
+			case "incendio" : {
+				$radius =  ;
+				break;
+			}
+			case "tornado" : {
+				$radius =  ;
+				break;
+			}
+			case "neve" : {
+				$radius =  ;
+				break;
+			}
+			case "alluvione" : {
+				$radius =  ;
+				break;
+			}
+			case "partita" : {
+				$radius =  ;
+				break;
+			}
+			case "manifestazione" : {
+				$radius =  ;
+				break;
+			}
+			case "concerto" : {
+				$radius =  ;
+				break;
+			}
+
+			default:{
+				$radius =  ;
+			}
+
 
 
 		}*/
