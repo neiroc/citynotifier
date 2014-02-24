@@ -1,6 +1,7 @@
 $('#logout').on('click', function(){
-
-	var url = "logout/";
+	
+	var host = "http://"+document.location.hostname ;
+	var url = host+"/logout/";
 	$.ajax({
 		type: "POST",
 		
@@ -16,7 +17,7 @@ $('#logout').on('click', function(){
 		
 		success:function(json){	
 			if(json.result==="logout effettuato con successo"){	
-			//console.log("sfinteriiii");
+			
 				jQuery.removeCookie('latitude');
 				jQuery.removeCookie('longitude');
 				jQuery.removeCookie('centerLatitude');

@@ -39,6 +39,7 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 else{
             
 	$result['result'] = "Credenziali Errate";//risposta negativa
+	header('Content-Type: application/json');
 	$re = json_encode($result);
 	echo $re;
 
