@@ -1,10 +1,12 @@
 $(document).ready(function() {
-	$("#notificastato").submit(function() {//da cambiare
+	$('#notifystatusbutton').on('click', function() {//da cambiare
 
 
 		var notificaj = {
 
 			event_id : $('#event_id').val(),
+
+			status : $('#status').val,
 
 			lat : $('#lat').val(),
 
@@ -12,7 +14,7 @@ $(document).ready(function() {
 
 			description : $('#notifyDescription').val(),
 
-			username : jQuery.cookie('username')
+			username : jQuery.cookie('id_utente')
 		
 		}
 

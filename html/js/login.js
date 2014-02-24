@@ -24,6 +24,10 @@ $(document).ready(function() {
 					session_user = "session"+$('#username').val();
 					jQuery.cookie('session_user', session_user, {expires:30});
 					jQuery.cookie('username', $('#username').val(), {expires:30});
+
+					jQuery.cookie('id_utente', call.id_utente, {expires:30});
+					//console.log("daje")
+
 					location.href="mappa.html";
 					
 				}

@@ -1,6 +1,9 @@
 $('#logout').on('click', function(){
 	
-	var url = "logout/";
+
+	var host = "http://"+document.location.hostname ;
+	var url = host+"/logout/";
+
 	$.ajax({
 		type: "POST",
 		
@@ -17,7 +20,7 @@ $('#logout').on('click', function(){
 		success:function(json){
 			
 			if(json.result==="logout effettuato con successo"){	
-				
+
 				jQuery.removeCookie('latitude');
 				jQuery.removeCookie('longitude');
 				jQuery.removeCookie('lastLatitude')
@@ -29,6 +32,7 @@ $('#logout').on('click', function(){
 				jQuery.removeCookie('status');
 				jQuery.removeCookie('data');
 				jQuery.removeCookie('username');
+				jQuery.removeCookie('id_utente');
 				location.href="index.html";
 				
 			}
