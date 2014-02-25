@@ -1,66 +1,71 @@
 $(document).ready(function() {
 	$('#notifybutton').on('click', function() {
-
-		var segnalazionej = {
-
-			type : {
-
-				type : $('#notifyType').val(),
-				subtype : $('#notifySubType').val() 
-			},
-
-			lat : lastLatitude,
-
-			lng : lastLongitude,
-
-			description : $('#notifyDescription').val(),
-
-			id_utente : jQuery.cookie('id_utente')
-
+		if(($('#notifyType').val()=="none") ||($('#notifySubType').val() == "none") ){
+			errorAlert("type e subtype non sono stati inseriti correttamente");
 		}
+		else{
 
-		var host = "http://"+document.location.hostname ;
+			var segnalazionej = {
 
-		var url = host+"/segnalazione/"; 
+				type : {
 
-		$.ajax({
+					type : $('#notifyType').val(),
+					subtype : $('#notifySubType').val() 
+				},
 
-			url: url, //url a cui fare la chiamata
+				lat : lastLatitude,
 
-			async: true, //chiamata asincrona
+				lng : lastLongitude,
 
-			type: "POST",// metodo della chiamata
-			
-			contentType: "application/json; charset=utf-8",
+				description : $('#notifyDescription').val(),
 
-			data: JSON.stringify(segnalazionej), 
+				id_utente : jQuery.cookie('id_utente')
 
-			dataType: 'json',
+			}
 
-			success:function(call){	
+			var host = "http://"+document.location.hostname ;
+
+			var url = host+"/segnalazione/"; 
+
+			$.ajax({
+
+				url: url, //url a cui fare la chiamata
+
+				async: true, //chiamata asincrona
+
+				type: "POST",// metodo della chiamata
 				
-				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
-					if(call.skept){
+				contentType: "application/json; charset=utf-8",
 
-						successAlert(call.result+" "+call.skept);
-					
-					}
-					else{
-					
-					successAlert(call.result);
-					
-					}
-				}
-				else {
-				
-					errorAlert(call.result+": "+call.errore);
+				data: JSON.stringify(segnalazionej), 
 
-				} 		
-			},
-			error: function(e){
-				errorAlert("errore di risposta dal server");
-			},
-		});
+				dataType: 'json',
+
+				success:function(call){	
+					
+					if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
+						if(call.skept){
+
+							successAlert(call.result+" "+call.skept);
+						
+						}
+						else{
+						
+						successAlert(call.result);
+						
+						}
+					}
+					else {
+					
+						errorAlert(call.result+": "+call.errore);
+
+					} 		
+				},
+				error: function(e){
+					errorAlert("errore di risposta dal server");
+				},
+			});
+	}
 		return false; // avoid to execute the actual submit of the form.
 	});				
 });

@@ -106,6 +106,7 @@ if($notifica->{'id_utente'} != Null){
 
 					$result['result'] = "Errore nell'invio della notifica";
 					$result['errore'] = "errore di connessione con il db server";
+				}
 
 			}
 		}			
@@ -116,6 +117,7 @@ if($notifica->{'id_utente'} != Null){
 		$result['errore']= "dati notifica incompleti";
 	}
 }
+
 else{
 
 	$result['result'] = "errore nell'invio della notifica";
