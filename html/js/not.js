@@ -22,7 +22,7 @@ function successAlert(msg){
 }
 
 function handleMsg(msgObj){
-	$.noty.consumeAlert({layout: 'bottomLeft', type: msgObj.type, dismissQueue: true, timeout: 2000});
+	$.noty.consumeAlert({layout: 'bottomLeft', type: msgObj.type, dismissQueue: true, timeout: 5000});
 	alert(msgObj.msg);
 	$.noty.stopConsumeAlert();
 }

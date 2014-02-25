@@ -16,13 +16,14 @@ $('document').ready(function(){
 		console.log(type)
 		if(!type)
 			type='all';
+
 		if(!subtype){
 			subtype='all';
 			status='all'
 		}
 		//setta i valori dei menu (notify)
-		$('#notifyType').val(type);
-		$('#notifySubType').val(subtype);
+		$('#notifyType').val('none');
+		$('#notifySubType').val('none');
 		disableOption(type);
 		
 		//setta i valori dei menu (search)

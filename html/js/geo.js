@@ -47,7 +47,7 @@ function showPosition (pos){
 function errorGettingPosition(err) {
 
 	if(err.code == 1) {
-		console.log(lastLatitude)
+		//console.log(lastLatitude)
 		if(lastLatitude && lastLongitude)
 			alternLoc()
 		else
@@ -123,7 +123,7 @@ function alternLoc(){
 }
 	
 function centerLoc() {
-		console.log("centerLoc")
+		//console.log("centerLoc")
 		//prende posizione default
 		var newMarkPos = cityCenter;
 		
@@ -203,10 +203,10 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 				var ih = $("#tableEventAddress" + (actual + table_count)).html();
 				if (ih == "<img src=\"img/ajax-loader.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
 				else res = ih;*/
-				console.log("errore");
+				//console.log("errore");
 			}		
 		}
-		 console.log(res);
+		 //console.log(res);
 		$("#tableEventAddress" + (actual + table_count)).html(res);
 		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
 	});
