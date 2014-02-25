@@ -4,7 +4,7 @@ function connect_db(){
 
 	//$url=$SERVER;
 
-    $con=mysqli_connect("localhost","maboh","maboh123","techweb");
+    $con=mysqli_connect("localhost","cacaturo","cacaturo123","techweb");
 
     // Check connection
     if (mysqli_connect_errno())
@@ -84,16 +84,18 @@ function set_skeptikal($id_utente, $id_evento, $time){
 		$query= "SELECT id_event FROM skept WHERE (id_event=$id_evento);";
 
 		$check= mysql_query($con, $query);
-		$row = mysqli_fetch_array($check)
+		$row = mysqli_fetch_array($check);
 
-		if(!$row['id_event']){
+		if(($row['id_event'])!= Null){
 
 			$insert= "INSERT INTO skept(id_event, id_utente, time) VALUES ($id_utente, $id_evento, $time);";
 			
 			$risp= mysqli_query($con, $insert);
+
 			if($row = mysqli_fetch_array($risp)){
 				
 				return True;
+			}
 		}
 	}
 	return False;
@@ -101,7 +103,7 @@ function set_skeptikal($id_utente, $id_evento, $time){
 
 function increase_reputation($id_utente){
 
-	f($con = connect_db()){
+	if($con = connect_db()){
 
 		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=$id_utente;";
 		$risp= mysql_query($con, $query);
@@ -117,13 +119,14 @@ function increase_reputation($id_utente){
 			else{
 				$update="UPDATE Utenti SET reputation= $reputation WHERE id_utente=$id_utente;";
 			}
-
+		}
+	}
 }
 
 
 function decrease_reputation($id_utente){
 
-	f($con = connect_db()){
+	if($con = connect_db()){
 
 		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=$id_utente;";
 		$risp= mysql_query($con, $query);
@@ -132,13 +135,15 @@ function decrease_reputation($id_utente){
 
 			$reputation=$row['reputation']-0.1;
 
-			if($reputation<(-1.0){
+			if($reputation<(-1.0)){
 
 				$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=$id_utente;";
 			}
 			else{
 				$update="UPDATE Utenti SET reputation= $reputation WHERE id_utente=$id_utente;";
 			}
+		}
+	}
 
 }
 /*
@@ -167,17 +172,25 @@ function risolvi_skeptikal($id_evento){
 
 				for($i=0; $i<$j-1; $i++){
 
-					if($row['status_notif']=="open"){
+					if($row['status_notif'][i]=="open"){
 						$open++;
 					}
 					else{
 						$closed++;
 					}
 				}
+
 				if($open>$closed){
 					$update="UPDATE Eventi SET status= 'open', last_time= $time WHERE id_event=$id_evento;";
 
+					for($i=0; $i<$j-1; $i++){
 
+						if($row['status_notif'][i]=="open"){
+													}
+						else{
+							$closed++;
+						}
+					}
 
 				}
 				elseif($open==$closed){
@@ -187,13 +200,9 @@ function risolvi_skeptikal($id_evento){
 				else{
 
 				}
-
 			}
-
-
 		}	
 	}
-	
 }
 */
 
