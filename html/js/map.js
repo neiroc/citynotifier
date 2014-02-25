@@ -80,8 +80,7 @@ var marker = new google.maps.Marker({
 	position: myLatlng,
 	map: map,
 	draggable:false,
-	title:id,
-	prova:1000
+	title:id
 	//animation: google.maps.Animation.BOUNCE 
 });
 //push marker in array
@@ -91,7 +90,7 @@ markersArray.push(marker);
 google.maps.event.addListener(marker, 'click', function() {
 	//CONTENT INFOWINDOW
 if(status == 'closed'){
-	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><textarea id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><textarea id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
 }else{
 	var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
 }
@@ -120,28 +119,30 @@ tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><
 
 //QUI! per ogni Evento la funzione notify farà una chiamata ajax per modificare lo stato di un evento
 //puoi deciderez
-function notify(id){
+function notify(id,status,lat,lng,descr){
 
 var notificaj = {
 			
 			evento_id : id,
 
-			status : $('#status').val,
+			status : status,
 
-			lat : $('#lat').val(),
+			lat : lat,
 
-			lng : $('#lng').val(),
+			lng : lng,
 
-			description : $('#notifyDescription').val(),
+			description : $('#descr').val(),
 
 			username : jQuery.cookie('id_utente')
 		
 }
-console.log(notificaj.evento_id);
-/*
+console.log(notificaj.username);
+console.log(jQuery.cookie('id_utente'));
+
+
 		var host = "http://"+document.location.hostname ;
 
-		var url = host+"/notifica/" 
+		var url = host+"/techweb/html/notifica/" 
 
 		$.ajax({
 
