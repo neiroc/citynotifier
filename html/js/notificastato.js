@@ -40,7 +40,16 @@ $(document).ready(function() {
 
 				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
 
-					successAlert(call.result);//da finire
+					if(call.skept){
+
+						successAlert(call.result+" "+call.skept);
+					
+					}
+					else{
+					
+					successAlert(call.result);
+					
+					}
 				}
 				else {
 				
