@@ -44,11 +44,11 @@ $(document).ready(function() {
 				}
 				else {
 				
-					errorAlert(call.result);
+					errorAlert(call.result+": "+call.errore);
 				} 		
 			},
 			error: function(e){
-				errorAlert("errore di connessione al server");
+				errorAlert("errore di risposta dal server");
 			},
 		});
 		return false; // avoid to execute the actual submit of the form.
