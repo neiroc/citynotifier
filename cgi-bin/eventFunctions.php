@@ -14,20 +14,6 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 {
 $list_events = array();
 
-// CONNECT TO THE DATABASE -- nascondere questi parametri
-$DB_NAME = 'techweb';
-$DB_HOST = 'localhost';
-$DB_USER = 'cacaturo';
-$DB_PASS = 'cacaturo123';
-
-/*$mysqli = new mysqli($DB_HOST, $DB_USER, $DB_PASS, $DB_NAME);
-
-			if (mysqli_connect_errno()) {
-			printf("Connect failed: %s\n", mysqli_connect_error());
-			exit();
-			}*/
-
-
 $mysqli = connect_db();
 
 if($mysqli == False){
