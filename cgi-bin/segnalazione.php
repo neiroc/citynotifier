@@ -81,9 +81,6 @@ if($segnalazione->{'id_utente'}!=Null){
 				default:{
 					$radius = 20 ;
 				}
-
-
-
 			}
 		
 
@@ -96,19 +93,33 @@ if($segnalazione->{'id_utente'}!=Null){
 			if($row = mysqli_fetch_array($rispostadb)){
 
 				$id_evento = $row['id_event'];
-				if(($row['status']=='closed')&&($row['last_time'] < $time)){//#########################################SKEPTICAL
-					//skeptical
+				
+				//inserisco notifica
+					
+				$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES (".$id_utente.", ".$id_evento.", ".$lat.", ".$lng.", ".$time.", 'open', '".$description."');";
+				mysqli_query($con,$insert);
+
+				$lat = ($lat + $row['lat_med'])/2;
+				$lng = ($lat + $row['lng_med'])/2;
+				$notifications = $row['notifications']+1;
+				
+				$reliability = update_reliability($id_utente, $id_evento, $notifications);
+				
+				if(($row['status']=='closed')&&($row['last_time'] < $time)&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
+					
+					$skept=set_skeptikal($id_evento, $id_utente, $time);
+
+					$update_query = "UPDATE Evento SET status='skeptical', event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
+					mysqli_query($con,$update_query);
+
+					//risposta positiva
+					$result['event_id'] =  $id_evento;
+					$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
+					$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento; 
+
 				}
 				else{
-					//inserisco notifica
-					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES (".$id_utente.", ".$id_evento.", ".$lat.", ".$lng.", ".$time.", 'open', '".$description."');";
-					mysqli_query($con,$insert);
-
-					$lat = ($lat + $row['lat_med'])/2;
-					$lng = ($lat + $row['lng_med'])/2;
-					$notifications = $row['notifications']+1;
 					
-					$reliability = update_reliability($id_utente, $id_evento, $notifications);
 
 					$update_query = "UPDATE Evento SET event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
 					mysqli_query($con,$update_query);
