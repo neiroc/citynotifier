@@ -4,11 +4,12 @@ require 'db_aux.php';
 
 $data = file_get_contents("php://input");
 
-$notifica=json_decode($data);
 
-if($notifica->{'id_utente'} != Null){
 
-	if(($notifica->{'id_evento'} != Null)&&($notifica->{'status'} != Null)&&($notifica->{'lat'} != Null)&&($notifica->{'lng'} != Null)){
+$id_utente = $notifica->{'id_utente'};
+if($id_utente != Null){
+
+	if(($notifica->{'id_evento'} != Null) && ($notifica->{'status'} != Null) && ($notifica->{'lat'} != Null) && ($notifica->{'lng'} != Null)){
 
 		$id_evento = $notifica->{'id_evento'};
 		$id_utente = $notifica->{'id_utente'};

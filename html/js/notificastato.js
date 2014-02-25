@@ -38,7 +38,7 @@ $(document).ready(function() {
 
 			success:function(call){	
 
-				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
+				if(call.result==="notifica inviata con successo"){	
 
 					if(call.skept){
 

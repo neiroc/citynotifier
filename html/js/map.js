@@ -28,7 +28,7 @@ $(document).ready(function(){
 	}
 	else{
 		//funzione di geolocalizzazione
-		//geoLocal();
+		geoLocal();
 	}
 	//riceve l'evento se mi sposto sulla mappa
 	google.maps.event.addListener(map, 'click', function(event) {
@@ -121,28 +121,28 @@ tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><
 //puoi deciderez
 function notify(id,status,lat,lng,descr){
 
-var notificaj = {
+	var notificaj = {
+				
+				id_evento : id,
+
+				status : status,
+
+				lat : lat,
+
+				lng : lng,
+
+				description : $('#descr').val(),
+
+				id_utente : jQuery.cookie('id_utente')
 			
-			evento_id : id,
+	}
 
-			status : status,
-
-			lat : lat,
-
-			lng : lng,
-
-			description : $('#descr').val(),
-
-			username : jQuery.cookie('id_utente')
-		
-}
-console.log(notificaj.username);
-console.log(jQuery.cookie('id_utente'));
+console.log(JSON.stringify(notificaj));
 
 
 		var host = "http://"+document.location.hostname ;
 
-		var url = host+"/techweb/html/notifica/" 
+		var url = host+"/notifica/" ;
 
 		$.ajax({
 
@@ -162,7 +162,16 @@ console.log(jQuery.cookie('id_utente'));
 
 				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
 
-					successAlert(call.result);//da finire
+					if(call.skept){
+
+						successAlert(call.result+" "+call.skept);
+					
+					}
+					else{
+					
+					successAlert(call.result);
+					
+					}
 				}
 				else {
 				
