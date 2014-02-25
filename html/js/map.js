@@ -5,6 +5,8 @@ var geocoder;
 var markersArray = [];
 var id_count;
 var tabella;
+var infowindow = null;
+
 
 
 
@@ -26,7 +28,7 @@ $(document).ready(function(){
 	}
 	else{
 		//funzione di geolocalizzazione
-		geoLocal();
+		//geoLocal();
 	}
 	//riceve l'evento se mi sposto sulla mappa
 	google.maps.event.addListener(map, 'click', function(event) {
@@ -63,11 +65,11 @@ $('#table').on('click', function(){
     });
 });
 
-var closeInfoWindow = function() {
-  infowindow.close();}
 
 /*Crea un marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
+	
+infowindow = new google.maps.InfoWindow;
 
 var data_inizio = timeConverter(inizio);
 var data_fine = timeConverter(ultima);
@@ -78,45 +80,30 @@ var marker = new google.maps.Marker({
 	position: myLatlng,
 	map: map,
 	draggable:false,
-	title:id
+	title:id,
+	prova:1000
 	//animation: google.maps.Animation.BOUNCE 
 });
 //push marker in array
 markersArray.push(marker);
+
 	
-//CONTENT INFOWINDOW
+google.maps.event.addListener(marker, 'click', function() {
+	//CONTENT INFOWINDOW
 if(status == 'closed'){
-	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><textarea id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;" id="notifica'+marker.title+'"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><textarea id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\')\""><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
 }else{
 	var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
 }
+infowindow.setContent(contentString);
+infowindow.open(map,marker);
+});
 
-	   var infowindow = new google.maps.InfoWindow({
-    	content: contentString,
-		maxWidth: 200
-	});
+google.maps.event.addListener(map, 'click', function() {
+infowindow.close();
+});
 	
-	
-	//Add an infowindow for each marker
-	google.maps.event.addListener(marker, 'click', function() {
-	infowindow.open(map,marker);
-	});
   
-	//egg vs chicken the infowindow html must be in DOM!
-	google.maps.event.addListener(infowindow, 'domready', function() {
-			//notifica evento
-			$("#notifica"+marker.title).click(function(e){
-				/*
-				$.ajax({
-				url: url,
-				type: 'GET',
-				data: $(this).serialize(),
-				dataType:'json',
-				success: function(data){}
-				});//fine ajax*/
-				console.log(id);					
-			});    
-	});
 
 }
 
@@ -129,6 +116,13 @@ freshness = timeConverter(freshness);
 //MakeTable	
 tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
 
+}
+
+//QUI! per ogni Evento la funzione notify farà una chiamata ajax per modificare lo stato di un evento
+//puoi decidere quali parametri prendere alla linea 94 . adesso prende solo id
+function notify(id){
+	console.log(id);
+	
 }
 
 
@@ -178,6 +172,7 @@ $("#searchbutton").click(function(e){
 		      id_count++;
 			});
 			console.log(data);
+			console.log(markersArray[0]);
 			setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 		
 		} //chiudi function data
