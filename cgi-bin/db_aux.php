@@ -159,7 +159,7 @@ function risolvi_skeptikal($id_evento){
 
 	$con = connect_db();
 		
-	$info_query="SELECT skept.time FROM skept WHERE id_event=."$id_evento.";";
+	$info_query="SELECT skept.time FROM skept WHERE id_event=".$id_evento.";";
 
 	$check= mysqli_query($con, $info_query);
 
@@ -174,7 +174,7 @@ function risolvi_skeptikal($id_evento){
 		if($row = mysqli_fetch_array($risp)){
 			$open=0;
 			$closed=0;
-			$j=count($row['status_notif'];
+			$j=count($row['status_notif']);
 
 			for($i=0; $i<$j-1; $i++){
 

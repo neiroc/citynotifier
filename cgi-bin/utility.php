@@ -12,7 +12,27 @@ function updateStatus($now,$freshness,$event_id,$mysqli){
 				}
 }
 
+function gestisci_skeptical_aperti(){
 
+	$now = time();
+
+	$con = connect_db();
+
+	$query = "SELECT skept.* FROM skept WHERE (".$now." - time) < 600;"; 
+
+	$risp = mysqli_query($con,$query);
+
+	if($row = mysqli_fetch_array($risp)){
+
+		$j = count($row['id_event']);
+
+		for($i=0; $i<$j-1; $i++){
+
+			risolvi_skeptikal(($row['id_event'][i]));
+
+		}
+	}
+}
 
 
 /*
