@@ -204,8 +204,7 @@ function checkRange(results){
 	range = $('#searchRange').val().split(" ")[0].replace(',','.');
 	//console.log(range);
 	if(range.length === 0) {
-		console.log(range)
-		console.log("porcodio")
+		
 		if (radius){
 			range = radius
 		}	

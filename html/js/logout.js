@@ -34,7 +34,6 @@ $('#logout').on('click', function(){
 				jQuery.removeCookie('username');
 				jQuery.removeCookie('id_utente');
 				location.href="index.html";
-				successAlert(call.result);
 			}
 			else 
 				errorAlert(call.result); 		

@@ -12,25 +12,22 @@ $('document').ready(function(){
 		type=jQuery.cookie('type');	
 		subtype=jQuery.cookie('subtype');
 	};
-		console.log(status)
-		console.log(type)
-		if(!type)
-			type='all';
-
-		if(!subtype){
-			subtype='all';
-			status='all'
-		}
-		//setta i valori dei menu (notify)
-		$('#notifyType').val(type);
-		$('#notifySubType').val(subtype);
-		disableOption(type);
 		
-		//setta i valori dei menu (search)
-		$('#searchType').val(type);
-		$('#searchSubType').val(subtype);
-		$('#searchStatus').val(status);
-		disableOpt(type);
-	
-	
+	if(!type)
+		type='all';
+
+	if(!subtype){
+		subtype='all';
+		status='all'
+	}
+	//setta i valori dei menu (notify)
+	$('#notifyType').val(type);
+	$('#notifySubType').val(subtype);
+	disableOption(type);
+		
+	//setta i valori dei menu (search)
+	$('#searchType').val(type);
+	$('#searchSubType').val(subtype);
+	$('#searchStatus').val(status);
+	disableOpt(type);	
 });

@@ -137,72 +137,69 @@ if(partsArray[0] =="ltw1324") id = partsArray[1];
 
 	var notificaj = {
 				
-				id_evento : id, //FATTO--->qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
-								 
-				status : status,
+		id_evento : id, //FATTO--->qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
+							 
+		status : status,
 
-				lat : lat,
+		lat : lat,
 
-				lng : lng,
+		lng : lng,
 
-				description : $('#descr').val(),
+		description : $('#descr').val(),
 
-				tipo : type,
+		tipo : type,
 
-				sottotipo : subtype,
+		sottotipo : subtype,
 
-				newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo 
+		newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo 
 
-				id_utente : jQuery.cookie('id_utente')
+		id_utente : jQuery.cookie('id_utente')
 			
 	}
+	console.log(JSON.stringify(notificaj));
 
-console.log(JSON.stringify(notificaj));
+	var host = "http://"+document.location.hostname ;
 
+	var url = host+"/notifica/" ;
 
-		var host = "http://"+document.location.hostname ;
+	$.ajax({
 
-		var url = host+"/notifica/" ;
+		url: url, //url a cui fare la chiamata
 
-		$.ajax({
+		async: true, //chiamata asincrona
 
-			url: url, //url a cui fare la chiamata
-
-			async: true, //chiamata asincrona
-
-			type: "POST",// metodo della chiamata
+		type: "POST",// metodo della chiamata
 			
-			contentType: "application/json; charset=utf-8",
+		contentType: "application/json; charset=utf-8",
 
-			data: JSON.stringify(notificaj), 
+		data: JSON.stringify(notificaj), 
 
-			dataType: 'json',
+		dataType: 'json',
 
-			success:function(call){	
+		success:function(call){	
 
-				if(call.result==="notifica inviata con successo"){	
+			if(call.result==="notifica inviata con successo"){	
 
-					if(call.skept){
+				if(call.skept){
 
-						successAlert(call.result+" "+call.skept);
-					
-					}
-					else{
+					successAlert(call.result+" "+call.skept);
+				}
+				else{
 					
 					successAlert(call.result);
 					
-					}
 				}
-				else {
+			}
+			else {
 				
-					errorAlert(call.result+": "+call.errore);
-				} 		
-			},
-			error: function(e){
-				errorAlert("errore di risposta dal server");
-			},
-		});
-		return false; // avoid to execute the actual submit of the form.*/
+				errorAlert(call.result+": "+call.errore);
+			} 		
+		},
+		error: function(e){
+			errorAlert("errore di risposta dal server");
+		},
+	});
+	return false; // avoid to execute the actual submit of the form.*/
 }
 
 
@@ -248,7 +245,7 @@ $("#searchbutton").click(function(e){
 			$(data.events).each(function(i, src) {
 				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-		      id_count++;
+		      	id_count++;
 			});
 			console.log(data);
 			console.log(markersArray[0]);
@@ -356,13 +353,3 @@ function getPin(type, subtype, status){
         case "skeptical" : return mDir + ".png";
     }
 }
-
-
-/*$("#searchType, #searchSubType, #searchStatus, #notifyType, #notifySubType").each(function(){
-	if($(this).val("")){
-		//console.log("porcoddio")
-		$(this).val('all')
-		//console.log($(this).val())
-		type='all';
-	}
-});*/
