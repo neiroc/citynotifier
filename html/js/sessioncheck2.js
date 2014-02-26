@@ -22,8 +22,8 @@ $('document').ready(function(){
 			status='all'
 		}
 		//setta i valori dei menu (notify)
-		$('#notifyType').val('none');
-		$('#notifySubType').val('none');
+		$('#notifyType').val(type);
+		$('#notifySubType').val(subtype);
 		disableOption(type);
 		
 		//setta i valori dei menu (search)
