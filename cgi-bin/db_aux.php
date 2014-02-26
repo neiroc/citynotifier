@@ -4,7 +4,7 @@ function connect_db(){
 
 	//$url=$SERVER;
 
-    $con=mysqli_connect("localhost","maboh","maboh123","techweb");
+    $con=mysqli_connect("localhost","root","pass","techweb");
 
     // Check connection
     if (mysqli_connect_errno()){

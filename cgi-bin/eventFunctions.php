@@ -3,15 +3,14 @@
 require "db_aux.php";  
 require "utility.php";
  
- 
 //VARIABILI GLOBALI
 $l_events = array();
 $new_events = array();
+//echo getLocalEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
 
 function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
-$list_events = array();
-
+//Connect to DB
 $mysqli = connect_db();
 
 if($mysqli == False){
@@ -20,18 +19,17 @@ if($mysqli == False){
 }
 
 $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
-
-
-/********************* Check parameters 
- if($get_type!="all"){
-		$query=$query." AND Evento.type='$get_type'";
-		if($get_subtype!="all"){
-			$query=$query." AND Evento.subtype='$get_subtype'";
+//check parameters. not compact
+ if($type!="all"){
+		$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius."AND Evento.type='$type'";
+		
+		if($subtype!="all"){
+			$query=$query." AND Evento.subtype='$subtype'";
 		}
 	}
-	if($get_status!="all"){
-		$query=$query." AND Evento.status='$get_status'";
-***********************/
+	if($status!="all"){
+		$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius."AND Evento.status='$status'";
+}
 
 	
 $result = $mysqli->query($query) or die($mysqli->error.__LINE__);
@@ -39,7 +37,6 @@ $result = $mysqli->query($query) or die($mysqli->error.__LINE__);
 //If result is not empty
 if($result->num_rows){
  
-$list_events = array();
 	//Another query
 	$query2 = "SELECT * FROM Notifiche";
 	$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
@@ -54,7 +51,6 @@ $list_events = array();
 	//Get Data from DB and construct the json response 
 	while ($row = $result->fetch_assoc()) {
 			$event_id = $row['id_event'];
-			//$id = $row['id'];
 			$user_id = $row['id_utente'];
 			$type = $row['type'];
 			$subtype = $row['subtype'];
@@ -71,7 +67,7 @@ $list_events = array();
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
 
-			//Update Status. modificare paramtri?
+			//Update Status. parametri leggibili?
 			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
 				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);
 			}
@@ -132,11 +128,11 @@ $array = json_decode($ris, true);
 
 	$opt = array(
 			  			CURLOPT_URL => $urls,
-			  			//CURLOPT_HEADER => FALSE,
+			  		 //CURLOPT_HEADER => FALSE,
 			  			CURLOPT_RETURNTRANSFER => TRUE,
-			 		 		CURLOPT_TIMEOUT => 5,
-							//CURLOPT_FAILONERROR => TRUE,
-							//CURLOPT_HTTPHEADER => array('Accept: application/json')
+			 		 	CURLOPT_TIMEOUT => 5,
+					 //CURLOPT_FAILONERROR => TRUE,
+					 //CURLOPT_HTTPHEADER => array('Accept: application/json')
 			);	
 
 		curl_setopt_array($cURL, $opt);

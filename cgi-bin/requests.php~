@@ -7,6 +7,8 @@ if ((!$_SERVER['REQUEST_METHOD'] == 'GET')) {
 	exit;
 }
 
+
+//esempio chiamata: 
 //verifico i parametri della query
 if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) and isset($_GET['lat'])and isset($_GET['lng'])and isset($_GET['radius'])and isset($_GET['timemin'])and isset($_GET['timemax'])and isset($_GET['status'])) {
         $scope = $_GET['scope'];

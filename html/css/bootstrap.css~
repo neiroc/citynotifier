@@ -264,7 +264,6 @@ table {
     page-break-after: avoid;
   }
   .navbar {
-  	background: red;
     display: none;
     
   }

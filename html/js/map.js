@@ -88,13 +88,12 @@ function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
 
 		
 	google.maps.event.addListener(marker, 'click', function() {
-		//CONTENT INFOWINDOW
-		if(status == 'closed'){
-			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br>Descrizioni<br><textarea readonly id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
-		}
-		else{
-			var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
-		}
+	//CONTENT INFOWINDOW
+	if(status == 'closed'){
+		var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+	}else if(status == 'open'){
+			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+	}else var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
 		infowindow.setContent(contentString);
 		infowindow.open(map,marker);
 	});
@@ -115,15 +114,8 @@ function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
 }
 
 
-/*NOTE:
--SE LO STATO E' APERTO METTO SOLO PULSANTE CHIUSO. SE LO STATO È CHIUSO SOLO PULSANTE APERTO.
-SE SEI UN SUPERUSER ANCHE PULSANTE ARCHIVED
--la info window dovrebbe essere dotata(se posibile) di un pulsante di scelta del tipo di stato da notificare(open closed archived) che diventerà poi lo status 
-	da inviare nella richiesta ajax
-	
--le descrizioni delle notifiche precedenti finiscono nel form della descrizione da compilare(dopo un paio di notifiche si riempie di varie descrizioni)
--dopo la notifica sarebbe il caso di far ripartire la search?
--FATTO -->dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
+/*
+* Notifica evento
 */
 function notify(id,status,lat,lng,descr){
 	var partsArray = id.split('_');
@@ -140,7 +132,7 @@ function notify(id,status,lat,lng,descr){
 
 		lng : lng,
 
-		description : $('#descr').val(),
+		description : $('#notif').val(),
 
 		tipo : type,
 

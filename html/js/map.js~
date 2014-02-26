@@ -7,9 +7,6 @@ var id_count;
 var tabella;
 var infowindow = null;
 
-
-
-
 $(document).ready(function(){
 
 	geocoder = new google.maps.Geocoder();
@@ -69,44 +66,41 @@ $('#table').on('click', function(){
 /*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
 
-//Nuovo oggetto Infowindow
-infowindow = new google.maps.InfoWindow;
+	//Nuovo oggetto Infowindow
+	infowindow = new google.maps.InfoWindow;
 
-var data_inizio = timeConverter(inizio);
-var data_fine = timeConverter(ultima);
+	var data_inizio = timeConverter(inizio);
+	var data_fine = timeConverter(ultima);
 
-var myLatlng = new google.maps.LatLng(lat,lng);
+	var myLatlng = new google.maps.LatLng(lat,lng);
 
-// Place a marker on the map
-var marker = new google.maps.Marker({
-	position: myLatlng,
-	icon: getPin(type, subtype, status),
-	map: map,
-	draggable:false,
-	title:id
-});
+	// Place a marker on the map
+	var marker = new google.maps.Marker({
+		position: myLatlng,
+		icon: getPin(type, subtype, status),
+		map: map,
+		draggable:false,
+		title:id
+	});
 
-//push marker in array
-markersArray.push(marker);
+	//push marker in array
+	markersArray.push(marker);
 
-	
-google.maps.event.addListener(marker, 'click', function() {
+		
+	google.maps.event.addListener(marker, 'click', function() {
 	//CONTENT INFOWINDOW
-if(status == 'closed'){
-	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br>Descrizioni<br><textarea readonly id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
-}else{
-	var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
-}
-infowindow.setContent(contentString);
-infowindow.open(map,marker);
-});
+	if(status == 'closed'){
+		var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+	}else if(status == 'open'){
+			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+	}else var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+		infowindow.setContent(contentString);
+		infowindow.open(map,marker);
+	});
 
-google.maps.event.addListener(map, 'click', function() {
-infowindow.close();
-});
-	
-  
-
+	google.maps.event.addListener(map, 'click', function() {
+		infowindow.close();
+	});
 }
 
 
@@ -114,95 +108,85 @@ infowindow.close();
 * Show Events on Table
 */
 function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
-freshness = timeConverter(freshness);
-//MakeTable	
-tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
-
+	freshness = timeConverter(freshness);
+	//MakeTable	
+	tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
 }
 
 
-/*NOTE:
--SE LO STATO E' APERTO METTO SOLO PULSANTE CHIUSO. SE LO STATO È CHIUSO SOLO PULSANTE APERTO.
-SE SEI UN SUPERUSER ANCHE PULSANTE ARCHIVED
--la info window dovrebbe essere dotata(se posibile) di un pulsante di scelta del tipo di stato da notificare(open closed archived) che diventerà poi lo status 
-	da inviare nella richiesta ajax
-	
--le descrizioni delle notifiche precedenti finiscono nel form della descrizione da compilare(dopo un paio di notifiche si riempie di varie descrizioni)
--dopo la notifica sarebbe il caso di far ripartire la search?
--FATTO -->dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
+/*
+* Notifica evento
 */
 function notify(id,status,lat,lng,descr){
-var partsArray = id.split('_');
-if(partsArray[0] =="ltw1324") id = partsArray[1];
+	var partsArray = id.split('_');
+	if(partsArray[0] =="ltw1324") 
+		id = partsArray[1];
 
 	var notificaj = {
 				
-				id_evento : 27, //FATTO--->qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
-								 
-				status : status,
+		id_evento : id, //FATTO--->qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
+							 
+		status : status,
 
-				lat : lat,
+		lat : lat,
 
-				lng : lng,
+		lng : lng,
 
-				description : $('#descr').val(),
+		description : $('#notif').val(),
 
-				tipo : type,
+		tipo : type,
 
-				sottotipo : subtype,
+		sottotipo : subtype,
 
-				newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo 
+		newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo 
 
-				id_utente : jQuery.cookie('id_utente')
+		id_utente : jQuery.cookie('id_utente')
 			
 	}
+	console.log(JSON.stringify(notificaj));
 
-console.log(JSON.stringify(notificaj));
+	var host = "http://"+document.location.hostname ;
 
+	var url = host+"/notifica/" ;
 
-		var host = "http://"+document.location.hostname ;
+	$.ajax({
 
-		var url = host+"/notifica/" ;
+		url: url, //url a cui fare la chiamata
 
-		$.ajax({
+		async: true, //chiamata asincrona
 
-			url: url, //url a cui fare la chiamata
-
-			async: true, //chiamata asincrona
-
-			type: "POST",// metodo della chiamata
+		type: "POST",// metodo della chiamata
 			
-			contentType: "application/json; charset=utf-8",
+		contentType: "application/json; charset=utf-8",
 
-			data: JSON.stringify(notificaj), 
+		data: JSON.stringify(notificaj), 
 
-			dataType: 'json',
+		dataType: 'json',
 
-			success:function(call){	
+		success:function(call){	
 
-				if(call.result==="notifica inviata con successo"){	
+			if(call.result==="notifica inviata con successo"){	
 
-					if(call.skept){
+				if(call.skept){
 
-						successAlert(call.result+" "+call.skept);
-					
-					}
-					else{
+					successAlert(call.result+" "+call.skept);
+				}
+				else{
 					
 					successAlert(call.result);
 					
-					}
 				}
-				else {
+			}
+			else {
 				
-					errorAlert(call.result+": "+call.errore);
-				} 		
-			},
-			error: function(e){
-				errorAlert("errore di risposta dal server");
-			},
-		});
-		return false; // avoid to execute the actual submit of the form.*/
+				errorAlert(call.result+": "+call.errore);
+			} 		
+		},
+		error: function(e){
+			errorAlert("errore di risposta dal server");
+		},
+	});
+	return false; // avoid to execute the actual submit of the form.*/
 }
 
 
@@ -210,6 +194,7 @@ console.log(JSON.stringify(notificaj));
 * OnClick start request 
 */
 $("#searchbutton").click(function(e){
+	$('#searchmenu').parent().removeClass('open');
 	clearOverlays();
 	//prendo tipo
 	type = $('#searchType').val();
@@ -248,7 +233,7 @@ $("#searchbutton").click(function(e){
 			$(data.events).each(function(i, src) {
 				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-		      id_count++;
+		      	id_count++;
 			});
 			console.log(data);
 			console.log(markersArray[0]);
@@ -356,13 +341,3 @@ function getPin(type, subtype, status){
         case "skeptical" : return mDir + ".png";
     }
 }
-
-
-/*$("#searchType, #searchSubType, #searchStatus, #notifyType, #notifySubType").each(function(){
-	if($(this).val("")){
-		//console.log("porcoddio")
-		$(this).val('all')
-		//console.log($(this).val())
-		type='all';
-	}
-});*/
