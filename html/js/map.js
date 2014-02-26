@@ -123,7 +123,7 @@ function notify(id,status,lat,lng,descr){
 
 	var notificaj = {
 				
-				id_evento : id,
+				id_evento : 27, //###############################qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
 
 				status : status,
 
@@ -136,6 +136,8 @@ function notify(id,status,lat,lng,descr){
 				tipo : type,
 
 				sottotipo : subtype,
+
+				newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo
 
 				id_utente : jQuery.cookie('id_utente')
 			

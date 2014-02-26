@@ -4,11 +4,10 @@ function connect_db(){
 
 	//$url=$SERVER;
 
-    $con=mysqli_connect("localhost","maboh","maboh123","techweb");
+    $con=mysqli_connect("localhost","cacaturo","cacaturo123","techweb");
 
     // Check connection
-    if (mysqli_connect_errno())
-     {
+    if (mysqli_connect_errno()){
         echo "Failed to connect to MySQL: " . mysqli_connect_error();
         $con = False;
       }
@@ -20,105 +19,112 @@ function connect_db(){
 
 function check_privileges($id_utente){
 
-	if($con = connect_db()){
+	$con = connect_db();
 
-		$query= "SELECT Utenti.privilegio FROM Utenti WHERE id_utente=".$id_utente.";";
+	$query= "SELECT Utenti.privilegio FROM Utenti WHERE id_utente=".$id_utente.";";
 
-		$risp= mysql_query($con, $query);
-		if($row = mysqli_fetch_array($risp)){
-			$privilegio = $row['privilegio'];
-			return $privilegio;
-		}
+	$risp= mysqli_query($con, $query);
+	if($row = mysqli_fetch_array($risp)){
+		$privilegio = $row['privilegio'];
+		return $privilegio;
 	}
+	else{
 	return False;
+	}
 }
 
 
 
 function get_stats($id_utente){
 
-	if($con = connect_db()){
-
-		$query= "SELECT Utenti.reputation, Utenti.assiduity FROM Utenti WHERE id_utente=".$id_utente.";";
-		//var_dump($query);
-		$risp= mysqli_query($con, $query);
-		if($row = mysqli_fetch_array($risp)){
-			
-			return $row;
-		}
+	
+	$con = connect_db();
+	$query= "SELECT Utenti.reputation, Utenti.assiduity FROM Utenti WHERE id_utente=".$id_utente.";";
+	//var_dump($query);
+	$risp= mysqli_query($con, $query);
+	if($row = mysqli_fetch_array($risp)){
+		
+		return $row;
 	}
+	else{
 	return False;
+	}
 }
 
 
 
 function update_reliability($id_utente, $id_evento, $not_num){         
 
-	if($con = connect_db()){
+	$con = connect_db();
 
-		$query= "SELECT DISTINCT Utenti.reputation, Utenti.assiduity FROM (Utenti INNER JOIN Notifica ON Utenti.id_utente = Notifica.id_utente) WHERE id_evento=".$id_evento.";";
+	$query= "SELECT DISTINCT Utenti.reputation, Utenti.assiduity FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifiche.id_utente) WHERE id_event=".$id_evento.";";
 
-		$risp= mysql_query($con, $query);
+	$risp= mysqli_query($con, $query);
 
-		if($row = mysqli_fetch_array($risp)){
-			
-			$sum=0;
-			$j=count($row['reputation']);
-			
-			for($i=0; $i<$j-1 ; $i++){
+	if($row = mysqli_fetch_array($risp)){
+		
+		$sum=0;
+		$j=count($row['reputation']);
+		
+		for($i=0; $i<$j-1 ; $i++){
 
-			$sum = $sum + (1+($row['reputation'][i] * $row['assiduity'][i]));
-			
-			}
-			
-			$reliability =	$sum / (2* $not_num);
+		$sum = $sum + (1+($row['reputation'][i] * $row['assiduity'][i]));
+		
 		}
+		
+		$reliability =	$sum / (2* $not_num);
+		//var_dump($reliability);
+		return $reliability;
 	}
-	return False;
+	else{
+	return 1.0;
+	}	
 }
 
-function set_skeptikal($id_utente, $id_evento, $time){
+function set_skeptikal($id_evento, $id_utente, $time){
 
-	if($con = connect_db()){
+	$con = connect_db();
 
-		$query= "SELECT id_event FROM skept WHERE (id_event=".$id_evento.");";
+	$query= "SELECT skept.* FROM skept WHERE id_event=".$id_evento.";";
 
-		$check= mysql_query($con, $query);
-		$row = mysqli_fetch_array($check);
+	$check= mysqli_query($con, $query);
+	$row = mysqli_fetch_array($check);
+ //var_dump($row['id_event']);
+	if(($row['id_event'])== $id_evento){
 
-		if(($row['id_event'])!= Null){
+		return False;
 
-			$insert= "INSERT INTO skept (id_event, id_utente, time) VALUES (".$id_utente.", ".$id_evento.", ".$time.");";
-			
-			$risp= mysqli_query($con, $insert);
-
-			if($row = mysqli_fetch_array($risp)){
-				
-				return True;
-			}
-		}
 	}
-	return False;
+	else{
+
+		$insert= "INSERT INTO skept (id_event, id_utente, time) VALUES (".$id_evento.", ".$id_utente.", ".$time.");";
+		//var_dump($insert);
+		$risp= mysqli_query($con, $insert);
+
+		if($risp){
+			
+			return True;
+		}	
+	}
 }
 
 function increase_reputation($id_utente){
 
-	if($con = connect_db()){
+	$con = connect_db();
 
-		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
-		$risp= mysql_query($con, $query);
+	$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
+	$risp= mysqli_query($con, $query);
 
-		if($row = mysqli_fetch_array($risp)){
+	if($row = mysqli_fetch_array($risp)){
 
-			$reputation=$row['reputation']+0.1;
+		$reputation=$row['reputation']+0.1;
 
-			if($reputation>1){
+		if($reputation>1){
 
-				$update="UPDATE Utenti SET reputation= 1 WHERE id_utente=".$id_utente.";";
-			}
-			else{
-				$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
-			}
+			$update="UPDATE Utenti SET reputation= 1 WHERE id_utente=".$id_utente.";";
+		}
+		else{
+			$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
 		}
 	}
 }
@@ -126,25 +132,23 @@ function increase_reputation($id_utente){
 
 function decrease_reputation($id_utente){
 
-	if($con = connect_db()){
+	$con = connect_db();
 
-		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
-		$risp= mysql_query($con, $query);
+	$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
+	$risp= mysqli_query($con, $query);
 
-		if($row = mysqli_fetch_array($risp)){
+	if($row = mysqli_fetch_array($risp)){
 
-			$reputation=$row['reputation']-0.1;
+		$reputation=$row['reputation']-0.1;
 
-			if($reputation<(-1.0)){
+		if($reputation<(-1.0)){
 
-				$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=".$id_utente.";";
-			}
-			else{
-				$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
-			}
+			$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=".$id_utente.";";
+		}
+		else{
+			$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
 		}
 	}
-
 }
 /*
 function risolvi_skeptikal($id_evento){

@@ -21,7 +21,7 @@ if($segnalazione->{'id_utente'}!=Null){
 		$lng = $segnalazione->{'lng'};
 		$description = $segnalazione->{'description'};
 		$id_utente = $segnalazione->{'id_utente'};
-
+		
 		//definisco il tempo della segnalazione
 		$time = time();
 

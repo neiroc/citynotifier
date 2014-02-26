@@ -19,7 +19,7 @@ if($id_utente != Null){
 		$description = $notifica->{'description'};
 		$type = $notifica->{'tipo'};
 		$subtype = $notifica->{'sottotipo'};
-
+		$newstatus = $notifica->{'newstatus'};
 		//definisco il tempo della notifica
 		$time = time();
 
@@ -35,13 +35,13 @@ if($id_utente != Null){
 
 			//recupero info riguardo l'evento
 
-			$query = "SELECT Evento.* FROM Evento WHERE id_event = ".$id_evento.";";
+			$query = "SELECT Evento.* FROM Evento WHERE id_event = ".$id_evento;
 
 			$rispostadb = mysqli_query($con,$query);
 
-			if($row = mysqli_fetch_array($rispostadb)){
+			if($row = mysqli_fetch_array($rispostadb)){ 
 
-				if( (check_privileges($id_utente) >2) && ($status=='archived') && ($status=='closed') && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
+				if( (check_privileges($id_utente) >2) && (($status=='archived') || ($status=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
 
 					$result['result'] = "errore nell'invio della notifica";
 					$result['errore']= "privilegi insufficenti";
@@ -50,35 +50,40 @@ if($id_utente != Null){
 					
 					//aggiungo notifica
 
-					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES (".$id_utente.", ".$id_evento.", ".$lat.", ".$lng.", ".$time.", 'open', '".$description."');";
+					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES (".$id_utente.", ".$id_evento.", ".$lat.", ".$lng.", ".$time.",'".$newstatus."', '".$description."');";
 
 					mysqli_query($con,$insert);
 
 					$lat = ($lat + $row['lat_med'])/2;
 					$lng = ($lat + $row['lng_med'])/2;
-					$notifications = $row['notifications']+1;
+					$notifications = 1 + ($row['notifications']);
 					$reliability = update_reliability($id_utente, $id_evento, $notifications);
 
-
-					if(($row['status']=='closed')&&($row['last_time'] < $time)&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
+//var_dump($reliability);
+					if(($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
 					
 						$skept=set_skeptikal($id_evento, $id_utente, $time);
-						if($skept){
-							$update_query = "UPDATE Evento SET status='skeptical', event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
-							mysqli_query($con,$update_query);
+
+						if($skept==True){
+							$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
+							//var_dump($update_query);
+							$con2=connect_db();
+							mysqli_query($con2,$update_query);
 							//risposta positiva
 							$result['result'] = "notifica inviata con successo";
 							$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
 						}
 						else{
 							$result['result'] = "notifica inviata con successo";
+							$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
+
 						}
 
 
 					}
 					else{
 						
-						$update_query = "UPDATE Evento SET event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
+						$update_query = "UPDATE Evento SET status = ".$newstatus."event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento;
 						mysqli_query($con,$update_query);
 
 						//risposta positiva
@@ -98,12 +103,14 @@ if($id_utente != Null){
 					$new_id = mysqli_insert_id($con);
 					//var_dump($new_id);
 					//inserisco notifica
-					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ('".$id_utente."','".$new_id."','".$lat."','".$lng."','".$time."','open','".$description."');";
+					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ('".$id_utente."','".$new_id."','".$lat."','".$lng."','".$time."','".$newstatus."','".$description."');";
 					$test = mysqli_query($con,$insert);
 					//var_dump($test);
 					
 					//risultato positivo
 					$result['result'] = "notifica inviata con successo";
+					$result['skept'] = "nuoooo";
+
 					
 					
 				}
