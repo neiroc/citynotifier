@@ -67,15 +67,17 @@ if($id_utente != Null){
 						if($skept==True){
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							//var_dump($update_query);
-							$con2=connect_db();
-							mysqli_query($con2,$update_query);
+							mysqli_query($con,$update_query);
 							//risposta positiva
 							$result['result'] = "notifica inviata con successo";
 							$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
 						}
 						else{
+
+							$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
+							mysqli_query($con,$update_query);
 							$result['result'] = "notifica inviata con successo";
-							$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
+							//$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
 
 						}
 

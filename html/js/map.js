@@ -118,7 +118,13 @@ tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><
 }
 
 //QUI! per ogni Evento la funzione notify farà una chiamata ajax per modificare lo stato di un evento
-//puoi deciderez
+/*NOTE:
+-la info window dovrebbe essere dotata(se posibile) di un pulsante di scelta del tipo di stato da notificare(open closed archived) che diventerà poi lo status 
+	da inviare nella richiesta ajax
+-le descrizioni delle notifiche precedenti finiscono nel form della descrizione da compilare(dopo un paio di notifiche si riempie di varie descrizioni)
+-dopo la notifica sarebbe il caso di far ripartire la search?
+-dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
+*/
 function notify(id,status,lat,lng,descr){
 
 	var notificaj = {
@@ -137,7 +143,7 @@ function notify(id,status,lat,lng,descr){
 
 				sottotipo : subtype,
 
-				newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo
+				newstatus : "open",//####################################da modificare per rendere interoperabile status deve essere quello nuovo 
 
 				id_utente : jQuery.cookie('id_utente')
 			

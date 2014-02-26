@@ -101,21 +101,29 @@ if($segnalazione->{'id_utente'}!=Null){
 
 				$lat = ($lat + $row['lat_med'])/2;
 				$lng = ($lat + $row['lng_med'])/2;
-				$notifications = $row['notifications']+1;
-				
+				$notifications = 1 + ($row['notifications']);
 				$reliability = update_reliability($id_utente, $id_evento, $notifications);
 				
-				if(($row['status']=='closed')&&($row['last_time'] < $time)&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
+				if(($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
 					
 					$skept=set_skeptikal($id_evento, $id_utente, $time);
 
-					$update_query = "UPDATE Evento SET status='skeptical', event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
-					mysqli_query($con,$update_query);
+					if($skept==True){
+						$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
+						//var_dump($update_query);
+						mysqli_query($con,$update_query);
+						//risposta positiva
+						$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
+						$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
+					}
+					else{
 
-					//risposta positiva
-					$result['event_id'] =  $id_evento;
-					$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
-					$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento; 
+						$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
+						mysqli_query($con,$update_query);
+						$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
+						//$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
+
+					}
 
 				}
 				else{
