@@ -3,12 +3,15 @@
 require 'db_aux.php';
 
 //recupero il file json contenente le credenziali di login e lo decodifico
-$data = file_get_contents("php://input");
-$login=json_decode($data);
+$data = file_get_contents("../data/utenti.json",'r');
+$login=json_decode($data,true);
+print_r($login);
+
+$ris = file_get_contents('../data/utenti.json','r'); 
+$array = json_decode($ris, true); 
 
 
-//NOTA: CONTROLLARE IL FLUSSO login=json_decode($data,true);
-
+//NOTA: CONTROLLARE IL FLUSSO 
 if(($login->{'username'} != Null)&&($login->{'password'} != Null)){
 	
 	$username = $login->{'username'};

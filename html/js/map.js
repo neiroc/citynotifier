@@ -66,23 +66,26 @@ $('#table').on('click', function(){
 });
 
 
-/*Crea un marker sulla mappa per ogni evento ricevuto dalla richiesta */
+/*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
-	
+
+//Nuovo oggetto Infowindow
 infowindow = new google.maps.InfoWindow;
 
 var data_inizio = timeConverter(inizio);
 var data_fine = timeConverter(ultima);
 
 var myLatlng = new google.maps.LatLng(lat,lng);
+
 // Place a marker on the map
 var marker = new google.maps.Marker({
 	position: myLatlng,
+	icon: getPin(type, subtype, status),
 	map: map,
 	draggable:false,
 	title:id
-	//animation: google.maps.Animation.BOUNCE 
 });
+
 //push marker in array
 markersArray.push(marker);
 
@@ -123,14 +126,14 @@ tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><
 	da inviare nella richiesta ajax
 -le descrizioni delle notifiche precedenti finiscono nel form della descrizione da compilare(dopo un paio di notifiche si riempie di varie descrizioni)
 -dopo la notifica sarebbe il caso di far ripartire la search?
--dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
+-FATTO -->dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
 */
 function notify(id,status,lat,lng,descr){
 
 	var notificaj = {
 				
 				id_evento : 27, //###############################qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
-
+									//E' PROPRIO QUELLO L'ID!! 
 				status : status,
 
 				lat : lat,
@@ -217,13 +220,13 @@ $("#searchbutton").click(function(e){
 	tabella.html("<thead><tr><th>ID</th><th>Tipo/Sottotipo</th><th>Luogo</th><th>Data/Freschezza</th><th>Stato</th><th>Descrizione</th></tr></thead>");
 	
 	
-	//prendo le coordinate.ATTENZIONE: assumono valori solo dopo aver cliccato sulla mappa. vedere geolocal.	
+	//prendo le coordinate.	
 	var lat = lastLatitude;
 	var lng = lastLongitude;
 
 	//prendo raggio di ricerca
 	radius = radiusWidget.get('distance')*1000;
-	//trasformo data in unixtme. ATTENZIONE: settare fuso orario corretto
+	//trasformo data in unixtime
 	var unixdata = new Date(data).getTime() / 1000;	
 	var oggi = Math.round((new Date()).getTime() / 1000);
 
@@ -293,6 +296,62 @@ function timeConverter(UNIX_timestamp){
      var time = date+' '+month+' '+year+'<br> ore: '+hour+':'+min+':'+sec ;
      return time;
  }
+ 
+ /**
+ * Get Pin Event
+ */
+function getPin(type, subtype, status){
+    var mDir = "/techweb/html/img/pins/";
+    switch (type){
+        case"problemi_stradali" :
+            switch(subtype){
+                case "incidente": mDir = mDir+"car_accident"; break;
+                case "buca": mDir = mDir+"buca"; break;
+                case "coda": mDir = mDir+"coda"; break;
+                case "lavori_in_corso": mDir = mDir+"lavoriincorso"; break;
+                case "strada_impraticabile": mDir = mDir+"stradanonpercorribile"; break;
+            }
+            break;
+        
+        case "emergenze_sanitarie" :
+            switch(subtype){
+                case "incidente": mDir = mDir+"incidente"; break;
+                case "malore": mDir = mDir+"malore"; break;
+                case "ferito": mDir = mDir+"ferito"; break;
+                }
+            break;
+        
+        case "reati" :
+            switch(subtype){
+                case "furto": mDir = mDir+"thief"; break;
+                case "attentato": mDir = mDir+"shooting"; break;
+            }
+            break;
+            
+        case "problemi_ambientali" :
+            switch(subtype){
+                case "incendio" : mDir = mDir+"fire"; break;
+                case "tornado" : mDir = mDir+"tornado"; break;
+                case "neve" : mDir = mDir+"snow"; break;
+                case "alluvione" : mDir = mDir+"rain"; break;
+            }
+            break;
+        case "eventi_pubblici" :
+            switch(subtype){
+                case "partita" : mDir = mDir+"football"; break;
+                case "manifestazione" : mDir = mDir+"manifestazione"; break;
+                case "concerto" : mDir = mDir+"livemusic"; break;
+                }
+            break;
+        break;
+    }
+    
+    switch (status){
+        case "open" : return mDir + "Open.png";
+        case "closed" : return mDir + "Closed.png"
+        case "skeptical" : return mDir + ".png";
+    }
+}
 
 
 /*$("#searchType, #searchSubType, #searchStatus, #notifyType, #notifySubType").each(function(){

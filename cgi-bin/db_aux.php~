@@ -80,7 +80,7 @@ function update_reliability($id_utente, $id_evento, $not_num){
 	return 1.0;
 	}	
 }
-/*
+
 function set_skeptikal($id_evento, $id_utente, $time){
 
 	$con = connect_db();
@@ -234,6 +234,6 @@ function risolvi_skeptikal($id_evento){
 		}
 	}	
 }
-*/
+
 
 ?>

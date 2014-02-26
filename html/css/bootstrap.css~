@@ -264,7 +264,9 @@ table {
     page-break-after: avoid;
   }
   .navbar {
+  	background: red;
     display: none;
+    
   }
   .table td,
   .table th {
@@ -5636,7 +5638,7 @@ body.modal-open,
 }
 
 .modal-content {
-  width: 100%;
+	/*!width: 900px;*/
   position: relative;
   background-color: #ffffff;
   border: 1px solid #999999;
@@ -5732,7 +5734,7 @@ body.modal-open,
   .modal-dialog {
     margin-right: 5%;
     margin-left: 5%;
-    width: 100%;
+    /*width: 100%;*/
     padding-top: 30px;
     padding-bottom: 30px;
   }
