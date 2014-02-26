@@ -133,6 +133,10 @@ function notify(id,status,lat,lng,descr){
 
 				description : $('#descr').val(),
 
+				tipo : type,
+
+				sottotipo : subtype,
+
 				id_utente : jQuery.cookie('id_utente')
 			
 	}
@@ -160,7 +164,7 @@ console.log(JSON.stringify(notificaj));
 
 			success:function(call){	
 
-				if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
+				if(call.result==="notifica inviata con successo"){	
 
 					if(call.skept){
 

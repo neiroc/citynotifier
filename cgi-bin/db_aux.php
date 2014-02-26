@@ -81,14 +81,14 @@ function set_skeptikal($id_utente, $id_evento, $time){
 
 	if($con = connect_db()){
 
-		$query= "SELECT id_event FROM skept WHERE (id_event=$id_evento);";
+		$query= "SELECT id_event FROM skept WHERE (id_event=".$id_evento.");";
 
 		$check= mysql_query($con, $query);
 		$row = mysqli_fetch_array($check);
 
 		if(($row['id_event'])!= Null){
 
-			$insert= "INSERT INTO skept(id_event, id_utente, time) VALUES ($id_utente, $id_evento, $time);";
+			$insert= "INSERT INTO skept (id_event, id_utente, time) VALUES (".$id_utente.", ".$id_evento.", ".$time.");";
 			
 			$risp= mysqli_query($con, $insert);
 
@@ -105,7 +105,7 @@ function increase_reputation($id_utente){
 
 	if($con = connect_db()){
 
-		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=$id_utente;";
+		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
 		$risp= mysql_query($con, $query);
 
 		if($row = mysqli_fetch_array($risp)){
@@ -114,10 +114,10 @@ function increase_reputation($id_utente){
 
 			if($reputation>1){
 
-				$update="UPDATE Utenti SET reputation= 1 WHERE id_utente=$id_utente;";
+				$update="UPDATE Utenti SET reputation= 1 WHERE id_utente=".$id_utente.";";
 			}
 			else{
-				$update="UPDATE Utenti SET reputation= $reputation WHERE id_utente=$id_utente;";
+				$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
 			}
 		}
 	}
@@ -128,7 +128,7 @@ function decrease_reputation($id_utente){
 
 	if($con = connect_db()){
 
-		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=$id_utente;";
+		$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
 		$risp= mysql_query($con, $query);
 
 		if($row = mysqli_fetch_array($risp)){
@@ -137,10 +137,10 @@ function decrease_reputation($id_utente){
 
 			if($reputation<(-1.0)){
 
-				$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=$id_utente;";
+				$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=".$id_utente.";";
 			}
 			else{
-				$update="UPDATE Utenti SET reputation= $reputation WHERE id_utente=$id_utente;";
+				$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
 			}
 		}
 	}

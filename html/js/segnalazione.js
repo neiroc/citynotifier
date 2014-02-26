@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	$('#notifybutton').on('click', function() {
-		if(($('#notifyType').val()=="none") ||($('#notifySubType').val() == "none") ){
+		if(($('#notifyType').val()=="all") ||($('#notifySubType').val() == "all") ){
 			errorAlert("type e subtype non sono stati inseriti correttamente");
 		}
 		else{

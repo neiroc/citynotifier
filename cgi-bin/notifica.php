@@ -4,7 +4,7 @@ require 'db_aux.php';
 
 $data = file_get_contents("php://input");
 
-
+$notifica=json_decode($data);
 
 $id_utente = $notifica->{'id_utente'};
 if($id_utente != Null){
@@ -17,7 +17,8 @@ if($id_utente != Null){
 		$lat = $notifica->{'lat'};
 		$lng = $notifica->{'lng'};
 		$description = $notifica->{'description'};
-		
+		$type = $notifica->{'tipo'};
+		$subtype = $notifica->{'sottotipo'};
 
 		//definisco il tempo della notifica
 		$time = time();
@@ -34,7 +35,7 @@ if($id_utente != Null){
 
 			//recupero info riguardo l'evento
 
-			$query = "SELECT Evento.* FROM Evento WHERE id_utente = ".$id_utente.";";
+			$query = "SELECT Evento.* FROM Evento WHERE id_event = ".$id_evento.";";
 
 			$rispostadb = mysqli_query($con,$query);
 
@@ -62,13 +63,16 @@ if($id_utente != Null){
 					if(($row['status']=='closed')&&($row['last_time'] < $time)&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
 					
 						$skept=set_skeptikal($id_evento, $id_utente, $time);
-
-						$update_query = "UPDATE Evento SET status='skeptical', event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
-						mysqli_query($con,$update_query);
-						
-						//risposta positiva
-						$result['result'] = "notifica inviata con successo";
-						$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
+						if($skept){
+							$update_query = "UPDATE Evento SET status='skeptical', event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
+							mysqli_query($con,$update_query);
+							//risposta positiva
+							$result['result'] = "notifica inviata con successo";
+							$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
+						}
+						else{
+							$result['result'] = "notifica inviata con successo";
+						}
 
 
 					}
