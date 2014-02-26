@@ -1,5 +1,8 @@
 infowindow = new google.maps.InfoWindow();
 
+$('#notifybutton').on('click', function(){
+	$('#notifymenu').parent().removeClass('open');
+})
 //salva in subtype il valore selezionato
 $('#notifySubType').on('change', function(){
 	subtype=$(this).val();

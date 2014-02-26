@@ -7,9 +7,6 @@ var id_count;
 var tabella;
 var infowindow = null;
 
-
-
-
 $(document).ready(function(){
 
 	geocoder = new google.maps.Geocoder();
@@ -69,44 +66,42 @@ $('#table').on('click', function(){
 /*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
 
-//Nuovo oggetto Infowindow
-infowindow = new google.maps.InfoWindow;
+	//Nuovo oggetto Infowindow
+	infowindow = new google.maps.InfoWindow;
 
-var data_inizio = timeConverter(inizio);
-var data_fine = timeConverter(ultima);
+	var data_inizio = timeConverter(inizio);
+	var data_fine = timeConverter(ultima);
 
-var myLatlng = new google.maps.LatLng(lat,lng);
+	var myLatlng = new google.maps.LatLng(lat,lng);
 
-// Place a marker on the map
-var marker = new google.maps.Marker({
-	position: myLatlng,
-	icon: getPin(type, subtype, status),
-	map: map,
-	draggable:false,
-	title:id
-});
+	// Place a marker on the map
+	var marker = new google.maps.Marker({
+		position: myLatlng,
+		icon: getPin(type, subtype, status),
+		map: map,
+		draggable:false,
+		title:id
+	});
 
-//push marker in array
-markersArray.push(marker);
+	//push marker in array
+	markersArray.push(marker);
 
-	
-google.maps.event.addListener(marker, 'click', function() {
-	//CONTENT INFOWINDOW
-if(status == 'closed'){
-	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br>Descrizioni<br><textarea readonly id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
-}else{
-	var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
-}
-infowindow.setContent(contentString);
-infowindow.open(map,marker);
-});
+		
+	google.maps.event.addListener(marker, 'click', function() {
+		//CONTENT INFOWINDOW
+		if(status == 'closed'){
+			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br>Descrizioni<br><textarea readonly id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+		}
+		else{
+			var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+		}
+		infowindow.setContent(contentString);
+		infowindow.open(map,marker);
+	});
 
-google.maps.event.addListener(map, 'click', function() {
-infowindow.close();
-});
-	
-  
-
+	google.maps.event.addListener(map, 'click', function() {
+		infowindow.close();
+	});
 }
 
 
@@ -114,10 +109,9 @@ infowindow.close();
 * Show Events on Table
 */
 function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
-freshness = timeConverter(freshness);
-//MakeTable	
-tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
-
+	freshness = timeConverter(freshness);
+	//MakeTable	
+	tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
 }
 
 
@@ -132,8 +126,9 @@ SE SEI UN SUPERUSER ANCHE PULSANTE ARCHIVED
 -FATTO -->dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
 */
 function notify(id,status,lat,lng,descr){
-var partsArray = id.split('_');
-if(partsArray[0] =="ltw1324") id = partsArray[1];
+	var partsArray = id.split('_');
+	if(partsArray[0] =="ltw1324") 
+		id = partsArray[1];
 
 	var notificaj = {
 				
@@ -207,6 +202,7 @@ if(partsArray[0] =="ltw1324") id = partsArray[1];
 * OnClick start request 
 */
 $("#searchbutton").click(function(e){
+	$('#searchmenu').parent().removeClass('open');
 	clearOverlays();
 	//prendo tipo
 	type = $('#searchType').val();
@@ -302,7 +298,7 @@ function timeConverter(UNIX_timestamp){
  * Get Pin Event
  */
 function getPin(type, subtype, status){
-    var mDir = "/techweb/html/img/pins/";
+    var mDir = "/img/pins/";
     switch (type){
         case"problemi_stradali" :
             switch(subtype){
