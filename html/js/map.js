@@ -93,7 +93,7 @@ markersArray.push(marker);
 google.maps.event.addListener(marker, 'click', function() {
 	//CONTENT INFOWINDOW
 if(status == 'closed'){
-	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><textarea id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
+	var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span><br>Descrizioni<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br>Descrizioni<br><textarea readonly id="descr">'+descr+'</textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\''+status+'\',\''+lat+'\',\''+lng+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button></div>';
 }else{
 	var contentString = '<div id="info"><b>'+type+'</b>'+'<br>'+id+'<br>Stato: <span class="label label-danger">'+status+'</span><br>Descrizioni<br><button type="button" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-plus-sign"></span></button><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><button type="button" id="notifica" class="btn btn-default btn-sm" style="background-color:red; color:white;"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
 }
@@ -120,20 +120,25 @@ tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><
 
 }
 
-//QUI! per ogni Evento la funzione notify farà una chiamata ajax per modificare lo stato di un evento
+
 /*NOTE:
+-SE LO STATO E' APERTO METTO SOLO PULSANTE CHIUSO. SE LO STATO È CHIUSO SOLO PULSANTE APERTO.
+SE SEI UN SUPERUSER ANCHE PULSANTE ARCHIVED
 -la info window dovrebbe essere dotata(se posibile) di un pulsante di scelta del tipo di stato da notificare(open closed archived) che diventerà poi lo status 
 	da inviare nella richiesta ajax
+	
 -le descrizioni delle notifiche precedenti finiscono nel form della descrizione da compilare(dopo un paio di notifiche si riempie di varie descrizioni)
 -dopo la notifica sarebbe il caso di far ripartire la search?
 -FATTO -->dobbiamo modificare il colore o l'immagine dei marker o di quello della posizione altrimenti non si capisce se è un evento o posizione
 */
 function notify(id,status,lat,lng,descr){
+var partsArray = id.split('_');
+if(partsArray[0] =="ltw1324") id = partsArray[1];
 
 	var notificaj = {
 				
-				id_evento : 27, //###############################qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
-									//E' PROPRIO QUELLO L'ID!! 
+				id_evento : id, //FATTO--->qui non arriva l'id dell'evento ma l'id attaccato alla stringa del server
+								 
 				status : status,
 
 				lat : lat,
@@ -243,7 +248,6 @@ $("#searchbutton").click(function(e){
 			$(data.events).each(function(i, src) {
 				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-				console.log(id_count);
 		      id_count++;
 			});
 			console.log(data);
