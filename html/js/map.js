@@ -340,13 +340,13 @@ function search() {
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
 		      	id_count++;
 			});
-			console.log(data);
-			console.log(markersArray[0]);
+			//console.log(data);
+			//console.log(markersArray[0]);
 			setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 		
 		} //chiudi function data
 	});//fine chiamata ajax
 	radius = radius / 1000;
 
-	window.setTimeout("search();", 300000);
+	window.setTimeout("search();", 6000000);
 }

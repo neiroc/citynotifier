@@ -7,21 +7,21 @@ $data = file_get_contents("php://input");
 
 $segnalazione=json_decode($data);
 
-if($segnalazione->{'id_utente'}!=Null){
+$id_utente = $segnalazione->{'id_utente'};
+
+
+if($id_utente!=Null){
 
 	$type = $segnalazione->{'type'}->{'type'};
 	$subtype = $segnalazione->{'type'}->{'subtype'};
+	$status = "open";
+	$lat = $segnalazione->{'lat'};
+	$lng = $segnalazione->{'lng'};
+	$description = $segnalazione->{'description'};
 
 	//controllo che la segnalazione contenga i dati necessari
 	if(($type !=Null)&&($subtype!=Null)&&($segnalazione->{'lat'} != Null) && ($segnalazione->{'lng'} != Null)){
 
-		
-		$status = "open";
-		$lat = $segnalazione->{'lat'};
-		$lng = $segnalazione->{'lng'};
-		$description = $segnalazione->{'description'};
-		$id_utente = $segnalazione->{'id_utente'};
-		
 		//definisco il tempo della segnalazione
 		$time = time();
 
@@ -124,7 +124,6 @@ if($segnalazione->{'id_utente'}!=Null){
 						//$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
 
 					}
-
 				}
 				else{
 					
@@ -135,9 +134,7 @@ if($segnalazione->{'id_utente'}!=Null){
 					//risposta positiva
 					$result['event_id'] =  $id_evento;
 					$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
-
 				}
-
 			}
 			//altrimenti inserisco(creo) il nuovo evento e la relativa notifica
 			else{
@@ -159,9 +156,7 @@ if($segnalazione->{'id_utente'}!=Null){
 					
 					//risultato positivo
 					$result['event_id'] =  $new_id;
-					$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
-					
-					
+					$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";	
 				}
 				else{
 
@@ -170,9 +165,7 @@ if($segnalazione->{'id_utente'}!=Null){
 
 				}
 			}
-		}
-
-		
+		}	
 	}
 	else{
 		$result['result'] = 'Errore nella segnalazione di un nuovo evento o notifica di evento esistente.';

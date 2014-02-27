@@ -23,6 +23,8 @@ $(document).ready(function() {
 
 			}
 
+//console.log(jQuery.cookie('id_utente'));
+
 			var host = "http://"+document.location.hostname ;
 
 			var url = host+"/segnalazione/"; 
@@ -46,7 +48,7 @@ $(document).ready(function() {
 					if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
 						if(call.skept){
 
-							successAlert(call.result+" "+call.skept);
+						successAlert(call.result+" "+call.skept);
 						
 						}
 						else{
