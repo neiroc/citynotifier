@@ -4,11 +4,10 @@ require 'db_aux.php';
 
 $data = file_get_contents("php://input");
 
-$result['result'] = "DEBUG: ";
-$result['error'] = $data;
+//$result['result'] = "DEBUG: ";
+//$result['error'] = $data;
 
 
-/*
 $notifica=json_decode($data);
 
 $id_utente = $notifica->{'id_utente'};
@@ -142,7 +141,7 @@ else{
 	$result['result'] = "errore nell'invio della notifica";
 	$result['errore']= "utente non riconosciuto";
 
-}*/
+}
 
 //risposta al client
 $re = json_encode($result);
