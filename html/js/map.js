@@ -8,6 +8,8 @@ var tabella;
 var infowindow = null;
 var reput;
 
+
+
 $(document).ready(function(){
 
 	geocoder = new google.maps.Geocoder();
@@ -269,7 +271,7 @@ function search() {
 			});
 			//console.log(data);
 			//console.log(markersArray[0]);
-			setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			//setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 		
 		} //chiudi function data
 	});//fine chiamata ajax
