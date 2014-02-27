@@ -63,9 +63,9 @@ function update_reliability($id_utente, $id_evento, $not_num){
 	$query= "SELECT DISTINCT Utenti.reputation, Utenti.assiduity FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifiche.id_utente) WHERE id_event=".$id_evento.";";
 
 	$risp= mysqli_query($con2, $query);
-ChromePhp::log($query);
+//ChromePhp::log($query);
 $row = mysqli_fetch_array($risp);
-ChromePhp::log($query);
+//ChromePhp::log($query);
 
 	if($row = mysqli_fetch_array($risp)){
 		
