@@ -101,7 +101,7 @@ if($id_utente != Null){
 				$stats=get_stats($id_utente);
 				$reliability=(1 + ( $stats['reputation'] * $stats['assiduity']))/2;
 
-				$insert = "INSERT INTO Evento (type, subtype, start_time, last_time, status, event_reliability, notifications, lat_med, lng_med) VALUES ('".$type."','".$subtype."','".$time."','".$time."','".$status."',".$reliability.", 1,'".$lat."','".$lng."');";
+				$insert = "INSERT INTO Evento (type, subtype, start_time, last_time, status, event_reliability, notifications, lat_med, lng_med) VALUES ('".$type."','".$subtype."','".$time."','".$time."','".$newstatus."',".$reliability.", 1,'".$lat."','".$lng."');";
 				
 				//var_dump($insert);
 				if(mysqli_query($con,$insert)){
