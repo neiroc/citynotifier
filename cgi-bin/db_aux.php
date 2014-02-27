@@ -1,5 +1,7 @@
 <?php
 
+require 'ChromePhp.php';
+
 function connect_db(){
 
 	
@@ -56,11 +58,14 @@ function get_stats($id_utente){
 
 function update_reliability($id_utente, $id_evento, $not_num){         
 
-	$con = connect_db();
+	$con2 = connect_db();
 
 	$query= "SELECT DISTINCT Utenti.reputation, Utenti.assiduity FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifiche.id_utente) WHERE id_event=".$id_evento.";";
 
-	$risp= mysqli_query($con, $query);
+	$risp= mysqli_query($con2, $query);
+ChromePhp::log($query);
+$row = mysqli_fetch_array($risp);
+ChromePhp::log($query);
 
 	if($row = mysqli_fetch_array($risp)){
 		
@@ -69,12 +74,13 @@ function update_reliability($id_utente, $id_evento, $not_num){
 		
 		for($i=0; $i<$j-1 ; $i++){
 
-		$sum = $sum + (1+($row['reputation'][i] * $row['assiduity'][i]));
+		$sum = $sum + (1+(($row['reputation'][i]) * ($row['assiduity'][i])));
 		
 		}
 		
-		$reliability =	$sum / (2* $not_num);
-		//var_dump($reliability);
+		$reliability =	($sum / (2 * $not_num));
+		ChromePhp::log($reliability);
+
 		return $reliability;
 	}
 	else{

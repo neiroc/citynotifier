@@ -43,6 +43,7 @@ if($id_utente != Null){
 			$rispostadb = mysqli_query($con,$query);
 
 			if($row = mysqli_fetch_array($rispostadb)){ 
+				$notifications=($row['notifications']);
 
 				if( (check_privileges($id_utente) >2) && (($newstatus=='archived') || ($newstatus=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
 
@@ -59,7 +60,7 @@ if($id_utente != Null){
 
 					$lat = ($lat + $row['lat_med'])/2;
 					$lng = ($lat + $row['lng_med'])/2;
-					$notifications = 1 + ($row['notifications']);
+					$notifications = 1 + $notifications;
 					$reliability = update_reliability($id_utente, $id_evento, $notifications);
 
 //var_dump($reliability);
@@ -89,11 +90,12 @@ if($id_utente != Null){
 					}
 					else{
 						
-						$update_query = "UPDATE Evento SET status = ".$newstatus."event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento;
+						$update_query = "UPDATE Evento SET status = ".$newstatus.", event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento;
 						mysqli_query($con,$update_query);
 
 						//risposta positiva
 						$result['result'] = "notifica inviata con successo";
+						$result['skept'] = "query=".$update_query." not=".$notifications." rel=".$reliability;
 					}
 				}
 			}

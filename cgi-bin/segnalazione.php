@@ -1,26 +1,24 @@
 <?php
 
-require 'db_aux.php';
+include 'db_aux.php';
+
 
 $data = file_get_contents("php://input");
-//var_dump($data);
 
 $segnalazione=json_decode($data);
 
 $id_utente = $segnalazione->{'id_utente'};
-
+$type = $segnalazione->{'type'}->{'type'};
+$subtype = $segnalazione->{'type'}->{'subtype'};
+$status = "open";
+$lat = $segnalazione->{'lat'};
+$lng = $segnalazione->{'lng'};
+$description = $segnalazione->{'description'};
 
 if($id_utente!=Null){
 
-	$type = $segnalazione->{'type'}->{'type'};
-	$subtype = $segnalazione->{'type'}->{'subtype'};
-	$status = "open";
-	$lat = $segnalazione->{'lat'};
-	$lng = $segnalazione->{'lng'};
-	$description = $segnalazione->{'description'};
-
 	//controllo che la segnalazione contenga i dati necessari
-	if(($type !=Null)&&($subtype!=Null)&&($segnalazione->{'lat'} != Null) && ($segnalazione->{'lng'} != Null)){
+	if(($type !=Null)&&($subtype!=Null)&&($lat != Null) && ($lng != Null)){
 
 		//definisco il tempo della segnalazione
 		$time = time();
@@ -110,7 +108,7 @@ if($id_utente!=Null){
 
 					if($skept==True){
 						$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
-						//var_dump($update_query);
+						
 						mysqli_query($con,$update_query);
 						//risposta positiva
 						$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
@@ -121,8 +119,6 @@ if($id_utente!=Null){
 						$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 						mysqli_query($con,$update_query);
 						$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
-						//$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
-
 					}
 				}
 				else{
@@ -141,18 +137,18 @@ if($id_utente!=Null){
 				
 				$stats=get_stats($id_utente);
 				$reliability=(1 + ( $stats['reputation'] * $stats['assiduity']))/2;
+				
 
 				$insert = "INSERT INTO Evento (type, subtype, start_time, last_time, status, event_reliability, notifications, lat_med, lng_med) VALUES ('".$type."','".$subtype."','".$time."','".$time."','".$status."',".$reliability.", 1,'".$lat."','".$lng."');";
 				
-				//var_dump($insert);
+				
 				if(mysqli_query($con,$insert)){
 					
 					$new_id = mysqli_insert_id($con);
-					//var_dump($new_id);
+					
 					//inserisco notifica
 					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ('".$id_utente."','".$new_id."','".$lat."','".$lng."','".$time."','open','".$description."');";
 					$test = mysqli_query($con,$insert);
-					//var_dump($test);
 					
 					//risultato positivo
 					$result['event_id'] =  $new_id;
