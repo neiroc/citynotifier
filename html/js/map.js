@@ -62,6 +62,7 @@ $('#table').on('click', function(){
     });
 });
 
+//$('#navuser').html(jQuery.cookie('username'))+":"+reput;
 
 /*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){

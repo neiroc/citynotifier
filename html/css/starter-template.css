@@ -80,3 +80,7 @@ select option[disabled] {
 	width: 60%
 }
 
+#navuser {
+	color:#FFFFFF;
+	margin-left: 100%;
+}

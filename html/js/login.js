@@ -1,3 +1,4 @@
+//var reput;
 $(document).ready(function() {
 	$("#login").submit(function() {
 		
@@ -20,7 +21,7 @@ $(document).ready(function() {
 			dataType: 'json',
 			success:function(call){	
 				if(call.result==="login effettuato con successo"){
-					
+					//reput=call.reputation;
 					session_user = "session"+$('#username').val();
 					jQuery.cookie('session_user', session_user, {expires:30});
 					jQuery.cookie('username', $('#username').val(), {expires:30});

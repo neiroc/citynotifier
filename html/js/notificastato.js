@@ -373,4 +373,4 @@ function getPin(type, subtype, status){
         case "closed" : return mDir + "Closed.png"
         case "skeptical" : return mDir + ".png";
     }
-}*/
+}
