@@ -6,8 +6,10 @@ require "utility.php";
 //VARIABILI GLOBALI
 $l_events = array();
 $new_events = array();
-//echo getLocalEvents(local,all,all,44.49895,11.341896,5000,1385899200,1389355200,all);
 
+/*
+* Prendi Eventi Locali
+*/
 function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
 //Connect to DB
@@ -19,7 +21,8 @@ if($mysqli == False){
 }
 
 $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 20";
-//check parameters. not compact
+
+//check parameters
  if($type!="all"){
 		$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event GROUP BY Evento.id_event HAVING distance < ".$radius."AND Evento.type='$type'";
 		
@@ -40,9 +43,6 @@ if($result->num_rows){
 	//Another query
 	$query2 = "SELECT * FROM Notifiche";
 	$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
-
-  //Aggiorna Stato Eventi
-	//prend timenow e last_time dell'evento e confronta con l'ultima segnalazione per ogni evento. chiudi se sono passati 20 minuti.
 	
 	//Set Time Zone
 	date_default_timezone_set("Europe/Rome");
@@ -67,7 +67,7 @@ if($result->num_rows){
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
 
-			//Update Status. parametri leggibili?
+			//Update Status.
 			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
 				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);
 			}
@@ -102,8 +102,9 @@ header('Content-Type: application/json');
 return json_encode($result);
 }
 
-/*CHIAMATA REMOTA E AGGREGAZIONE DATI***********************/
-
+/*
+*Prendi Eventi Remoti e Aggrega Dati
+*/
 function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
 global $new_events;
 global $l_events;
@@ -160,9 +161,8 @@ $array = json_decode($ris, true);
 			foreach ($result as $r) {
 			$json = json_decode($r,true);
 					foreach($json['events'] as $event){
-					//passo ogni evento remoto e lo confronto con i dati locali. MODIFICARE PARAMETER		
-					
-					compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
+					//passo ogni evento remoto e lo confronto con i dati locali. 	
+					 compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
 					}
 			}
 			//Merge Local with Remote Events 

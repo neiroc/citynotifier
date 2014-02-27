@@ -23,6 +23,9 @@ function showPosition (pos){
 	//prendo le coordinate del coordinate di geolocalizzazione
 	latitude = pos.coords.latitude;
 	longitude = pos.coords.longitude;
+
+	lastLatitude= latitude;
+	lastLongitude= longitude;
 	
 	myPosition = new google.maps.LatLng(latitude, longitude);
 	
@@ -41,6 +44,7 @@ function showPosition (pos){
 	
 	radiusWidget.set('distance', range);
 	radiusWidget.center_changed();
+	search();
 }
 
 //Gestione errori
@@ -120,6 +124,7 @@ function alternLoc(){
 	
 	radiusWidget.set('distance', radius);
 	//$('#searchRange').val(radius + " km ")
+	search();
 }
 	
 function centerLoc() {
@@ -136,6 +141,7 @@ function centerLoc() {
 		
 		map.setCenter(cityCenter);
 		geocodePosition(cityCenter);
+		search();
 }
 
 /**

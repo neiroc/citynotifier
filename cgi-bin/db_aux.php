@@ -2,9 +2,10 @@
 
 function connect_db(){
 
-	//$url=$SERVER;
+	
 
-    $con=mysqli_connect("localhost","root","pass","techweb");
+    //$con=mysqli_connect("localhost","my1323","h7YecW3U9","my1323");
+	$con=mysqli_connect("localhost","cacaturo","cacaturo123","techweb");
 
     // Check connection
     if (mysqli_connect_errno()){
@@ -80,7 +81,7 @@ function update_reliability($id_utente, $id_evento, $not_num){
 	return 1.0;
 	}	
 }
-/*
+
 function set_skeptikal($id_evento, $id_utente, $time){
 
 	$con = connect_db();
@@ -98,7 +99,7 @@ function set_skeptikal($id_evento, $id_utente, $time){
 	else{
 
 		$insert= "INSERT INTO skept (id_event, id_utente, time) VALUES (".$id_evento.", ".$id_utente.", ".$time.");";
-		//var_dump($insert);
+		
 		$risp= mysqli_query($con, $insert);
 
 		if($risp){
@@ -234,6 +235,6 @@ function risolvi_skeptikal($id_evento){
 		}
 	}	
 }
-*/
+
 
 ?>

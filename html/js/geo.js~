@@ -23,6 +23,9 @@ function showPosition (pos){
 	//prendo le coordinate del coordinate di geolocalizzazione
 	latitude = pos.coords.latitude;
 	longitude = pos.coords.longitude;
+
+	lastLatitude= latitude;
+	lastLongitude= longitude;
 	
 	myPosition = new google.maps.LatLng(latitude, longitude);
 	
@@ -41,13 +44,14 @@ function showPosition (pos){
 	
 	radiusWidget.set('distance', range);
 	radiusWidget.center_changed();
+	
 }
 
 //Gestione errori
 function errorGettingPosition(err) {
 
 	if(err.code == 1) {
-		console.log(lastLatitude)
+		//console.log(lastLatitude)
 		if(lastLatitude && lastLongitude)
 			alternLoc()
 		else
@@ -120,10 +124,11 @@ function alternLoc(){
 	
 	radiusWidget.set('distance', radius);
 	//$('#searchRange').val(radius + " km ")
+	search();
 }
 	
 function centerLoc() {
-		console.log("centerLoc")
+		//console.log("centerLoc")
 		//prende posizione default
 		var newMarkPos = cityCenter;
 		
@@ -136,6 +141,7 @@ function centerLoc() {
 		
 		map.setCenter(cityCenter);
 		geocodePosition(cityCenter);
+		search();
 }
 
 /**
@@ -186,11 +192,10 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 	geocoder.geocode({'latLng': LatLng}, function(results, status) {
     		if (status == google.maps.GeocoderStatus.OK) {		
 			if (results[0]) {
-				res = results[0].formatted_address;
-				/*
+		
 				res = results[0].address_components[1].long_name + " n." +
-				      results[0].address_components[0].long_name + ", " +
-				      results[0].address_components[2].long_name;*/
+				      results[0].address_components[0].long_name + ",<br> " +
+				      results[0].address_components[2].long_name;
 			}
 			else res = "Indirizzo non trovato.";
 		}
@@ -204,10 +209,10 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 				var ih = $("#tableEventAddress" + (actual + table_count)).html();
 				if (ih == "<img src=\"img/ajax-loader.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
 				else res = ih;*/
-				console.log("errore");
+				//console.log("errore");
 			}		
 		}
-		 console.log(res);
+		 //console.log(res);
 		$("#tableEventAddress" + (actual + table_count)).html(res);
 		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
 	});

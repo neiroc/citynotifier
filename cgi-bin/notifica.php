@@ -13,13 +13,13 @@ if($id_utente != Null){
 
 		$id_evento = $notifica->{'id_evento'};
 		$id_utente = $notifica->{'id_utente'};
-		$status = $notifica->{'status'};
+		$newstatus = $notifica->{'status'};
 		$lat = $notifica->{'lat'};
 		$lng = $notifica->{'lng'};
 		$description = $notifica->{'description'};
 		$type = $notifica->{'tipo'};
 		$subtype = $notifica->{'sottotipo'};
-		$newstatus = $notifica->{'newstatus'};
+		
 		//definisco il tempo della notifica
 		$time = time();
 
@@ -41,7 +41,7 @@ if($id_utente != Null){
 
 			if($row = mysqli_fetch_array($rispostadb)){ 
 
-				if( (check_privileges($id_utente) >2) && (($status=='archived') || ($status=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
+				if( (check_privileges($id_utente) >2) && (($newstatus=='archived') || ($newstatus=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
 
 					$result['result'] = "errore nell'invio della notifica";
 					$result['errore']= "privilegi insufficenti";

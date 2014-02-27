@@ -8,7 +8,7 @@ $(document).ready(function() {
 		
 		var host = "http://"+document.location.hostname ;
 
-		var url = host+"/techweb/html/login/"; // url dello script remoto
+		var url = host+"/login/"; // url dello script remoto
 		
 
 		$.ajax({

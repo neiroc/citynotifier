@@ -21,13 +21,7 @@ body {
 	background: grey;
 }	
 
-footer{
-	height:5%;
-	width: 100%;
-	background: #D2322D;
-	text-align: center;
-	padding: 5px 5px;
-}
+
 
 #logout {
 	margin-top:10%;	
@@ -56,8 +50,8 @@ select option[disabled] {
 }
 
 #insertLoc {
-	margin-top:30%;
-	margin-left:60%;
+	margin-top:18%;
+	margin-right:20px;
 }
 
 .control-group.error input{	
@@ -86,7 +80,3 @@ select option[disabled] {
 	width: 60%
 }
 
-.modal-content {
-	width: 130%;
-	margin-left:-15%
-}

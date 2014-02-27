@@ -21,7 +21,7 @@ $con=connect_db();
 
 if($con == False) {
 	$result['result'] = "Errore di connessione al db server";//risposta negativa
-	header('Content-Type: application/json');
+	//header('Content-Type: application/json');
 	$re = json_encode($result);
 	echo $re;
 }
@@ -38,7 +38,7 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 						
 	$result['result'] = "login effettuato con successo";//risposta positiva
 	$result['id_utente'] = $row['id_utente'];
-	header('Content-Type: application/json');	
+	//header('Content-Type: application/json');	
 	$re = json_encode($result);
 	echo $re;
                            
@@ -48,7 +48,7 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 else{
             
 	$result['result'] = "Credenziali Errate";//risposta negativa
-	header('Content-Type: application/json; charset=utf-8');
+	//header('Content-Type: application/json; charset=utf-8');
 	$re = json_encode($result);
 	echo $re;
 

@@ -5,6 +5,7 @@ RewriteRule logout/ /cgi-bin/logout.php [L]
 RewriteRule segnalazione/ /cgi-bin/segnalazione.php [L]
 RewriteRule notifica/ /cgi-bin/notifica.php [L]
 
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
