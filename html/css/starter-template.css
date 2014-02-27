@@ -80,7 +80,10 @@ select option[disabled] {
 	width: 60%
 }
 
-#navuser {
+#navuser1 {
 	color:#FFFFFF;
-	margin-left: 100%;
+}
+
+#navuser2 {
+	color:#FFFFFF;
 }

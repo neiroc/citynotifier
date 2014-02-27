@@ -1,7 +1,8 @@
+var username;
 $('document').ready(function(){
 	
 	if (jQuery.cookie('username')){
-		cookieuser=jQuery.cookie('username');
+		username=jQuery.cookie('username');
 		lastLatitude=jQuery.cookie('lastLatitude');
 		lastLongitude=jQuery.cookie('lastLongitude');
 		latitude=jQuery.cookie('latitude');

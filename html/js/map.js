@@ -6,6 +6,7 @@ var markersArray = [];
 var id_count;
 var tabella;
 var infowindow = null;
+var reput;
 
 $(document).ready(function(){
 
@@ -62,7 +63,10 @@ $('#table').on('click', function(){
     });
 });
 
-//$('#navuser').html(jQuery.cookie('username'))+":"+reput;
+us="User: "+ jQuery.cookie('username');
+rep="Reputation: "+jQuery.cookie('reputation');
+$('#navuser1').html(us);
+$('#navuser2').html(rep);
 
 /*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
