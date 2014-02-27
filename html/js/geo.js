@@ -128,20 +128,22 @@ function alternLoc(){
 }
 	
 function centerLoc() {
-		//console.log("centerLoc")
-		//prende posizione default
-		var newMarkPos = cityCenter;
-		
-		getMarker(newMarkPos);
-		distanceWidget = new DistanceWidget(map, newMarkPos);
-		radiusWidgetCheck = true;
 	
-		radiusWidget.set('distance', RADIUS);
-		radiusWidget.center_changed();
+	//prende posizione default
+	var newMarkPos = cityCenter;
+	lastLatitude=cityCenter.lat();
+	lastLongitude=cityCenter.lng();
 		
-		map.setCenter(cityCenter);
-		geocodePosition(cityCenter);
-		search();
+	getMarker(newMarkPos);
+	distanceWidget = new DistanceWidget(map, newMarkPos);
+	radiusWidgetCheck = true;
+	
+	radiusWidget.set('distance', RADIUS);
+	radiusWidget.center_changed();
+		
+	map.setCenter(cityCenter);
+	geocodePosition(cityCenter);
+	search();
 }
 
 /**
