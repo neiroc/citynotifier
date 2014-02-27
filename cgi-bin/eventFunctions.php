@@ -97,7 +97,7 @@ $result = array('request_time' => time(),
 								'result' => $messaggio,
 								'from_server'=> $server,
 								'events' => $list_events);
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 return json_encode($result);
 }
