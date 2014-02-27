@@ -27,7 +27,7 @@ if($con == False) {
 }
 	
 //interrogo il db e controllo se i dati di accesso corrispondono		
-$query="SELECT id_utente,username,user_pass FROM Utenti where username='".$username."' AND user_pass='".$password."';";
+$query="SELECT id_utente,username,user_pass,reputation FROM Utenti where username='".$username."' AND user_pass='".$password."';";
 	
 $risposta = mysqli_query($con,$query);
 
@@ -38,6 +38,7 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 						
 	$result['result'] = "login effettuato con successo";//risposta positiva
 	$result['id_utente'] = $row['id_utente'];
+	$result['reputation'] = $row['reputation'];
 	header('Content-Type: application/json; charset=utf-8');
 	$re = json_encode($result);
 	echo $re;
