@@ -176,47 +176,5 @@ function geocodePosition(position){
 	});
 }
 
-//Setta gli indirizzi degli eventi in tabella ricorsivamente
-function setTableAddress(events, actual, last, timeout, table_count) {
-	
-	geocoder = new google.maps.Geocoder();
-	
-	var llat, llng;
 
-	llat = events[actual].locations[0].lat; 
-	llng = events[actual].locations[0].lng;
-	//console.log(llat);
-	//console.log(llng);
-
-
-	var LatLng = new google.maps.LatLng(llat, llng);
-	
-	geocoder.geocode({'latLng': LatLng}, function(results, status) {
-    		if (status == google.maps.GeocoderStatus.OK) {		
-			if (results[0]) {
-		
-				res = results[0].address_components[1].long_name + " n." +
-				      results[0].address_components[0].long_name + ",<br> " +
-				      results[0].address_components[2].long_name;
-			}
-			else res = "Indirizzo non trovato.";
-		}
-		else { 
-			if ( (timeout < 16) && status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-				setTimeout(function(){ setTableAddress(events, actual, last, (timeout+1), table_count); }, 425);
-				return;
-			}
-			else {
-				
-				var ih = $("#tableEventAddress" + (actual + table_count)).html();
-				if (ih == "<img src=\"img/load2.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
-				else res = ih;
-				console.log("errore");
-			}		
-		}
-		 //console.log(res);
-		$("#tableEventAddress" + (actual + table_count)).html(res);
-		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
-	});
-}
 

@@ -7,12 +7,14 @@ require "utility.php";
 $l_events = array();
 $new_events = array();
 
+//getRemoteEvents(local,all,all,44.49895,11.341896,50,1385856000,1389312000,all);
+//echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all);
+
 /*
 * Prendi Eventi Locali
 */
 function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
-
 $list_events = array();
 	
 //Connect to DB
@@ -109,12 +111,13 @@ return json_encode($result);
 *Prendi Eventi Remoti e Aggrega Dati
 */
 function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
+
 global $new_events;
 global $l_events;
 
 $handles = array();
 $result = array();
-$res = array();
+
 
 $m_curl = curl_multi_init();
 
@@ -125,8 +128,8 @@ $array = json_decode($ris, true);
 
 	foreach($array['server'] as $url)
 	{
+	
 	$urls = $url."/richieste?scope=".$scope."&type=".$type."&subtype=".$subtype."&lat=".$lat."&lng=".$lng."&radius=".$radius."&timemin=".$timeMin."&timemax=".$timeMax."&status=".$status;
-
 
 	$cURL = curl_init();
 
@@ -158,7 +161,7 @@ $array = json_decode($ris, true);
     		curl_multi_remove_handle($m_curl, $handles[$i]);
 		}
 			
-			//Take local events	
+			//Local Events	
 			$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status),true);
 
 			foreach ($result as $r) {
