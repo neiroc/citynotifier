@@ -12,6 +12,9 @@ $new_events = array();
 */
 function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
 {
+
+$list_events = array();
+	
 //Connect to DB
 $mysqli = connect_db();
 
