@@ -209,7 +209,7 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 				var ih = $("#tableEventAddress" + (actual + table_count)).html();
 				if (ih == "<img src=\"img/load2.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
 				else res = ih;
-				console.log("errore");
+				//console.log("errore");
 			}		
 		}
 		 //console.log(res);

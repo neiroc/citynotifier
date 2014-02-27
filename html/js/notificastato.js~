@@ -1,5 +1,5 @@
 /*
-* Notifica evento
+* Notifica Stato Evento
 */
 function notify(id,status,lat,lng,type,subtype){
 	
@@ -72,4 +72,7 @@ var partsArray = id.split('_');
 	});
 	return false; // avoid to execute the actual submit of the form.*/
 }
+
+
+
 
