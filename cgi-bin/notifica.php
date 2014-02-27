@@ -10,20 +10,19 @@ $data = file_get_contents("php://input");
 
 $notifica=json_decode($data);
 
+$id_evento = $notifica->{'id_evento'};
 $id_utente = $notifica->{'id_utente'};
+$newstatus = $notifica->{'status'};
+$lat = $notifica->{'lat'};
+$lng = $notifica->{'lng'};
+$description = $notifica->{'description'};
+$type = $notifica->{'tipo'};
+$subtype = $notifica->{'sottotipo'};
+
 if($id_utente != Null){
 
-	if(($notifica->{'id_evento'} != Null) && ($notifica->{'status'} != Null) && ($notifica->{'lat'} != Null) && ($notifica->{'lng'} != Null)){
+	if(($id_evento != Null) && ($newstatus != Null) && ($lat != Null) && ($lng != Null)){
 
-		$id_evento = $notifica->{'id_evento'};
-		$id_utente = $notifica->{'id_utente'};
-		$newstatus = $notifica->{'status'};
-		$lat = $notifica->{'lat'};
-		$lng = $notifica->{'lng'};
-		$description = $notifica->{'description'};
-		$type = $notifica->{'tipo'};
-		$subtype = $notifica->{'sottotipo'};
-		
 		//definisco il tempo della notifica
 		$time = time();
 
@@ -44,6 +43,7 @@ if($id_utente != Null){
 			$rispostadb = mysqli_query($con,$query);
 
 			if($row = mysqli_fetch_array($rispostadb)){ 
+				$notifications=($row['notifications']);
 
 				if( (check_privileges($id_utente) >2) && (($newstatus=='archived') || ($newstatus=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
 
@@ -60,7 +60,7 @@ if($id_utente != Null){
 
 					$lat = ($lat + $row['lat_med'])/2;
 					$lng = ($lat + $row['lng_med'])/2;
-					$notifications = 1 + ($row['notifications']);
+					$notifications = 1 + $notifications;
 					$reliability = update_reliability($id_utente, $id_evento, $notifications);
 
 //var_dump($reliability);
@@ -69,6 +69,7 @@ if($id_utente != Null){
 						$skept=set_skeptikal($id_evento, $id_utente, $time);
 
 						if($skept==True){
+							//attivo lo skeptical
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							//var_dump($update_query);
 							mysqli_query($con,$update_query);
@@ -77,7 +78,7 @@ if($id_utente != Null){
 							$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
 						}
 						else{
-
+							//lo skeptical esiste già
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							mysqli_query($con,$update_query);
 							$result['result'] = "notifica inviata con successo";
@@ -89,11 +90,12 @@ if($id_utente != Null){
 					}
 					else{
 						
-						$update_query = "UPDATE Evento SET status = ".$newstatus."event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento;
+						$update_query = "UPDATE Evento SET status = ".$newstatus.", event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento;
 						mysqli_query($con,$update_query);
 
 						//risposta positiva
 						$result['result'] = "notifica inviata con successo";
+						$result['skept'] = "query=".$update_query." not=".$notifications." rel=".$reliability;
 					}
 				}
 			}
