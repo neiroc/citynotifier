@@ -50,6 +50,9 @@ $('#searchType').on('change', function(){
 	$('#searchSubType option:nth-child(1)').attr('selected', true);
 
 	switch ($(this).val()) {
+		case 'all':
+			disableOpt(type);
+		break;
 		case 'problemi_stradali':
 			disableOpt(type);	
 			break;
@@ -64,7 +67,7 @@ $('#searchType').on('change', function(){
 			break;
 		case 'eventi_pubblici':
 			disableOpt(type);
-			break;
+		break;
 	}
 });
 
@@ -95,59 +98,65 @@ function codeAddress() {
 //funzione che disabilita le opzioni
 function disableOpt(nType){
 	switch(nType){
-	case 'problemi_stradali':
-		for (var i=7; i<=18; i++){
-			$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
-		}
-		//riattivo option disattivate prima
-		for (var i=2; i<=6; i++){
-			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
-		}
-	break;
-	case 'emergenze_sanitarie':
-		for (var i=2; i<=18; i++){
-			if (i!=7 && i!=8 && i!=9){
+	
+		case 'all':
+			for (var i=2; i<=18; i++){
 				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
 			}
-		}
-		//riattivo option disattivate prima
-		for (var i=7; i<=9; i++){
-			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
-		}
-	break;
-	case 'reati':
-		for (var i=2; i<=18; i++){
-			if (i!=10 && i!=11){
+		break;
+		case 'problemi_stradali':
+			for (var i=7; i<=18; i++){
 				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
 			}
-		}
-		//riattivo option disattivate prima
-		for (var i=10; i<=11; i++){
-			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
-		}
-	break;
-	case 'problemi_ambientali':
-		for (var i=2; i<=18; i++){
-			if (i!=12 && i!=13 && i!=14 && i!=15){
-				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
+			//riattivo option disattivate prima
+			for (var i=2; i<=6; i++){
+				$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
 			}
-		}
-		//riattivo option disattivate prima
-		for (var i=12; i<=15; i++){
-			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
-		}
-	break;
-	case 'eventi_pubblici':
-		for (var i=2; i<=18; i++){
-			if (i!=16 && i!=17 && i!=18){
-				$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
+		break;
+		case 'emergenze_sanitarie':
+			for (var i=2; i<=18; i++){
+				if (i!=7 && i!=8 && i!=9){
+					$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
+				}
 			}
-		}
-		//riattivo option disattivate prima
-		for (var i=16; i<=18; i++){
-			$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
-		}
-	break;
+			//riattivo option disattivate prima
+			for (var i=7; i<=9; i++){
+				$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
+			}
+		break;
+		case 'reati':
+			for (var i=2; i<=18; i++){
+				if (i!=10 && i!=11){
+					$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
+				}
+			}
+			//riattivo option disattivate prima
+			for (var i=10; i<=11; i++){
+				$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
+			}
+		break;
+		case 'problemi_ambientali':
+			for (var i=2; i<=18; i++){
+				if (i!=12 && i!=13 && i!=14 && i!=15){
+					$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
+				}
+			}
+			//riattivo option disattivate prima
+			for (var i=12; i<=15; i++){
+				$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
+			}
+		break;
+		case 'eventi_pubblici':
+			for (var i=2; i<=18; i++){
+				if (i!=16 && i!=17 && i!=18){
+					$("#searchSubType option:nth-child("+ i +")").prop('disabled', true);
+				}
+			}
+			//riattivo option disattivate prima
+			for (var i=16; i<=18; i++){
+				$("#searchSubType option:nth-child("+ i +")").prop('disabled', false);
+			}
+		break;
 	}	
 }
 /**
