@@ -253,12 +253,12 @@ function search() {
 	//prendo raggio di ricerca
 	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtime
-	var unixdata = new Date(data).getTime() / 1000;	
-	var oggi = Math.round((new Date()).getTime() / 1000);
+   var unixdata = data_converter(data) + 3600;
+   var now = Math.round((new Date()).getTime() / 1000 + 3600); 
 
 
-	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ oggi + "&status="+status;
-console.log(url);
+	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
+   console.log(url);
 	$.ajax({
 		url: url,
 		type: 'GET',
@@ -267,14 +267,16 @@ console.log(url);
 		success: function(data){
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
-				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
+				//mid point
+				media = average(data.events[i]);
+				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-		      	id_count++;
+		      id_count++;
 			});
 			//console.log(data);
 			//console.log(markersArray[0]);
-			console.log(data.events);
-			setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			//console.log(data.events);
+			//if(data.events.length != 0)// setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 			
 		
 		} //chiudi function data
@@ -315,10 +317,10 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 				return;
 			}
 			else {
-				
+				/*
 				var ih = $("#tableEventAddress" + (actual + table_count)).html();
 				if (ih == "<img src=\"img/load2.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
-				else res = ih;
+				else res = ih;*/
 				console.log("errore");
 			}		
 		}
@@ -327,3 +329,12 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
 	});
 }
+
+//funzione di conversione date to timestamp
+function data_converter(strDate) {
+	var dateParts = strDate.split(" ");
+	var newDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+	var date = parseInt((new Date(newDate)).getTime()) / 1000; //secondi
+	return date;
+}
+

@@ -6,7 +6,7 @@ var markersArray = [];
 var id_count;
 var tabella;
 var infowindow = null;
-var reput;
+var checkSearch;
 
 
 $(document).ready(function(){
@@ -19,6 +19,7 @@ $(document).ready(function(){
 	};
 	map = new google.maps.Map(document.getElementById("gmap"), mapOptions);
 	
+	checkSearch=true;
 	
 	//se esistono i cookie
 	if (lastLatitude && lastLongitude){
@@ -29,6 +30,7 @@ $(document).ready(function(){
 		//funzione di geolocalizzazione
 		geoLocal();
 	}
+
 	//riceve l'evento se mi sposto sulla mappa
 	google.maps.event.addListener(map, 'click', function(event) {
 		
@@ -122,8 +124,9 @@ function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
 * OnClick start request 
 */
 $("#searchbutton").click(function(e){
+	//chiudo il dropdown
 	$('#searchmenu').parent().removeClass('open');
-	
+	//chiamo la funzione di ricerca
 	search();
 });
 
@@ -250,12 +253,13 @@ function search() {
 	//prendo raggio di ricerca
 	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtime
-	var unixdata = new Date(data).getTime() / 1000;	
-	var oggi = Math.round((new Date()).getTime() / 1000);
+   var unixdata = data_converter(data) + 3600;
+   
+   var now = Math.round((new Date()).getTime() / 1000 + 3600); 
 
 
-	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ oggi + "&status="+status;
-
+	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
+   console.log(url);
 	$.ajax({
 		url: url,
 		type: 'GET',
@@ -264,14 +268,16 @@ function search() {
 		success: function(data){
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
-				showOnMap(src.locations[0].lat,src.locations[0].lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
+				//mid point
+				media = average(data.events[i]);
+				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-		      	id_count++;
+		      id_count++;
 			});
 			//console.log(data);
 			//console.log(markersArray[0]);
-			console.log(data.events);
-			setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			//console.log(data.events);
+			//if(data.events.length != 0)// setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 			
 		
 		} //chiudi function data
@@ -280,3 +286,56 @@ function search() {
 
 	window.setTimeout("search();", 6000000);
 }
+
+//Setta gli indirizzi degli eventi in tabella ricorsivamente
+function setTableAddress(events, actual, last, timeout, table_count) {
+	
+	geocoder = new google.maps.Geocoder();
+	
+	var llat, llng;
+
+	llat = events[actual].locations[0].lat; 
+	llng = events[actual].locations[0].lng;
+	//console.log(llat);
+	//console.log(llng);
+
+
+	var LatLng = new google.maps.LatLng(llat, llng);
+	
+	geocoder.geocode({'latLng': LatLng}, function(results, status) {
+    		if (status == google.maps.GeocoderStatus.OK) {		
+			if (results[0]) {
+		
+				res = results[0].address_components[1].long_name + " n." +
+				      results[0].address_components[0].long_name + ",<br> " +
+				      results[0].address_components[2].long_name;
+			}
+			else res = "Indirizzo non trovato.";
+		}
+		else { 
+			if ( (timeout < 16) && status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+				setTimeout(function(){ setTableAddress(events, actual, last, (timeout+1), table_count); }, 425);
+				return;
+			}
+			else {
+				/*
+				var ih = $("#tableEventAddress" + (actual + table_count)).html();
+				if (ih == "<img src=\"img/load2.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
+				else res = ih;*/
+				console.log("errore");
+			}		
+		}
+		 //console.log(res);
+		$("#tableEventAddress" + (actual + table_count)).html(res);
+		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
+	});
+}
+
+//funzione di conversione date to timestamp
+function data_converter(strDate) {
+	var dateParts = strDate.split(" ");
+	var newDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
+	var date = parseInt((new Date(newDate)).getTime()) / 1000; //secondi
+	return date;
+}
+

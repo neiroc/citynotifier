@@ -8,7 +8,7 @@ $l_events = array();
 $new_events = array();
 
 //getRemoteEvents(local,all,all,44.49895,11.341896,50,1385856000,1389312000,all);
-echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all);
+//echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all);
 
 /*
 * Prendi Eventi Locali
