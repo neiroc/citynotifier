@@ -84,6 +84,6 @@ select option[disabled] {
 	color:#FFFFFF;
 }
 
-#navuser2 {
-	color:#FFFFFF;
+#usermenu {
+	width: 10%;
 }
