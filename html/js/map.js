@@ -258,7 +258,7 @@ function search() {
 
 
 	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
-   console.log(url);
+  
 	$.ajax({
 		url: url,
 		type: 'GET',

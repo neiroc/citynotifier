@@ -254,7 +254,6 @@ function search() {
 	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtime
    var unixdata = data_converter(data) + 3600;
-   
    var now = Math.round((new Date()).getTime() / 1000 + 3600); 
 
 
