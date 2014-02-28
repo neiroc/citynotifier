@@ -1,6 +1,6 @@
 <?php
 
-include 'db_aux.php';
+require 'db_aux.php';
 
 
 $data = file_get_contents("php://input");
@@ -15,6 +15,9 @@ $lat = $segnalazione->{'lat'};
 $lng = $segnalazione->{'lng'};
 $description = $segnalazione->{'description'};
 
+//connessione al db
+$con = connect_db();
+
 if($id_utente!=Null){
 
 	//controllo che la segnalazione contenga i dati necessari
@@ -23,8 +26,7 @@ if($id_utente!=Null){
 		//definisco il tempo della segnalazione
 		$time = time();
 
-		//connessione al db
-		$con = connect_db();
+		
 		
 		if($con == False){
 			
@@ -100,6 +102,7 @@ if($id_utente!=Null){
 				$lat = ($lat + $row['lat_med'])/2;
 				$lng = ($lat + $row['lng_med'])/2;
 				$notifications = 1 + ($row['notifications']);
+				ChromePhp::log($notifications);
 				$reliability = update_reliability($id_utente, $id_evento, $notifications);
 				
 				if(($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
@@ -107,8 +110,9 @@ if($id_utente!=Null){
 					$skept=set_skeptikal($id_evento, $id_utente, $time);
 
 					if($skept==True){
+						//ChromePhp::log($notifications);
 						$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
-						
+						//ChromePhp::log($update_query);
 						mysqli_query($con,$update_query);
 						//risposta positiva
 						$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
@@ -117,6 +121,7 @@ if($id_utente!=Null){
 					else{
 
 						$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
+						
 						mysqli_query($con,$update_query);
 						$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
 					}
@@ -173,8 +178,17 @@ else{
 	$result['errore'] = 'utente non riconosciuto';
 }
 
-//risposta al client
+//recupero reputation
 
+$query="SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
+
+$rep = mysqli_query($con,$query);
+if($row = mysqli_fetch_array($rep)){
+	$result['reputation'] = "reputation: 0.2";//$row['reputation'];
+	//ChromePhp::log($result['reputation']);
+}
+
+//risposta al client
 $re = json_encode($result);
 //var_dump($re);
 header('Content-Type: application/json; charset=utf-8');

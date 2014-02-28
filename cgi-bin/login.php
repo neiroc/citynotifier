@@ -21,8 +21,9 @@ $con=connect_db();
 
 if($con == False) {
 	$result['result'] = "Errore di connessione al db server";//risposta negativa
-	header('Content-Type: application/json; charset=utf-8');
+	
 	$re = json_encode($result);
+	header('Content-Type: application/json; charset=utf-8');
 	echo $re;
 }
 	

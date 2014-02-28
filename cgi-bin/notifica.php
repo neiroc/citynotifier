@@ -19,6 +19,9 @@ $description = $notifica->{'description'};
 $type = $notifica->{'tipo'};
 $subtype = $notifica->{'sottotipo'};
 
+//connessione al db
+$con = connect_db();
+
 if($id_utente != Null){
 
 	if(($id_evento != Null) && ($newstatus != Null) && ($lat != Null) && ($lng != Null)){
@@ -26,8 +29,7 @@ if($id_utente != Null){
 		//definisco il tempo della notifica
 		$time = time();
 
-		//connessione al db
-		$con = connect_db();
+		
 		
 		if($con == False){
 			
@@ -44,7 +46,7 @@ if($id_utente != Null){
 
 			if($row = mysqli_fetch_array($rispostadb)){ 
 				$notifications=($row['notifications']);
-
+//ChromePhp::log($notifications);
 				if( (check_privileges($id_utente) >2) && (($newstatus=='archived') || ($newstatus=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
 
 					$result['result'] = "errore nell'invio della notifica";
@@ -63,13 +65,15 @@ if($id_utente != Null){
 					$notifications = 1 + $notifications;
 					$reliability = update_reliability($id_utente, $id_evento, $notifications);
 
-//var_dump($reliability);
+
 					if(($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
 					
 						$skept=set_skeptikal($id_evento, $id_utente, $time);
 
 						if($skept==True){
 							//attivo lo skeptical
+
+							//ChromePhp::log($notifications);
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							//var_dump($update_query);
 							mysqli_query($con,$update_query);
@@ -78,6 +82,8 @@ if($id_utente != Null){
 							$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
 						}
 						else{
+
+							//ChromePhp::log($notifications);
 							//lo skeptical esiste già
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							mysqli_query($con,$update_query);
@@ -143,6 +149,15 @@ else{
 	$result['result'] = "errore nell'invio della notifica";
 	$result['errore']= "utente non riconosciuto";
 
+}
+
+//recupero reputation
+$query="SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
+
+$rep = mysqli_query($con,$query);
+if($row = mysqli_fetch_array($rep)){
+	$result['reputation'] = $row['reputation'];
+	//ChromePhp::log($row['reputation']);
 }
 
 //risposta al client

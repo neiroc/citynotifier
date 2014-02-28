@@ -1,6 +1,6 @@
 <?php
 
-require 'ChromePhp.php';
+include 'ChromePhp.php';
 
 function connect_db(){
 

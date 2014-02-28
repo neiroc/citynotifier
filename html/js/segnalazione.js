@@ -46,14 +46,21 @@ $(document).ready(function() {
 				success:function(call){	
 					
 					if(call.result==="nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo"){	
+						
+
+						rep=call.reputation;
+						//$('navuser2').html(rep);
+						//console.log(rep);
+						//console.log(call.reputation);
+
 						if(call.skept){
 
-						successAlert(call.result+" "+call.skept);
+							successAlert(call.result+" "+call.skept);
 						
 						}
 						else{
 						
-						successAlert(call.result);
+							successAlert(call.result);
 						
 						}
 					}

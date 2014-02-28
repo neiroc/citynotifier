@@ -4,7 +4,7 @@
 * Funzione Aggiorna Stato degli eventi dopo 20 minuti. tranne per buca!
 */
 function updateStatus($now,$freshness,$event_id,$mysqli){
-				gestisci_skeptical_aperti();
+				//gestisci_skeptical_aperti();
 				$diff = $now - $freshness;
 				if($diff > 1200) {
 						$updateStatusQuery = "UPDATE Evento SET status=\"closed\" WHERE id_event=".$event_id;
