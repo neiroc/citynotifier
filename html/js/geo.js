@@ -44,7 +44,9 @@ function showPosition (pos){
 	
 	radiusWidget.set('distance', range);
 	radiusWidget.center_changed();
-	search();
+	
+	if (checkSearch)
+		search();
 }
 
 //Gestione errori
@@ -123,8 +125,9 @@ function alternLoc(){
 	geocodePosition(newMarkPos);
 	
 	radiusWidget.set('distance', radius);
-	//$('#searchRange').val(radius + " km ")
-	search();
+	
+	if (checkSearch)
+		search();
 }
 	
 function centerLoc() {
@@ -143,7 +146,8 @@ function centerLoc() {
 		
 	map.setCenter(cityCenter);
 	geocodePosition(cityCenter);
-	search();
+	if (checkSearch)
+		search();
 }
 
 /**

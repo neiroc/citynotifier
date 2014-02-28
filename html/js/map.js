@@ -6,7 +6,7 @@ var markersArray = [];
 var id_count;
 var tabella;
 var infowindow = null;
-var reput;
+var checkSearch;
 
 
 $(document).ready(function(){
@@ -19,6 +19,7 @@ $(document).ready(function(){
 	};
 	map = new google.maps.Map(document.getElementById("gmap"), mapOptions);
 	
+	checkSearch=true;
 	
 	//se esistono i cookie
 	if (lastLatitude && lastLongitude){
@@ -29,6 +30,7 @@ $(document).ready(function(){
 		//funzione di geolocalizzazione
 		geoLocal();
 	}
+
 	//riceve l'evento se mi sposto sulla mappa
 	google.maps.event.addListener(map, 'click', function(event) {
 		
@@ -122,8 +124,9 @@ function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
 * OnClick start request 
 */
 $("#searchbutton").click(function(e){
+	//chiudo il dropdown
 	$('#searchmenu').parent().removeClass('open');
-	
+	//chiamo la funzione di ricerca
 	search();
 });
 

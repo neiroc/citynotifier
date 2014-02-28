@@ -35,6 +35,11 @@ $('#notifyType').on('change', function(){
 
 //se clicco il tasto di geolocalizzazione nel menu notify
 $('#insertLoc').on('click', function(){
+
+	checkSearch=false;
+
+	clearOverlays()
+	
 	//geolocalizza
 	geoLocal();
 })
