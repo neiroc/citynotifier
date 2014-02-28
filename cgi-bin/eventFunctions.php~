@@ -35,7 +35,6 @@ $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * c
 			$query=$query." AND Evento.subtype='$subtype'";
 		}
 	}
- 
 	if($status!="all"){
 		$query=$query." AND Evento.status='$status'";
 }
@@ -74,13 +73,7 @@ if($result->num_rows){
 						$list_descr[$i][]=$row2['description'];
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
-					
-			print("ora:");
-			print_r($now);
-			print("fresh:");
-			print_r($freshness);
-			
-
+								
 			//Update Status.
 			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
 				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);
@@ -240,7 +233,7 @@ $found = false;
 			
 				$v['locations'] = array_merge($v['locations'], $evento['locations']);
 			
-				//calcolare reliability!
+				$v['reliability'] = ($v['reliability'] + $evento['reliability']) / 2;
 				$v['number_of_notifications'] = count($v['description']);
 				$v['freshness'] = max($v['freshness'], $evento['freshness']);
 	

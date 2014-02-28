@@ -35,7 +35,6 @@ $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * c
 			$query=$query." AND Evento.subtype='$subtype'";
 		}
 	}
- 
 	if($status!="all"){
 		$query=$query." AND Evento.status='$status'";
 }
@@ -225,7 +224,7 @@ $found = false;
 	
 		if(!$found){	
 			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi AGGREGO
-			if($dist <= 100 && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
+			if($dist <= 200 && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
 			{
 				$found = true;
 		
@@ -234,7 +233,7 @@ $found = false;
 			
 				$v['locations'] = array_merge($v['locations'], $evento['locations']);
 			
-				//calcolare reliability!
+				$v['reliability'] = ($v['reliability'] + $evento['reliability']) / 2;
 				$v['number_of_notifications'] = count($v['description']);
 				$v['freshness'] = max($v['freshness'], $evento['freshness']);
 	
