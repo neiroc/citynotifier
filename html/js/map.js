@@ -64,9 +64,9 @@ $('#table').on('click', function(){
 });
 
 us="User: "+ jQuery.cookie('username');
-rep="Reputation: "+jQuery.cookie('reputation');
-$('#navuser1').html(us);
-$('#navuser2').html(rep);
+rep=jQuery.cookie('reputation');
+$('#navuser1').html(us + '<b class="caret"></b>');
+$('.badge-success').html(rep)
 
 /*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,inizio,ultima,descr){
