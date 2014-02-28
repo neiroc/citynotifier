@@ -9,7 +9,7 @@ $new_events = array();
 
 //getRemoteEvents(local,all,all,44.49895,11.341896,50,1385856000,1389312000,all);
 //echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all);
-
+//http://localhost/richieste?scope=local&type=emergenze_sanitarie&subtype=ferito&lat=44.524966819292565&lng=11.523284912109375&radius=2000&timemin=1388534400&timemax=1393590048&status=all
 /*
 * Prendi Eventi Locali
 */
@@ -35,23 +35,26 @@ $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * c
 			$query=$query." AND Evento.subtype='$subtype'";
 		}
 	}
+ 
 	if($status!="all"){
 		$query=$query." AND Evento.status='$status'";
 }
 
 	
 $result = $mysqli->query($query) or die($mysqli->error.__LINE__);
-
+	
 //If result is not empty
 if($result->num_rows){
- 
+ 		
 	//Another query
 	$query2 = "SELECT * FROM Notifiche";
 	$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
+
 	
 	//Set Time Zone
 	date_default_timezone_set("Europe/Rome");
 	$now = time();
+	
 
 	//Get Data from DB and construct the json response 
 	while ($row = $result->fetch_assoc()) {
@@ -71,7 +74,7 @@ if($result->num_rows){
 						$list_descr[$i][]=$row2['description'];
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
-
+								
 			//Update Status.
 			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
 				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);

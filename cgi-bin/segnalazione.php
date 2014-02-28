@@ -25,8 +25,6 @@ if($id_utente!=Null){
 
 		//definisco il tempo della segnalazione
 		$time = time();
-
-		
 		
 		if($con == False){
 			

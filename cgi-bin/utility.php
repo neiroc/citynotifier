@@ -1,7 +1,7 @@
 <?php
 
 /*
-* Funzione Aggiorna Stato degli eventi dopo 20 minuti. tranne per buca!
+* Funzione Aggiorna Stato degli eventi dopo 20 minuti. tranne per buca e lavori in corso
 */
 function updateStatus($now,$freshness,$event_id,$mysqli){
 				//gestisci_skeptical_aperti();
@@ -10,7 +10,7 @@ function updateStatus($now,$freshness,$event_id,$mysqli){
 						$updateStatusQuery = "UPDATE Evento SET status=\"closed\" WHERE id_event=".$event_id;
 						$updateResult = $mysqli->query($updateStatusQuery);
 						return "closed";
-				}
+				}else return "open";
 }
 
 function gestisci_skeptical_aperti(){

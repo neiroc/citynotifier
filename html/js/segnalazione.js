@@ -23,7 +23,7 @@ $(document).ready(function() {
 
 			}
 
-//console.log(jQuery.cookie('id_utente'));
+//console.log(segnalazionej);
 
 			var host = "http://"+document.location.hostname ;
 
