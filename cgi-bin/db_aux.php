@@ -70,29 +70,19 @@ function update_reliability($id_utente, $id_evento, $not_num){
 	$query= "SELECT DISTINCT Utenti.reputation, Utenti.assiduity FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifiche.id_utente) WHERE id_event=".$id_evento.";";
 
 	$risp= mysqli_query($con2, $query);
-//ChromePhp::log($query);
-$row = mysqli_fetch_array($risp);
-//ChromePhp::log($query);
 
-	if($row = mysqli_fetch_array($risp)){
+	$sum=0;
+	
+	while($row = $risp->fetch_assoc()){
 		
-		$sum=0;
-		$j=count($row['reputation']);
+		$sum = $sum + (1+(($row['reputation']) * ($row['assiduity'])));
 		
-		for($i=0; $i<$j-1 ; $i++){
-
-		$sum = $sum + (1+(($row['reputation'][i]) * ($row['assiduity'][i])));
-		
-		}
-		
-		$reliability =	($sum / (2 * $not_num));
-		ChromePhp::log($reliability);
-
-		return $reliability;
 	}
-	else{
-	return 1.0;
-	}	
+	
+	$reliability =	($sum / (2 * $not_num));
+	ChromePhp::log($reliability);
+
+	return $reliability;	
 }
 
 
@@ -127,7 +117,7 @@ function set_skeptikal($id_evento, $time){
 
 /*aumenta la reputazione di un utente*/
 function increase_reputation($id_utente){
-ChromePhp::log("increase");
+
 	$con = connect_db();
 
 	$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
@@ -135,15 +125,19 @@ ChromePhp::log("increase");
 
 	if($row = mysqli_fetch_array($risp)){
 
-		$reputation=($row['reputation'])+0.1;
-ChromePhp::log($reputation);
+		$reputation=$row['reputation'];
+		
+		$reputation=$reputation+(1/10);
+
 
 		if($reputation>1){
 
 			$update="UPDATE Utenti SET reputation= 1 WHERE id_utente=".$id_utente.";";
+			mysqli_query($con, $update);
 		}
 		else{
 			$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
+			mysqli_query($con, $update);
 		}
 	}
 }
@@ -151,7 +145,7 @@ ChromePhp::log($reputation);
 
 /*dimuniusce la reputazione di un utente*/
 function decrease_reputation($id_utente){
-ChromePhp::log("decrease");
+
 	$con = connect_db();
 
 	$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
@@ -159,14 +153,18 @@ ChromePhp::log("decrease");
 
 	if($row = mysqli_fetch_array($risp)){
 
-		$reputation=($row['reputation'])-0.1;
-ChromePhp::log($reputation);
+		$reputation=$row['reputation'];
+		
+		$reputation=$reputation-(1/10);
+
 		if($reputation<(-1.0)){
 
 			$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=".$id_utente.";";
+			mysqli_query($con, $update);
 		}
 		else{
 			$update="UPDATE Utenti SET reputation= ".$reputation." WHERE id_utente=".$id_utente.";";
+			mysqli_query($con, $update);
 		}
 	}
 }
@@ -176,29 +174,28 @@ ChromePhp::log($reputation);
 /*risolve lo  stato skeptical dell'evento passato*/
 
 function risolvi_skeptical($id_evento){
-ChromePhp::log("risolvo singolo skept");
+
 	$time = time();
-//ChromePhp::log($id_evento);
+
 	$con = connect_db();
 		
 	$info_query="SELECT skept.time FROM skept WHERE id_event=".$id_evento.";";
 
 	$check= mysqli_query($con, $info_query);
-//ChromePhp::log($info_query);
+
 	if($row = mysqli_fetch_array($check)){
 
 		$start = $row['time'];
 
 		$query="SELECT DISTINCT Utenti.id_utente, Notifiche.status_notif FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifiche.id_utente) WHERE id_event=".$id_evento." AND time >= ".$start.";";
 
-ChromePhp::log($query);
 		$risp=mysqli_query($con, $query);
 
 		$open=0;
 		$closed=0;
 
 		while($row2 = $risp->fetch_assoc()){
-			ChromePhp::log($row2);
+			
 			if($row2['status_notif']=="open"){
 				$open++;
 			}
@@ -208,25 +205,23 @@ ChromePhp::log($query);
 		}
 
 		if($open==$closed){
-		ChromePhp::log("diobbestia");	
+
 			$update="UPDATE Evento SET status= 'open', last_time= ".$time." WHERE id_event=".$id_evento.";";
 
 			mysqli_query($con, $update);
-
 		}
 		else{
+
 			if($open>$closed){
 				$update="UPDATE Evento SET status= 'open', last_time= ".$time." WHERE id_event=".$id_evento.";";
 
 				mysqli_query($con, $update);
-ChromePhp::log("riapro");
+
 				
 				$risp=mysqli_query($con, $query);
 
 				while($row3 = $risp->fetch_assoc()){
-ChromePhp::log($row3);
-ChromePhp::log($row3['status_notif']);
-ChromePhp::log($row3['id_utente']);
+
 					if($row3['status_notif']=="open"){
 
 						increase_reputation($row3['id_utente']);
@@ -241,15 +236,13 @@ ChromePhp::log($row3['id_utente']);
 			else{
 
 				$update="UPDATE Evento SET status= 'closed', last_time= ".$time." WHERE id_event=".$id_evento.";";
-ChromePhp::log("richiudo");
+
 				mysqli_query($con, $update);
 
 				$risp=mysqli_query($con, $query);
 
 				while($row3 = $risp->fetch_assoc()){
-ChromePhp::log($row3);
-ChromePhp::log($row3['status_notif']);
-ChromePhp::log($row3['id_utente']);
+
 					if($row3['status_notif']=="closed"){
 
 						increase_reputation($row3['id_utente']);
@@ -270,17 +263,17 @@ ChromePhp::log($row3['id_utente']);
 /*gestisce la risoluzione degli stati skeptical uno a uno*/
 
 function gestisci_skeptical_aperti(){
-ChromePhp::log("gestisco skeptical");
+
 	$now = time();
 
 	$con = connect_db();
 
-	$query = "SELECT skept.id_event FROM skept WHERE (".$now." - time) > 60;"; 
+	$query = "SELECT skept.id_event FROM skept WHERE (".$now." - time) > 90;"; 
 
 	$risp = mysqli_query($con,$query);
 
 	while($row = $risp->fetch_assoc()){
-			ChromePhp::log($row['id_event']);
+			
 			risolvi_skeptical($row['id_event']);
 	}
 }

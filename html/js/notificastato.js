@@ -52,6 +52,8 @@ var partsArray = id.split('_');
 			if(call.result==="notifica inviata con successo"){	
 
 				rep=call.reputation;
+				//successAlert(call.reputation);
+				upRep();
 				
 				if(call.skept){
 
