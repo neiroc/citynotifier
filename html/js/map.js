@@ -7,9 +7,14 @@ var id_count;
 var tabella;
 var infowindow = null;
 var checkSearch;
+var upUs;
+var rep;
 
 
 $(document).ready(function(){
+
+	upUser();
+	upRep();
 
 	geocoder = new google.maps.Geocoder();
 	var mapOptions = {
@@ -63,10 +68,19 @@ $('#table').on('click', function(){
     });
 });
 
-us="User: "+ jQuery.cookie('username');
-rep=jQuery.cookie('reputation');
-$('#navuser1').html(us + '<b class="caret"></b>');
-$('.badge-success').html(rep)
+//aggiorna l'user in navbar
+function upUser(){
+	upUs="User: "+ jQuery.cookie('username');
+	$('#navuser1').html(upUs + '<b class="caret"></b>');
+}
+
+//aggiorna la reputazine nel menu utente
+function upRep(){
+	if (!rep)
+		rep=jQuery.cookie('reputation');
+
+	$('.badge-success').html(rep)
+}
 
 /*Crea marker sulla mappa per ogni evento ricevuto dalla richiesta */
 function showOnMap(lat,lng,id,type,subtype,status,rel,inizio,ultima,descr){
@@ -94,37 +108,39 @@ function showOnMap(lat,lng,id,type,subtype,status,rel,inizio,ultima,descr){
 	var pos = marker.getPosition();
 
 	var circle_event = new google.maps.Circle({
-	center: pos,
-	map:map,
-	radius:0,
-	strokeOpacity:0.8,
-	strokeWeight: 0,
-	fillColor: "#F86F05",
+		center: pos,
+		map:map,
+		radius:0,
+		strokeOpacity:0.8,
+		strokeWeight: 0,
+		fillColor: "#F86F05",
 	});
 
 	google.maps.event.addListener(marker, 'mouseover', function() {
 		var area = calculateEventArea(type,subtype); //area di aggregamento
 		circle_event.setRadius(area);
-		});
+	});
 		
    google.maps.event.addListener(marker, 'mouseout', function() {
 		circle_event.setRadius(0);
-		});
+	});
 
 		
 	google.maps.event.addListener(marker, 'click', function() {
-	//CONTENT INFOWINDOW
-	if(status == 'closed'){
-		var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span>&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
-	}else if(status == 'open'){
-			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-success">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
-	}else var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-warning">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
-		infowindow.setContent(contentString);
-		infowindow.open(map,marker);
-	});
+		//CONTENT INFOWINDOW
+		if(status == 'closed'){
+			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span>&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+		}
+		else if(status == 'open'){
+				var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-success">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+		}
+		else var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-warning">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+			infowindow.setContent(contentString);
+			infowindow.open(map,marker);
+		});
 
-	google.maps.event.addListener(map, 'click', function() {
-		infowindow.close();
+		google.maps.event.addListener(map, 'click', function() {
+			infowindow.close();
 	});
 }
 
