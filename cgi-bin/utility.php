@@ -6,7 +6,7 @@
 function updateStatus($now,$freshness,$event_id,$mysqli){
 				//gestisci_skeptical_aperti();
 				$diff = $now - $freshness;
-				if($diff > 1200) {
+				if($diff > 555200) {
 						$updateStatusQuery = "UPDATE Evento SET status=\"closed\" WHERE id_event=".$event_id;
 						$updateResult = $mysqli->query($updateStatusQuery);
 						return "closed";

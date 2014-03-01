@@ -66,7 +66,7 @@ if($id_utente != Null){
 					$reliability = update_reliability($id_utente, $id_evento, $notifications);
 
 
-					if(($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
+					if((($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200))||($row['status']==='skeptical')) {//#########################################SKEPTICAL
 					
 						$skept=set_skeptikal($id_evento, $id_utente, $time);
 
@@ -83,16 +83,14 @@ if($id_utente != Null){
 						}
 						else{
 
-							//ChromePhp::log($notifications);
+							ChromePhp::log($notifications." lo stato è già skeptical");
 							//lo skeptical esiste già
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							mysqli_query($con,$update_query);
 							$result['result'] = "notifica inviata con successo";
-							//$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
+							$result['skept'] = "Attenzione: l'evento è in stato skeptical: ".$id_evento;
 
 						}
-
-
 					}
 					else{
 						
@@ -106,6 +104,8 @@ if($id_utente != Null){
 				}
 			}
 			else{//inserire nuovo stato
+
+				ChromePhp::log("nuovo stato");
 				$stats=get_stats($id_utente);
 				$reliability=(1 + ( $stats['reputation'] * $stats['assiduity']))/2;
 

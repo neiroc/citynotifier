@@ -62,6 +62,7 @@ var partsArray = id.split('_');
 					successAlert(call.result);
 					
 				}
+				search();
 			}
 			else {
 				

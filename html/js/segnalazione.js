@@ -63,12 +63,14 @@ $(document).ready(function() {
 							successAlert(call.result);
 						
 						}
+						search();
 					}
 					else {
 					
 						errorAlert(call.result+": "+call.errore);
 
-					} 		
+					} 	
+
 				},
 				error: function(e){
 					errorAlert("errore di risposta dal server");

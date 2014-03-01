@@ -103,7 +103,7 @@ if($id_utente!=Null){
 				ChromePhp::log($notifications);
 				$reliability = update_reliability($id_utente, $id_evento, $notifications);
 				
-				if(($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200)){//#########################################SKEPTICAL
+				if((($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200))||($row['status']==='skeptical')) {//#########################################SKEPTICAL
 					
 					$skept=set_skeptikal($id_evento, $id_utente, $time);
 

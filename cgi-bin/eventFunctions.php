@@ -77,7 +77,7 @@ if($result->num_rows){
 								
 			//Update Status.
 			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
-				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);
+				if($status == "open") $status = updateStatus($now,$freshness,$event_id,$mysqli);
 			}
 	
 			//Array Events
