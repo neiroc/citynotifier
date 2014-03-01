@@ -2,6 +2,9 @@
 
 include 'ChromePhp.php';
 
+
+
+/*effettua la connessione al db server*/
 function connect_db(){
 
 	
@@ -20,6 +23,8 @@ function connect_db(){
 }
 
 
+
+/*controlla i privilegi di un utente*/
 function check_privileges($id_utente){
 
 	$con = connect_db();
@@ -38,6 +43,7 @@ function check_privileges($id_utente){
 
 
 
+/*resituisce le statistiche dell'utente passato*/
 function get_stats($id_utente){
 
 	
@@ -56,6 +62,7 @@ function get_stats($id_utente){
 
 
 
+/*aggiorna la reliability di un evento dopo una segnalazione o notifica*/
 function update_reliability($id_utente, $id_evento, $not_num){         
 
 	$con2 = connect_db();
@@ -88,7 +95,9 @@ $row = mysqli_fetch_array($risp);
 	}	
 }
 
-function set_skeptikal($id_evento, $id_utente, $time){
+
+/*inserisce un evento nella lista degli skeptical*/
+function set_skeptikal($id_evento, $time){
 
 	$con = connect_db();
 
@@ -96,7 +105,7 @@ function set_skeptikal($id_evento, $id_utente, $time){
 
 	$check= mysqli_query($con, $query);
 	$row = mysqli_fetch_array($check);
- //var_dump($row['id_event']);
+
 	if(($row['id_event'])== $id_evento){
 
 		return False;
@@ -104,7 +113,7 @@ function set_skeptikal($id_evento, $id_utente, $time){
 	}
 	else{
 
-		$insert= "INSERT INTO skept (id_event, id_utente, time) VALUES (".$id_evento.", ".$id_utente.", ".$time.");";
+		$insert= "INSERT INTO skept (id_event, time) VALUES (".$id_evento.", ".$time.");";
 		
 		$risp= mysqli_query($con, $insert);
 
@@ -115,8 +124,10 @@ function set_skeptikal($id_evento, $id_utente, $time){
 	}
 }
 
-function increase_reputation($id_utente){
 
+/*aumenta la reputazione di un utente*/
+function increase_reputation($id_utente){
+ChromePhp::log("increase");
 	$con = connect_db();
 
 	$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
@@ -124,7 +135,8 @@ function increase_reputation($id_utente){
 
 	if($row = mysqli_fetch_array($risp)){
 
-		$reputation=$row['reputation']+0.1;
+		$reputation=($row['reputation'])+0.1;
+ChromePhp::log($reputation);
 
 		if($reputation>1){
 
@@ -137,8 +149,9 @@ function increase_reputation($id_utente){
 }
 
 
+/*dimuniusce la reputazione di un utente*/
 function decrease_reputation($id_utente){
-
+ChromePhp::log("decrease");
 	$con = connect_db();
 
 	$query= "SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
@@ -146,8 +159,8 @@ function decrease_reputation($id_utente){
 
 	if($row = mysqli_fetch_array($risp)){
 
-		$reputation=$row['reputation']-0.1;
-
+		$reputation=($row['reputation'])-0.1;
+ChromePhp::log($reputation);
 		if($reputation<(-1.0)){
 
 			$update="UPDATE Utenti SET reputation= -1 WHERE id_utente=".$id_utente.";";
@@ -160,87 +173,116 @@ function decrease_reputation($id_utente){
 
 
 
-function risolvi_skeptikal($id_evento){
+/*risolve lo  stato skeptical dell'evento passato*/
 
+function risolvi_skeptical($id_evento){
+ChromePhp::log("risolvo singolo skept");
 	$time = time();
-
+//ChromePhp::log($id_evento);
 	$con = connect_db();
 		
 	$info_query="SELECT skept.time FROM skept WHERE id_event=".$id_evento.";";
 
 	$check= mysqli_query($con, $info_query);
-
+//ChromePhp::log($info_query);
 	if($row = mysqli_fetch_array($check)){
 
 		$start = $row['time'];
 
-		$query="SELECT DISTINCT Utenti.id_utente, Notifiche.status_notif FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifica.id_utente) WHERE id_event=".$id_evento." AND time > ".$start.";";
+		$query="SELECT DISTINCT Utenti.id_utente, Notifiche.status_notif FROM (Utenti INNER JOIN Notifiche ON Utenti.id_utente = Notifiche.id_utente) WHERE id_event=".$id_evento." AND time >= ".$start.";";
 
-		$risp= mysqli_query($con, $query);
+ChromePhp::log($query);
+		$risp=mysqli_query($con, $query);
 
-		if($row = mysqli_fetch_array($risp)){
-			$open=0;
-			$closed=0;
-			$j=count($row['status_notif']);
+		$open=0;
+		$closed=0;
 
-			for($i=0; $i<$j-1; $i++){
-
-				if($row['status_notif'][i]=="open"){
-					$open++;
-				}
-				else{
-					$closed++;
-				}
+		while($row2 = $risp->fetch_assoc()){
+			ChromePhp::log($row2);
+			if($row2['status_notif']=="open"){
+				$open++;
 			}
-			if($open==$closed){
-				$update="UPDATE Evento SET status= 'open' WHERE id_event=".$id_evento.";";
+			else{
+				$closed++;
+			}
+		}
+
+		if($open==$closed){
+		ChromePhp::log("diobbestia");	
+			$update="UPDATE Evento SET status= 'open', last_time= ".$time." WHERE id_event=".$id_evento.";";
+
+			mysqli_query($con, $update);
+
+		}
+		else{
+			if($open>$closed){
+				$update="UPDATE Evento SET status= 'open', last_time= ".$time." WHERE id_event=".$id_evento.";";
 
 				mysqli_query($con, $update);
+ChromePhp::log("riapro");
+				
+				$risp=mysqli_query($con, $query);
+
+				while($row3 = $risp->fetch_assoc()){
+ChromePhp::log($row3);
+ChromePhp::log($row3['status_notif']);
+ChromePhp::log($row3['id_utente']);
+					if($row3['status_notif']=="open"){
+
+						increase_reputation($row3['id_utente']);
+					}
+					else{
+						
+						decrease_reputation($row3['id_utente']);
+					}
+				}
 
 			}
 			else{
-				if($open>$closed){
-					$update="UPDATE Evento SET status= 'open' WHERE id_event=".$id_evento.";";
 
-					mysqli_query($con, $update);
+				$update="UPDATE Evento SET status= 'closed', last_time= ".$time." WHERE id_event=".$id_evento.";";
+ChromePhp::log("richiudo");
+				mysqli_query($con, $update);
 
-					for($i=0; $i<$j-1; $i++){
+				$risp=mysqli_query($con, $query);
 
-						if($row['status_notif'][i]=="open"){
+				while($row3 = $risp->fetch_assoc()){
+ChromePhp::log($row3);
+ChromePhp::log($row3['status_notif']);
+ChromePhp::log($row3['id_utente']);
+					if($row3['status_notif']=="closed"){
 
-							increase_reputation($row['id_utente']);
-						}
-						else{
-							
-							decrease_reputation($row['id_utente']);
-						}
+						increase_reputation($row3['id_utente']);
 					}
-
-				}
-				else{
-
-					$update="UPDATE Evento SET status= 'open' WHERE id_event=".$id_evento.";";
-
-					mysqli_query($con, $update);
-
-					for($i=0; $i<$j-1; $i++){
-
-						if($row['status_notif'][i]=="closed"){
-
-							increase_reputation($row['id_utente']);
-						}
-						else{
-							
-							decrease_reputation($row['id_utente']);
-						}
+					else{
+						
+						decrease_reputation($row3['id_utente']);
 					}
 				}
-				$delete="DELETE FROM skept WHERE id_event=".$id_evento.";";
-				mysqli_query($con, $delete);
 			}
 		}
+	$delete="DELETE FROM skept WHERE id_event=".$id_evento.";";
+	mysqli_query($con, $delete);		
 	}	
 }
 
+
+/*gestisce la risoluzione degli stati skeptical uno a uno*/
+
+function gestisci_skeptical_aperti(){
+ChromePhp::log("gestisco skeptical");
+	$now = time();
+
+	$con = connect_db();
+
+	$query = "SELECT skept.id_event FROM skept WHERE (".$now." - time) > 60;"; 
+
+	$risp = mysqli_query($con,$query);
+
+	while($row = $risp->fetch_assoc()){
+			ChromePhp::log($row['id_event']);
+			risolvi_skeptical($row['id_event']);
+	}
+}
 
 ?>

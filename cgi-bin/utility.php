@@ -4,37 +4,14 @@
 * Funzione Aggiorna Stato degli eventi dopo 20 minuti. tranne per buca e lavori in corso
 */
 function updateStatus($now,$freshness,$event_id,$mysqli){
-				//gestisci_skeptical_aperti();
+				
 				$diff = $now - $freshness;
-				if($diff > 555200) {
+				if($diff > 1200) {
 						$updateStatusQuery = "UPDATE Evento SET status=\"closed\" WHERE id_event=".$event_id;
 						$updateResult = $mysqli->query($updateStatusQuery);
 						return "closed";
 				}else return "open";
 }
-
-function gestisci_skeptical_aperti(){
-
-	$now = time();
-
-	$con = connect_db();
-
-	$query = "SELECT skept.* FROM skept WHERE (".$now." - time) < 600;"; 
-
-	$risp = mysqli_query($con,$query);
-
-	if($row = mysqli_fetch_array($risp)){
-
-		$j = count($row['id_event']);
-
-		for($i=0; $i<$j-1; $i++){
-
-			risolvi_skeptikal(($row['id_event'][i]));
-
-		}
-	}
-}
-
 
 /*
 * Funzione restituisce distanza tra le coordinate di due punti

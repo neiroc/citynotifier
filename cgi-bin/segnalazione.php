@@ -14,7 +14,7 @@ $status = "open";
 $lat = $segnalazione->{'lat'};
 $lng = $segnalazione->{'lng'};
 $description = $segnalazione->{'description'};
-
+//ChromePhp::log($status);
 //connessione al db
 $con = connect_db();
 
@@ -105,7 +105,7 @@ if($id_utente!=Null){
 				
 				if((($row['status']==='closed')&&($newstatus==='open')&&(($time - $row['last_time'])<7200))||($row['status']==='skeptical')) {//#########################################SKEPTICAL
 					
-					$skept=set_skeptikal($id_evento, $id_utente, $time);
+					$skept=set_skeptikal($id_evento, $time);
 
 					if($skept==True){
 						//ChromePhp::log($notifications);

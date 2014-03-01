@@ -73,12 +73,19 @@ if($result->num_rows){
 						$list_descr[$i][]=$row2['description'];
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
-								
+							
 			//Update Status.
-			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
-				if($status == "open") $status = updateStatus($now,$freshness,$event_id,$mysqli);
+						//ChromePhp::log($status);
+			if($status != "skeptical"){
+				if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
+					if($status == "open") {
+						$status = updateStatus($now,$freshness,$event_id,$mysqli);
+					}
+				}
 			}
-	
+			//ChromePhp::log($status);
+			
+
 			//Array Events
 			 $list_events[] = array(
 						'event_id'=>'ltw1324_'.$event_id,
@@ -95,7 +102,9 @@ if($result->num_rows){
 
 }//if end
 
+//risoluzione degli skeptikal
 
+gestisci_skeptical_aperti();
 
 //Returns the json
 $messaggio = "Messaggio di servizio";
