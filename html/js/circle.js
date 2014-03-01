@@ -57,7 +57,7 @@ DistanceWidget.prototype = new google.maps.MVCObject();
  */
 function RadiusWidget(distance) {
 	var circle = new google.maps.Circle({
-	    strokeWeight: 2
+	    strokeWeight: 1
 	});
   	
 	// Set the distance property value

@@ -98,7 +98,7 @@ if($id_utente!=Null){
 				mysqli_query($con,$insert);
 
 				$lat = ($lat + $row['lat_med'])/2;
-				$lng = ($lat + $row['lng_med'])/2;
+				$lng = ($lng + $row['lng_med'])/2;
 				$notifications = 1 + ($row['notifications']);
 				ChromePhp::log($notifications);
 				$reliability = update_reliability($id_utente, $id_evento, $notifications);
