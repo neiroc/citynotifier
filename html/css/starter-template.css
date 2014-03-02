@@ -21,10 +21,9 @@ body {
 	background: grey;
 }	
 
-
-
 #logout {
 	margin-top:10%;	
+	margin-left:16%
 }
 
 .dropdown-menu {
@@ -50,8 +49,9 @@ select option[disabled] {
 }
 
 #insertLoc {
-	margin-top:18%;
+	margin-top:10%;
 	margin-right:20px;
+	margin-left:5%;
 }
 
 .control-group.error input{	
