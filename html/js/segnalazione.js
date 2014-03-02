@@ -49,9 +49,8 @@ $(document).ready(function() {
 						
 
 						rep=call.reputation;
-						//$('navuser2').html(rep);
-						//console.log(rep);
-						//console.log(call.reputation);
+						upRep();
+
 
 						if(call.skept){
 

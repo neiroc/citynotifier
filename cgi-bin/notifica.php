@@ -4,10 +4,6 @@ require 'db_aux.php';
 
 $data = file_get_contents("php://input");
 
-//$result['result'] = "DEBUG: ";
-//$result['error'] = $data;
-
-
 $notifica=json_decode($data);
 
 $id_evento = $notifica->{'id_evento'};
@@ -29,8 +25,6 @@ if($id_utente != Null){
 		//definisco il tempo della notifica
 		$time = time();
 
-		
-		
 		if($con == False){
 			
 			$result['result'] = "errore nell'invio della notifica";
@@ -46,7 +40,7 @@ if($id_utente != Null){
 
 			if($row = mysqli_fetch_array($rispostadb)){ 
 				$notifications=($row['notifications']);
-//ChromePhp::log($notifications);
+
 				if( (check_privileges($id_utente) >2) && (($newstatus=='archived') || ($newstatus=='closed')) && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
 
 					$result['result'] = "errore nell'invio della notifica";
@@ -73,17 +67,16 @@ if($id_utente != Null){
 						if($skept==True){
 							//attivo lo skeptical
 
-							//ChromePhp::log($notifications);
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", status = 'skeptical', event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
-							//var_dump($update_query);
+							
 							mysqli_query($con,$update_query);
+
 							//risposta positiva
 							$result['result'] = "notifica inviata con successo";
 							$result['skept'] = "Attenzione: generato stato skeptical su evento: ".$id_evento;
 						}
 						else{
 
-							ChromePhp::log($notifications." lo stato è già skeptical");
 							//lo skeptical esiste già
 							$update_query = "UPDATE Evento SET  last_time = ".$time.", event_reliability = ".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng."  WHERE id_event = ".$id_evento.";";
 							mysqli_query($con,$update_query);
@@ -99,7 +92,7 @@ if($id_utente != Null){
 
 						//risposta positiva
 						$result['result'] = "notifica inviata con successo";
-						//$result['skept'] = "query=".$update_query." not=".$notifications." rel=".$reliability;
+						
 					}
 				}
 			}
@@ -111,22 +104,16 @@ if($id_utente != Null){
 
 				$insert = "INSERT INTO Evento (type, subtype, start_time, last_time, status, event_reliability, notifications, lat_med, lng_med) VALUES ('".$type."','".$subtype."','".$time."','".$time."','".$newstatus."',".$reliability.", 1,'".$lat."','".$lng."');";
 				
-				//var_dump($insert);
 				if(mysqli_query($con,$insert)){
 					
 					$new_id = mysqli_insert_id($con);
-					//var_dump($new_id);
+				
 					//inserisco notifica
 					$insert = "INSERT INTO Notifiche (id_utente, id_event, lat, lng, time, status_notif, description)  VALUES ('".$id_utente."','".$new_id."','".$lat."','".$lng."','".$time."','".$newstatus."','".$description."');";
 					$test = mysqli_query($con,$insert);
-					//var_dump($test);
-					
+			
 					//risultato positivo
 					$result['result'] = "notifica inviata con successo";
-					$result['skept'] = "nuoooo";
-
-					
-					
 				}
 				else{
 
@@ -157,7 +144,6 @@ $query="SELECT Utenti.reputation FROM Utenti WHERE id_utente=".$id_utente.";";
 $rep = mysqli_query($con,$query);
 if($row = mysqli_fetch_array($rep)){
 	$result['reputation'] = $row['reputation'];
-	//ChromePhp::log($row['reputation']);
 }
 
 //risposta al client
