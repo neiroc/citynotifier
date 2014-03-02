@@ -42,8 +42,11 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-			<a class="navbar-brand" href="#">City Notifier</a>    
-            <li><a id="table" href="#myModal" role="button" data-toggle="modal">
+          	<li>
+				<a class="navbar-brand" href="#">City Notifier</a> 
+			</li>   
+            <li>
+            	<a id="table" href="#myModal" role="button" data-toggle="modal">
 					Table
 				</a>
 			</li>
@@ -217,9 +220,10 @@
 						           
           		</ul>
 			</li>
+			<!--user menu-->
 			<li class="dropdown">
 				<a id="navuser1" role="button" class="dropdown-toggle" data-toggle="dropdown" href="#">
-					 <b class="caret"></b>
+					
 				</a>
 				<ul class="dropdown-menu" id="usermenu">
 					<form>
@@ -227,25 +231,29 @@
 							<b>Reputation: </b>
 							<span class="badge badge-success" id "relval"></span>
 						</div>
+						<div>
+						<li>
+							<button type="button" class="btn btn-danger" id="logout">
+								<span class="glyphicon glyphicon-off"></span>
+								Logout
+							</button>
+						</li>
+					</div>
 					</form>
 				</ul>
-			</li>	
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-		<ul class="nav navbar-nav navbar-right">
-				<li>
+			</li>
+	        <!--geoloc button-->	
+			<li>
+				<div>
 					<button type="button" id="insertLoc" class="btn btn-default btn-sm">
 						<span class="glyphicon glyphicon-map-marker"></span>
 					</button>
-				</li>
-				<li>
-					<button type="button" class="btn btn-danger" id="logout">
-						<span class="glyphicon glyphicon-off"></span>
-						Logout
-					</button>
-				</li>
-			</ul>
+				</div>
+			</li>
+				
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
     </div>
 	</div><!-- /.navbar-->
 	
