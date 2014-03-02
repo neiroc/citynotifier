@@ -268,7 +268,7 @@ function gestisci_skeptical_aperti(){
 
 	$con = connect_db();
 
-	$query = "SELECT skept.id_event FROM skept WHERE (".$now." - time) > 90;"; 
+	$query = "SELECT skept.id_event FROM skept WHERE (".$now." - time) > 1000;"; 
 
 	$risp = mysqli_query($con,$query);
 
