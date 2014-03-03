@@ -71,7 +71,7 @@ $('#table').on('click', function(){
 //aggiorna l'user in navbar
 function upUser(){
 	upUs=jQuery.cookie('username');
-	$('#navuser1').html(upUs + ' <span class="glyphicon glyphicon-user"></span>');
+	$('#navuser1').html('<span class="glyphicon glyphicon-user"></span> ' + upUs);
 }
 
 //aggiorna la reputazine nel menu utente

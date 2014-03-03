@@ -16,7 +16,7 @@ $('document').ready(function(){
 	}
 	else {
 		location.href="index.html";
-	};	
+	}
 
 	if(!type)
 		type='all';
