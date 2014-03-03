@@ -87,3 +87,13 @@ select option[disabled] {
 #usermenu {
 	width: 10%;
 }
+.event_descs {
+height: 45px;
+width: auto;
+max-width: 250px;
+overflow-y: auto;
+}
+
+#notif{
+width: 200px;}
+

@@ -73,12 +73,19 @@ if($result->num_rows){
 						$list_descr[$i][]=$row2['description'];
 						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
 						}
-								
+							
 			//Update Status.
-			if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
-				if($status != "closed") $status = updateStatus($now,$freshness,$event_id,$mysqli);
+						//ChromePhp::log($status);
+			if($status != "skeptical"){
+				if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
+					if($status == "open") {
+						$status = updateStatus($now,$freshness,$event_id,$mysqli);
+					}
+				}
 			}
-	
+			//ChromePhp::log($status);
+			
+
 			//Array Events
 			 $list_events[] = array(
 						'event_id'=>'ltw1324_'.$event_id,
@@ -95,7 +102,9 @@ if($result->num_rows){
 
 }//if end
 
+//risoluzione degli skeptikal
 
+gestisci_skeptical_aperti();
 
 //Returns the json
 $messaggio = "Messaggio di servizio";
@@ -123,7 +132,7 @@ $result = array();
 
 $m_curl = curl_multi_init();
 
-//List of servers
+//ServerList
 $ris = file_get_contents('../data/server.json','r'); 
 $array = json_decode($ris, true); 
 
@@ -219,13 +228,21 @@ $found = false;
 
 	$r_lat = $sum/$i;
 	$r_lng = $sum1/$i;
-
-  $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
+   
+   $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
 	
+	//checktime -48h+
+	if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = true;
+		else $timeOK = false;
+		
 		if(!$found){	
+	
+			$eventArea = setDistEvent($v['type']['type'],$v['type']['subtype']);
+
 			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi AGGREGO
-			if($dist <= 100 && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
+			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
 			{
+				//print "Sto aggregando";
 				$found = true;
 		
 				//aggrega evento remoto con locale. aggiungi descrizione e locations

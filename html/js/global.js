@@ -25,16 +25,16 @@ function average(event) {
 function calculateEventArea(tipo,sottotipo){
 	if(tipo=="problemi_stradali"){
 		switch(sottotipo){
-			case "incidente": spazio = 200; break;
+			case "incidente": spazio = 100; break;
 			case "buca": spazio = 100; break;
 			case "coda": spazio = 200; break;
-			case "lavori_in_corso": spazio = 100; break;
-			case "strada_impraticabile": spazio = 200; break;
+			case "lavori_in_corso": spazio = 30; break;
+			case "strada_impraticabile": spazio = 50; break;
 		}
 	}
 	else if(tipo=="emergenze_sanitarie"){
 		switch(sottotipo){
-			case "incidente": spazio = 200; break;
+			case "incidente": spazio = 100; break;
 			case "malore": spazio = 200; break;
 			case "ferito": spazio = 200; break;
 		}
@@ -47,17 +47,17 @@ function calculateEventArea(tipo,sottotipo){
 	}
 	else if(tipo=="problemi_ambientali"){
 		switch(sottotipo){
-			case "incendio": spazio = 500; break;
-			case "tornado": spazio = 1000; break;
+			case "incendio": spazio = 100; break;
+			case "tornado": spazio = 500; break;
 			case "neve": spazio = 1000; break;
-			case "alluvione": spazio = 1000; break;
+			case "alluvione": spazio = 300; break;
 		}
 	}
 	else if(tipo=="eventi_pubblici"){
 		switch(sottotipo){
 			case "partita": spazio = 200; break;
-			case "manifestazione": spazio = 200; break;
-			case "concerto": spazio = 200; break;
+			case "manifestazione": spazio = 100; break;
+			case "concerto": spazio = 50; break;
 		}
 	}
 	return spazio;
