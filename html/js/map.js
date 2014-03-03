@@ -188,6 +188,7 @@ $(window).unload(function(){
 		jQuery.cookie('subtype', subtype, {expires:30});
 		jQuery.cookie('status', status, {expires:30});
 		jQuery.cookie('data', data, {expires:30});
+		jQuery.cookie('reputation', rep, {expires:30});
 	}
 });
 

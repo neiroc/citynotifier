@@ -12,8 +12,11 @@ $('document').ready(function(){
 		data=jQuery.cookie('data');
 		type=jQuery.cookie('type');	
 		subtype=jQuery.cookie('subtype');
-	};
-		
+		rep=jQuery.cookie('reputation')
+	}
+	else {
+		location.href="index.html";
+	};	
 	if(!type)
 		type='all';
 
