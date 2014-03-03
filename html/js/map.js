@@ -70,8 +70,8 @@ $('#table').on('click', function(){
 
 //aggiorna l'user in navbar
 function upUser(){
-	upUs="User: "+ jQuery.cookie('username');
-	$('#navuser1').html(upUs + '<span class="glyphicon glyphicon-user"></span>');
+	upUs=jQuery.cookie('username');
+	$('#navuser1').html(upUs + ' <span class="glyphicon glyphicon-user"></span>');
 }
 
 //aggiorna la reputazine nel menu utente
@@ -336,8 +336,8 @@ function search() {
 
 //Setta gli indirizzi degli eventi in tabella ricorsivamente
 function setTableAddress(events, actual, last, timeout, table_count) {
-	console.log(actual);
-	console.log(last);
+	//console.log(actual);
+	//console.log(last);
 	geocoder = new google.maps.Geocoder();
 	
 	var llat, llng;

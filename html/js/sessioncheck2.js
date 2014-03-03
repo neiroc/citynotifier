@@ -12,7 +12,10 @@ $('document').ready(function(){
 		data=jQuery.cookie('data');
 		type=jQuery.cookie('type');	
 		subtype=jQuery.cookie('subtype');
-	};
+	}
+	else {
+		location.href="index.html";
+	}
 		
 	if(!type)
 		type='all';
