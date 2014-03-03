@@ -132,7 +132,7 @@ $result = array();
 
 $m_curl = curl_multi_init();
 
-//List of servers
+//ServerList
 $ris = file_get_contents('../data/server.json','r'); 
 $array = json_decode($ris, true); 
 
@@ -228,13 +228,21 @@ $found = false;
 
 	$r_lat = $sum/$i;
 	$r_lng = $sum1/$i;
-
-  $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
+   
+   $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
 	
+	//checktime -48h+
+	if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = true;
+		else $timeOK = false;
+		
 		if(!$found){	
+	
+			$eventArea = setDistEvent($v['type']['type'],$v['type']['subtype']);
+
 			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi AGGREGO
-			if($dist <= 200 && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
+			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'] && $timeOk)
 			{
+				//print "Sto aggregando";
 				$found = true;
 		
 				//aggrega evento remoto con locale. aggiungi descrizione e locations

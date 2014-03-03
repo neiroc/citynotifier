@@ -27,4 +27,62 @@ function distance($lat1, $lon1, $lat2, $lon2) {
 
 }
 
+/*
+* Setta Raggio Azione Evento
+*/
+function setDistEvent($type,$subtype) {
+
+			//definisco il radius in base al tipo di evento
+			switch ($subtype)
+			{
+
+				case "coda" : {
+					$radius = 200 ;
+					break;
+				}
+				case "lavori_in_corso" : {
+					$radius = 30 ;
+					break;
+				}
+				case "strada_impraticabile" : {
+					$radius = 50;
+					break;
+				}
+				case "incendio" : {
+					$radius = 100 ;
+					break;
+				}
+				case "tornado" : {
+					$radius = 500 ;
+					break;
+				}
+				case "neve" : {
+					$radius = 1000  ;
+					break;
+				}
+				case "alluvione" : {
+					$radius =  300;
+					break;
+				}
+				case "partita" : {
+					$radius = 200 ;
+					break;
+				}
+				case "manifestazione" : {
+					$radius =  100;
+					break;
+				}
+				case "concerto" : {
+					$radius = 50 ;
+					break;
+				}
+
+				default:{
+					$radius = 20 ;
+				}
+			}
+		return $radius;
+		}
+	
+
 ?>

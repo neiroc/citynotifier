@@ -128,15 +128,23 @@ function showOnMap(lat,lng,id,type,subtype,status,rel,inizio,ultima,descr){
 		
 	google.maps.event.addListener(marker, 'click', function() {
 		//CONTENT INFOWINDOW
-		if(status == 'closed'){
-			var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-danger">'+status+'</span>&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+		switch(status) {
+		case "open": var contentLabel = '<strong class="label label-success">Aperto</strong>'; var contentButton=''; break;
+		case "closed": var contentLabel = '<strong class="label label-danger">Chiuso</strong>'; 
+							var contentButton = '<button type="button" class="btn btn-default btn-sm" onclick=\"notify(\''+id+'\',\'archived\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-folder-open"></span> Archivia</button>'; break;
+		case "skeptical": var contentLabel = '<strong class="label label-warning"> ? </strong>'; break;
+		case "archived": var contentLabel = '<strong class="label label-info">Archiviato</strong>'; break;
 		}
-		else if(status == 'open'){
-				var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-success">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
+	 
+		if(jQuery.cookie('id_utente') == 101){
+			var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><div class=\"event_descs\"></div><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><div class="bts_noty"><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button>'+contentButton+'</div></div>';
 		}
-		else var contentString = '<div id="info"><h1>Dettagli Evento</h1><b>ID : </b>'+id+'<br><b>Tipo: </b>'+type+'<br><b>Sottotipo: </b>'+subtype+'<br><b>Stato: </b><span class="label label-warning">'+status+'</span><br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span>Chiudi</button></div>';
-			infowindow.setContent(contentString);
+		else	var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><div class=\"event_descs\"></div><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+
+			infowindow.setContent(contentString);	
 			infowindow.open(map,marker);
+			crea_eventdescs(descr);	
+			
 		});
 
 		google.maps.event.addListener(map, 'click', function() {
@@ -151,7 +159,7 @@ function showOnMap(lat,lng,id,type,subtype,status,rel,inizio,ultima,descr){
 function showOnTable(event_id,subtype,type,freshness,status,descr,lat,lng){
 	freshness = timeConverter(freshness);
 	//MakeTable	
-	tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
+	tabella[0].innerHTML +="<td>"+event_id+"</td><td>"+type+" /<br>"+subtype+"</td><td id=\"tableEventAddress"+id_count+"\"><img align=\"center\" src=\"img/load2.gif\"></td><td>"+freshness+"</td><td>"+status+"</td><td><div class=\"btn-group\"><button class=\"btn btn-primary\">Mostra</button><button class=\"btn btn-primary dropdown-toggle\" data-toggle=\"dropdown\"><span class=\"caret\"></span></button><ul style=\"right:0;\" class=\"dropdown-menu\"><h5 class=\"muted\">"+descr+"</div></h5></ul></div></td>";
 }
 
 
@@ -203,7 +211,7 @@ function timeConverter(UNIX_timestamp){
      var hour = a.getHours();
      var min = a.getMinutes();
      var sec = a.getSeconds();
-     var time = date+' '+month+' '+year+'<br> ore: '+hour+':'+min+':'+sec ;
+     var time = date+' '+month+' '+year+' '+hour+':'+min+':'+sec ;
      return time;
  }
  
@@ -303,9 +311,11 @@ function search() {
 		success: function(data){
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
+				//console.log("i="+i);
 				if(src.locations.length){//aggiungo un controllo. alcuni server mandano eventi senza locations!!
 				//mid point
 				media = average(data.events[i]);
+				//console.log(media.lat);
 				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
 		      id_count++;
@@ -314,7 +324,7 @@ function search() {
 			//console.log(data);
 			//console.log(markersArray[0]);
 			//console.log(data.events);
-			//if(data.events.length != 0)// setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 			
 		
 		} //chiudi function data
@@ -326,7 +336,8 @@ function search() {
 
 //Setta gli indirizzi degli eventi in tabella ricorsivamente
 function setTableAddress(events, actual, last, timeout, table_count) {
-	
+	console.log(actual);
+	console.log(last);
 	geocoder = new google.maps.Geocoder();
 	
 	var llat, llng;
@@ -351,7 +362,7 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 		}
 		else { 
 			if ( (timeout < 16) && status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-				setTimeout(function(){ setTableAddress(events, actual, last, (timeout+1), table_count); }, 425);
+				setTimeout(function(){ setTableAddress(events, actual, last, (timeout+1), table_count); }, 350);
 				return;
 			}
 			else {
@@ -364,7 +375,7 @@ function setTableAddress(events, actual, last, timeout, table_count) {
 		}
 		 //console.log(res);
 		$("#tableEventAddress" + (actual + table_count)).html(res);
-		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 450);
+		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 400);
 	});
 }
 
@@ -374,5 +385,19 @@ function data_converter(strDate) {
 	var newDate = dateParts[1] + "/" + dateParts[0] + "/" + dateParts[2];
 	var date = parseInt((new Date(newDate)).getTime()) / 1000; //secondi
 	return date;
+}
+
+function crea_eventdescs(descs){
+	var j;
+	var no_descr=0;
+	$(".event_descs").html("<ul>");
+	
+	for(j=0;j<descs.length;j++){
+		console.log(descs[j]);
+		if(descs[j]!="")
+			$(".event_descs").append("<li>"+descs[j]+"</li>"); 
+			else no_descr++;
+	} if (no_descr==descs.length) $(".event_descs").append("<li> Nessuna Descrizione</li>");
+	$(".event_descs").append("</ul>");
 }
 

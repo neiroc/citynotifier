@@ -489,7 +489,7 @@ h6 small,
 h1,
 h2,
 h3 {
-  margin-top: 20px;
+  margin-top: 0px;
   margin-bottom: 10px;
 }
 
@@ -507,7 +507,7 @@ h1,
 
 h2,
 .h2 {
-  font-size: 30px;
+  font-size: 20px;
 }
 
 h3,
@@ -3226,7 +3226,7 @@ input[type="button"].btn-block {
 .dropdown-menu {
   position: absolute;
   top: 100%;
-  left: 0;
+  left: auto;;
   z-index: 1000;
   display: none;
   float: left;
@@ -5674,6 +5674,7 @@ body.modal-open,
   min-height: 16.428571429px;
   padding: 15px;
   border-bottom: 1px solid #e5e5e5;
+  text-align: center;
 }
 
 .modal-header .close {
@@ -5688,6 +5689,7 @@ body.modal-open,
 .modal-body {
   position: relative;
   padding: 20px;
+  overflow-x: auto;
 }
 
 .modal-footer {
