@@ -97,7 +97,7 @@ if($id_utente != Null){
 
 							//risposta positiva
 							$result['result'] = "notifica inviata con successo";
-							//$result['msg'] = "archiviato vecchio evento e creato nuovo evento: ".$new_notif_id;
+							
 						}
 					}
 					else{//archivio il precedente evento perchè troppo vecchio e ne creo uno nuovo
@@ -120,6 +120,7 @@ if($id_utente != Null){
 					
 							//risultato positivo
 							$result['result'] = "notifica inviata con successo";
+							$result['msg'] = "archiviato vecchio evento e creato nuovo evento: ".$new_id;
 						}
 						else{
 
@@ -130,9 +131,9 @@ if($id_utente != Null){
 					}
 				}
 			}
-			else{//inserire nuovo stato
+			else{//inserire nuovo evento dopo segnalazione di evento remoto
 
-				ChromePhp::log("nuovo stato");
+				//ChromePhp::log("nuovo stato");
 				$stats=get_stats($id_utente);
 				$reliability=(1 + ( $stats['reputation'] * $stats['assiduity']))/2;
 

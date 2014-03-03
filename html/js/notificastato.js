@@ -26,8 +26,6 @@ var partsArray = id.split('_');
 		id_utente : jQuery.cookie('id_utente')
 			
 	}
-	console.log(JSON.stringify(notificaj));
-	
 
 	var host = "http://"+document.location.hostname ;
 
