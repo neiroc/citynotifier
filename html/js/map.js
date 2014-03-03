@@ -77,7 +77,7 @@ function upUser(){
 //aggiorna la reputazine nel menu utente
 function upRep(){
 	if (!rep)
-		rep=jQuery.cookie('reputation');
+		rep=jQuery.cookie('reputation', rep);
 
 	$('.badge-success').html(rep)
 }
