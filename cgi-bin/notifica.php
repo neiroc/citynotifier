@@ -92,7 +92,7 @@ if($id_utente != Null){
 						}
 						else{
 
-							$update_query = "UPDATE Evento SET event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
+							$update_query = "UPDATE Evento SET status = '".$newstatus."' event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
 							mysqli_query($con,$update_query);
 
 							//risposta positiva
