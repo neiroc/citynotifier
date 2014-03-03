@@ -80,9 +80,9 @@ function update_reliability($id_utente, $id_evento, $not_num){
 	}
 	
 	$reliability =	($sum / (2 * $not_num));
-	ChromePhp::log($reliability);
+	//ChromePhp::log($reliability);
 
-	return $reliability;	
+	return round($reliability, 1);	
 }
 
 
