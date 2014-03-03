@@ -70,14 +70,14 @@ $('#table').on('click', function(){
 
 //aggiorna l'user in navbar
 function upUser(){
-	upUs="User: "+ jQuery.cookie('username');
-	$('#navuser1').html(upUs + '<span class="glyphicon glyphicon-user"></span>');
+	upUs=jQuery.cookie('username');
+	$('#navuser1').html(upUs + ' <span class="glyphicon glyphicon-user"></span>');
 }
 
 //aggiorna la reputazine nel menu utente
 function upRep(){
 	if (!rep)
-		rep=jQuery.cookie('reputation');
+		rep=jQuery.cookie('reputation', rep);
 
 	$('.badge-success').html(rep)
 }
@@ -131,15 +131,14 @@ function showOnMap(lat,lng,id,type,subtype,status,rel,inizio,ultima,descr){
 		switch(status) {
 		case "open": var contentLabel = '<strong class="label label-success">Aperto</strong>'; var contentButton=''; break;
 		case "closed": var contentLabel = '<strong class="label label-danger">Chiuso</strong>'; 
-							var contentButton = '<button type="button" class="btn btn-default btn-sm" onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-folder-open"></span> Archivia</button>'; break;
-		case "skeptical": var contentLabel = '<strong class="label label-warning"> ? </strong>'; break;
-		case "archived": var contentLabel = '<strong class="label label-info">Archiviato</strong>'; break;
+							var contentButton = '<button type="button" class="btn btn-default btn-sm" onclick=\"notify(\''+id+'\',\'archived\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-folder-open"></span> Archivia</button>'; break;
+		case "skeptical": var contentLabel = '<strong class="label label-warning"> ? </strong>'; var contentButton=''; break;
 		}
 	 
 		if(jQuery.cookie('id_utente') == 101){
 			var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><div class=\"event_descs\"></div><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><div class="bts_noty"><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button>'+contentButton+'</div></div>';
 		}
-		else	var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><textarea readonly id="descr">'+descr+'</textarea><br><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
+		else	var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><div class=\"event_descs\"></div><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><button type="button" class="btn btn-default btn-sm" style="background-color:green; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:red; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button></div>';
 
 			infowindow.setContent(contentString);	
 			infowindow.open(map,marker);
@@ -196,6 +195,7 @@ $(window).unload(function(){
 		jQuery.cookie('subtype', subtype, {expires:30});
 		jQuery.cookie('status', status, {expires:30});
 		jQuery.cookie('data', data, {expires:30});
+		jQuery.cookie('reputation', rep, {expires:30});
 	}
 });
 
@@ -336,8 +336,8 @@ function search() {
 
 //Setta gli indirizzi degli eventi in tabella ricorsivamente
 function setTableAddress(events, actual, last, timeout, table_count) {
-	console.log(actual);
-	console.log(last);
+	//console.log(actual);
+	//console.log(last);
 	geocoder = new google.maps.Geocoder();
 	
 	var llat, llng;

@@ -225,15 +225,16 @@ $found = false;
 		$sum1 += $value['lng'];
 		$i++;
 	}
-
-	$r_lat = $sum/$i;
-	$r_lng = $sum1/$i;
-   
+	if($i != 0){
+		$r_lat = $sum/$i;
+		$r_lng = $sum1/$i;
+   	}
    $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
 	
+	//$timeOK=True;
 	//checktime -48h+
-	if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = true;
-		else $timeOK = false;
+	//if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = True;
+	//	else $timeOK = False;
 		
 		if(!$found){	
 	
