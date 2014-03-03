@@ -52,9 +52,9 @@ $(document).ready(function() {
 						upRep();
 
 
-						if(call.skept){
+						if(call.msg){
 
-							successAlert(call.result+" "+call.skept);
+							successAlert(call.result+" "+call.msg);
 						
 						}
 						else{
