@@ -231,7 +231,7 @@ $found = false;
    	}
    $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
 	
-	$timeOK=True;
+	//$timeOK=True;
 	//checktime -48h+
 	//if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = True;
 	//	else $timeOK = False;
@@ -241,7 +241,7 @@ $found = false;
 			$eventArea = setDistEvent($v['type']['type'],$v['type']['subtype']);
 
 			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi AGGREGO
-			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'] && $timeOk)
+			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
 			{
 				//print "Sto aggregando";
 				$found = true;

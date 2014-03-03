@@ -40,7 +40,7 @@ if($id_utente != Null){
 
 			$row = mysqli_fetch_array($rispostadb);
 
-			if(($row != Null) &&($type == $row['type'])&&($subtype == $row['subtype'])&&($lat == $row['lat'])&&($lng == $row['lng'])) { 
+			if(($row != Null) &&($type == $row['type'])&&($subtype == $row['subtype'])&&($lat == $row['lat_med'])&&($lng == $row['lng_med'])) { 
 
 				$notifications=($row['notifications']);
 				$privilegi = check_privileges($id_utente);
