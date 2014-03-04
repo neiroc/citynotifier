@@ -19,8 +19,11 @@ if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) a
         $timeMax = $_GET['timemax'];
         $status = $_GET['status'];
 			if($scope == "local"){
-			getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
-			} 
+			     getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
+			}
+                        else{
+                            getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);    
+                        }
 
 } else{ 
 echo alert("406 Not acceptable:mi vincoli della richiesta non sono soddisfacibili");

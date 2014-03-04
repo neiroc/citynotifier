@@ -88,8 +88,14 @@ if($id_utente!=Null){
 
 			$rispostadb = mysqli_query($con,$query);
 			$row = mysqli_fetch_array($rispostadb);
+			
+			$row=Null;
 
-			if($row != Null) {   //&&(($time - ($row['last_time'])) < 1giorno? )
+			if($rispostadb){
+				$row = mysqli_fetch_array($rispostadb);
+			}
+
+			if($row != Null) {   
 
 				$id_evento = $row['id_event'];
 				

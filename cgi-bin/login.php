@@ -50,8 +50,8 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 else{
             
 	$result['result'] = "Credenziali Errate";//risposta negativa
-	header('Content-Type: application/json; charset=utf-8');
 	$re = json_encode($result);
+	header('Content-Type: application/json; charset=utf-8');
 	echo $re;
 
 }

@@ -66,7 +66,9 @@ if($result->num_rows){
 			$status = $row['status'];
 			$reliability = $row['event_reliability'];
 			$notifications = $row['notifications'];
-		 
+		 	
+		 	$lat_med=$row['lat_med'];
+	 		$lng_med=$row['lng_med'];
 	 		//Adds descriptions and locations
 			while($row2 = $result2->fetch_assoc()){
 						$i=$row2['id_event'];
@@ -83,9 +85,10 @@ if($result->num_rows){
 					}
 				}
 			}
-			//ChromePhp::log($status);
 			
-
+			$address=calcola_indirizzo($lat_med, $lng_med);
+			ChromePhp::log($address);
+			break;
 			//Array Events
 			 $list_events[] = array(
 						'event_id'=>'ltw1324_'.$event_id,
@@ -117,6 +120,41 @@ header('Content-Type: application/json; charset=utf-8');
 
 return json_encode($result);
 }
+
+function calcola_indirizzo($lat, $lng){
+
+	//$reverseurl = "http://maps.googleapis.com/maps/api/geocode/xml?latlng=".$lat.",".$lng."&sensor=false&location_type=APPROXIMATE";{0}->{'address_components'}->{0}->
+	$reverseurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&language=it&result_type=street_address&sensor=true&key=AIzaSyA6xA6H345Svd58sdTUNpRU5rT5NsA2jPo";
+	//ChromePhp::log($reverseurl);
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL,$reverseurl);
+	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+	$result = curl_exec($ch);
+	curl_close($ch);
+
+	$aux=json_decode($result);
+	
+	$indirizzo=$aux->{'results'};
+    
+
+	ChromePhp::log($aux->{'results'}->{'address_components'}->{'1'}->{'short_name'});
+  //echo 'Nome: '.$p[elemento][Nome];
+ 
+
+
+	ChromePhp::log($aux);
+	//ChromePhp::log($indirizzo[0]);
+
+	return $indirizzo;
+
+	
+
+
+}
+
+
 
 /*
 *Prendi Eventi Remoti e Aggrega Dati
@@ -262,6 +300,8 @@ $found = false;
  if(!$found) $new_events[] = $evento;
 
 }
+
+
 
 
 ?>

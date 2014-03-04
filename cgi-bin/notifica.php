@@ -37,8 +37,11 @@ if($id_utente != Null){
 			$query = "SELECT Evento.* FROM Evento WHERE id_event = ".$id_evento;
 
 			$rispostadb = mysqli_query($con,$query);
+			$row=Null;
 
-			$row = mysqli_fetch_array($rispostadb);
+			if($rispostadb){
+				$row = mysqli_fetch_array($rispostadb);
+			}
 
 			if(($row != Null) &&($type == $row['type'])&&($subtype == $row['subtype'])&&($lat == $row['lat_med'])&&($lng == $row['lng_med'])) { 
 
