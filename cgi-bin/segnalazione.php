@@ -87,15 +87,9 @@ if($id_utente!=Null){
 			$query = "SELECT Evento.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento WHERE type ='".$type."' AND subtype ='".$subtype."' AND NOT (status ='archved') GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 1";
 
 			$rispostadb = mysqli_query($con,$query);
-			$row = mysqli_fetch_array($rispostadb);
 			
-			$row=Null;
 
-			if($rispostadb){
-				$row = mysqli_fetch_array($rispostadb);
-			}
-
-			if($row != Null) {   
+			if($row = mysqli_fetch_array($rispostadb)) {   
 
 				$id_evento = $row['id_event'];
 				
