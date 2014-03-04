@@ -122,7 +122,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 		echo json_encode($result);
 	}
 	else{
-		return echo json_encode($result);
+		return json_encode($result);
 	}
 }
 

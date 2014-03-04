@@ -299,7 +299,7 @@ function search(){
 	var now = Math.round((new Date()).getTime() / 1000 + 3600);
 
 	search_local(type,subtype,status,lat,lng,radius,unixdata, now);
-	//search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
+	search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
 
 	window.setTimeout("search();", 6000000);
 }
