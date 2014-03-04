@@ -4,11 +4,13 @@ require "db_aux.php";
 require "utility.php";
  
 //VARIABILI GLOBALI
-$l_events = array();
-$new_events = array();
+$l_events = array(); //local events in getRemote temporanei
+$new_events = array(); //nuova lista eventi eventi remoti + locali aggregati
+$mergedEvents = array();//solo eventi aggregati dalla remot
+
 
 //getRemoteEvents(local,all,all,44.49895,11.341896,50,1385856000,1389312000,all);
-echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
+//echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
 //http://localhost/richieste?scope=local&type=emergenze_sanitarie&subtype=ferito&lat=44.524966819292565&lng=11.523284912109375&radius=2000&timemin=1388534400&timemax=1393590048&status=all
 /*
 * Prendi Eventi Locali
@@ -71,7 +73,6 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 
 			 
 		 	//Adds descriptions and locations
-
 			while($row2 = $result2->fetch_assoc()){
 				$i=$row2['id_event'];
 				$list_descr[$i][]=$row2['description'];
@@ -119,7 +120,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 								'events' => $list_events);
 	header('Content-Type: application/json; charset=utf-8');
 
-		return json_encode($result);
+	return json_encode($result);
 
 }
 
@@ -151,12 +152,13 @@ function calcola_indirizzo($lat, $lng){
 
 
 /*
-*Prendi Eventi Remoti e Aggrega Dati
+*getRemote deve restituire  gli eventi remoti e i locali aggregati ai remoti. NON i locali non aggregati
 */
 function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
 
 	global $new_events;
 	global $l_events;
+	global $mergedEvents;
 
 	$handles = array();
 	$result = array();
@@ -171,7 +173,7 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 
 	foreach($array['server'] as $url){
 	
-		$urls = $url."/richieste?scope=".$scope."&type=".$type."&subtype=".$subtype."&lat=".$lat."&lng=".$lng."&radius=".$radius."&timemin=".$timeMin."&timemax=".$timeMax."&status=".$status;
+		$urls = $url."/richieste?scope=local&type=".$type."&subtype=".$subtype."&lat=".$lat."&lng=".$lng."&radius=".$radius."&timemin=".$timeMin."&timemax=".$timeMax."&status=".$status;
 
 		$cURL = curl_init();
 
@@ -201,35 +203,53 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 		}
     	curl_multi_remove_handle($m_curl, $handles[$i]);
 	}
-			
+	
 	//Local Events	
 	$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status,False),true);
+	//print_r(json_encode($l_events));
 
 	foreach ($result as $r) {
 		$json = json_decode($r,true);
+		//print_r(json_encode($json));
 		foreach($json['events'] as $event){
 			//passo ogni evento remoto e lo confronto con i dati locali. 	
 			 compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
 		}
 	}
+
+   //print_r($mergedEvents);
+	
 	//Merge Local with Remote Events 
-	$l_events['events'] = array_merge($l_events['events'], $new_events); 
+	
+	$new_events = array_merge($mergedEvents, $new_events); 
+	//print_r($new_events);
 	//print_r($l_events);
+	
+	//Return json
+	$messaggio = "Messaggio di servizio";
+	$server = "http://ltw1324.web.cs.unibo.it";
+	$result = array('request_time' => time(),
+								'result' => $messaggio,
+								'from_server'=> $server,
+								'events' => $new_events);
+	//header('Content-Type: application/json; charset=utf-8');
 			
-	echo json_encode($l_events);
+	echo json_encode($result);
 }
 
 
 /*
-* Funzione confronta un evento remoto con tutti gli eventi locali. Se è presente aggrega altrimenti aggiunge
+* Funzione confronta un evento remoto con tutti gli eventi locali. Se è presente aggrega altrimenti aggiunge NO non aggiunge
 */
 function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
 	
-	global $l_events;
+	global $l_events; //ci sono tutti gli eventi locali
 	global $new_events;
+	global $mergedEvents;
 	$found = false;
 
-	foreach($l_events['events'] as &$v){
+   //serve ancora il puntatore &??
+	foreach($l_events['events'] as $v){
 
 		//calcolo di longitudine e latitudine media per gli eventi
 		$sum  = 0;
@@ -254,11 +274,13 @@ function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$
 			$sum1 += $value['lng'];
 			$i++;
 		}
+		//aggiunto controllo. server non rispettano protocollo	
 		if($i != 0){
 			$r_lat = $sum/$i;
 			$r_lng = $sum1/$i;
 	   	}
-		$dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
+	   
+		$dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza tra evento locale e remoto
 	
 		//$timeOK=True;
 		//checktime -48h+
@@ -269,11 +291,11 @@ function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$
 	
 			$eventArea = setDistEvent($v['type']['type'],$v['type']['subtype']);
 
-			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi
-			//AGGREGO
+			//se la distanza dell'evento remoto con gli eventi locali rientra nel raggio d'azione dell'evento aggrega altrimenti no
 			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype']){
 				
-				//print "Sto aggregando";
+				//print "Sto aggregando\n";
+				//print_r($v);
 				$found = true;
 		
 				//aggrega evento remoto con locale. aggiungi descrizione e locations
@@ -284,7 +306,10 @@ function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$
 				$v['reliability'] = ($v['reliability'] + $evento['reliability']) / 2;
 				$v['number_of_notifications'] = count($v['description']);
 				$v['freshness'] = max($v['freshness'], $evento['freshness']);
-	
+				
+				//lista di soli eventi aggregati				
+				$mergedEvents[] = $v;
+	        
 			}
 		}
 	}

@@ -136,7 +136,7 @@ function showOnMap(lat,lng,id,type,subtype,status,rel,inizio,ultima,descr){
 		}
 	 
 	
-					var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><div class=\"event_descs\"></div><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><div class="bts_noty"><button type="button" class="btn btn-default btn-sm" style="background-color:#5CB85C; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:#D9534F; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button>'+contentButton+'</div></div>';
+		var contentString = '<div id="info"><h2>'+subtype+'</h2><h1>'+type+'</h1><b>Stato: </b>'+contentLabel+'&nbsp&nbsp<b>Affidabilità :</b> '+rel+'<br><b>Inizio :</b>'+data_inizio+'<br><b>Ultima :</b>'+data_fine+'<br><b>Descrizioni :</b><br><div class=\"event_descs\"></div><b>Notifica :</b><br><textarea id="notif"></textarea><br><br><div class="bts_noty"><button type="button" class="btn btn-default btn-sm" style="background-color:#5CB85C; color:white;"  onclick=\"notify(\''+id+'\',\'open\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-play-circle"></span> Apri</button><button type="button" class="btn btn-default btn-sm" style="background-color:#D9534F; color:white;"  onclick=\"notify(\''+id+'\',\'closed\',\''+lat+'\',\''+lng+'\',\''+type+'\',\''+subtype+'\')\"><span class="glyphicon glyphicon-off"></span> Chiudi</button>'+contentButton+'</div></div>';
 		
 			infowindow.setContent(contentString);	
 			infowindow.open(map,marker);
@@ -270,9 +270,9 @@ function getPin(type, subtype, status){
 }//#########################################################################################################
 
 //###################################################################################################################################
-//funzione che effettua la ricerca
-function search() {
-	
+//funzione generale di ricerca
+function search(){
+
 	clearOverlays();
 	//prendo tipo
 	type = $('#searchType').val();
@@ -295,10 +295,20 @@ function search() {
 	//prendo raggio di ricerca
 	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtime
-   var unixdata = data_converter(data) + 3600;
-   var now = Math.round((new Date()).getTime() / 1000 + 3600); 
+	var unixdata = data_converter(data) + 3600;
+	var now = Math.round((new Date()).getTime() / 1000 + 3600);
 
+	search_local(type,subtype,status,lat,lng,radius,unixdata, now);
+	search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
+	radius = radius / 1000;
 
+	window.setTimeout("search();", 6000000);
+}
+
+//funzione che effettua la ricerca locale
+function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
+	console.log("sono dentro la local")
+	
 	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
   
 	$.ajax({
@@ -310,14 +320,50 @@ function search() {
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
 				//console.log("i="+i);
-				if(src.locations.length){//aggiungo un controllo. alcuni server mandano eventi senza locations!!
+				
 				//mid point
 				media = average(data.events[i]);
 				//console.log(media.lat);
 				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-		      id_count++;
-		      }
+				id_count++;
+			});
+			//console.log(data);
+			//console.log(markersArray[0]);
+			//console.log(data.events);
+			//if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			
+		
+		} //chiudi function data
+	});//fine chiamata ajax
+
+}
+
+//effettua ricerche remote
+function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
+	
+	//console.log("sono dentro la remote")
+
+	var url = "richieste?scope=remote&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
+  
+	$.ajax({
+		url: url,
+		type: 'GET',
+		data: $(this).serialize(),
+		dataType:'json',
+		success: function(data){
+			smartClear(data); //cancella solo gli eventi locali aggregati dalla remote
+			//for each event add a Marker 
+			$(data.events).each(function(i, src) {
+				//console.log("i="+i);
+				if(src.locations.length){//aggiungo un controllo. alcuni server mandano eventi senza locations!!
+					//mid point
+					media = average(data.events[i]);
+					//console.log(media.lat);
+					showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
+					showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
+				  id_count++;
+		    	}
 			});
 			//console.log(data);
 			//console.log(markersArray[0]);
@@ -327,10 +373,9 @@ function search() {
 		
 		} //chiudi function data
 	});//fine chiamata ajax
-	radius = radius / 1000;
 
-	window.setTimeout("search();", 6000000);
 }
+
 
 //Setta gli indirizzi degli eventi in tabella ricorsivamente
 function setTableAddress(events, actual, last, timeout, table_count) {
@@ -399,3 +444,18 @@ function crea_eventdescs(descs){
 	$(".event_descs").append("</ul>");
 }
 
+function smartClear(data) { //non toglie gli eventi local già ricevuti, che non verrebbero aggiornati dai dati remote
+	var json = JSON.stringify(data);
+	var obj = JSON.parse(json);
+	var events = obj.events;
+	//console.log(markersArray[0].title);
+	
+	for (var i = 0; i < events.length; i++) {
+    		for (var j = 0; j < markersArray.length; j++) {
+			if ((events[i].event_id == markersArray[j].title)){// && (events[i].number_of_notifications > eventsMarkers[j].num)) {
+				console.log("marker eliminato");		
+				markersArray[j].setMap(null);
+			}
+		}
+  	}
+}

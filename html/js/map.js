@@ -293,13 +293,14 @@ function search(){
 	var lng = lastLongitude;
 
 	//prendo raggio di ricerca
-	radius = radiusWidget.get('distance');
+	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtime
 	var unixdata = data_converter(data) + 3600;
 	var now = Math.round((new Date()).getTime() / 1000 + 3600);
 
 	search_local(type,subtype,status,lat,lng,radius,unixdata, now);
-	//search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
+	search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
+	radius = radius / 1000;
 
 	window.setTimeout("search();", 6000000);
 }
@@ -330,12 +331,12 @@ function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
 			//console.log(data);
 			//console.log(markersArray[0]);
 			//console.log(data.events);
-			if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			//if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 			
 		
 		} //chiudi function data
 	});//fine chiamata ajax
-	radius = radius / 1000;
+
 }
 
 //effettua ricerche remote
@@ -351,6 +352,7 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 		data: $(this).serialize(),
 		dataType:'json',
 		success: function(data){
+			smartClear(data); //cancella solo gli eventi locali aggregati dalla remote
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
 				//console.log("i="+i);
@@ -366,12 +368,12 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 			//console.log(data);
 			//console.log(markersArray[0]);
 			//console.log(data.events);
-			if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			//if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
 			
 		
 		} //chiudi function data
 	});//fine chiamata ajax
-	radius = radius / 1000;
+
 }
 
 
@@ -442,3 +444,18 @@ function crea_eventdescs(descs){
 	$(".event_descs").append("</ul>");
 }
 
+function smartClear(data) { //non toglie gli eventi local già ricevuti, che non verrebbero aggiornati dai dati remote
+	var json = JSON.stringify(data);
+	var obj = JSON.parse(json);
+	var events = obj.events;
+	//console.log(markersArray[0].title);
+	
+	for (var i = 0; i < events.length; i++) {
+    		for (var j = 0; j < markersArray.length; j++) {
+			if ((events[i].event_id == markersArray[j].title)){// && (events[i].number_of_notifications > eventsMarkers[j].num)) {
+				console.log("marker eliminato");		
+				markersArray[j].setMap(null);
+			}
+		}
+  	}
+}
