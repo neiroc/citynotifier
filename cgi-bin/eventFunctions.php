@@ -13,22 +13,21 @@ $new_events = array();
 /*
 * Prendi Eventi Locali
 */
-function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
-{
-$list_events = array();
+function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
+	$list_events = array();
 	
-//Connect to DB
-$mysqli = connect_db();
+	//Connect to DB
+	$mysqli = connect_db();
 
-if($mysqli == False){
-	printf("Connect failed: %s\n", mysqli_connect_error());
-			exit();
-}
+	if($mysqli == False){
+		printf("Connect failed: %s\n", mysqli_connect_error());
+		exit();
+	}
 
-$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event AND status != 'archived' GROUP BY Evento.id_event HAVING distance < ".$radius;
+	$query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento, Notifiche WHERE Evento.id_event = Notifiche.id_event AND status != 'archived' GROUP BY Evento.id_event HAVING distance < ".$radius;
 
-//check parameters
- if($type!="all"){
+	//check parameters
+	if($type!="all"){
 		$query=$query." AND Evento.type='$type'";
 		
 		if($subtype!="all"){
@@ -37,26 +36,24 @@ $query="SELECT Evento.*, Notifiche.*, ( 6371795 * acos( cos( radians($lat) ) * c
 	}
 	if($status!="all"){
 		$query=$query." AND Evento.status='$status'";
-}
-
+	}
+	$result = $mysqli->query($query) or die($mysqli->error.__LINE__);
 	
-$result = $mysqli->query($query) or die($mysqli->error.__LINE__);
-	
-//If result is not empty
-if($result->num_rows){
+	//If result is not empty
+	if($result->num_rows){
  		
-	//Another query
-	$query2 = "SELECT * FROM Notifiche";
-	$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
+		//Another query
+		$query2 = "SELECT * FROM Notifiche";
+		$result2 = $mysqli->query($query2) or die($mysqli->error.__LINE__);
 
 	
-	//Set Time Zone
-	date_default_timezone_set("Europe/Rome");
-	$now = time();
+		//Set Time Zone
+		date_default_timezone_set("Europe/Rome");
+		$now = time();
 	
 
-	//Get Data from DB and construct the json response 
-	while ($row = $result->fetch_assoc()) {
+		//Get Data from DB and construct the json response 
+		while ($row = $result->fetch_assoc()) {
 			$event_id = $row['id_event'];
 			$user_id = $row['id_utente'];
 			$type = $row['type'];
@@ -66,18 +63,22 @@ if($result->num_rows){
 			$status = $row['status'];
 			$reliability = $row['event_reliability'];
 			$notifications = $row['notifications'];
+
 		 	
 		 	$lat_med=$row['lat_med'];
 	 		$lng_med=$row['lng_med'];
 	 		//Adds descriptions and locations
+
+			 
+		 	//Adds descriptions and locations
+
 			while($row2 = $result2->fetch_assoc()){
-						$i=$row2['id_event'];
-						$list_descr[$i][]=$row2['description'];
-						$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
-						}
-							
+				$i=$row2['id_event'];
+				$list_descr[$i][]=$row2['description'];
+				$coordinate[$i][]=array('lat'=>$row2['lat'], 'lng'=>$row2['lng']);
+			}
 			//Update Status.
-						//ChromePhp::log($status);
+			//ChromePhp::log($status);
 			if($status != "skeptical"){
 				if($type != "problemi_stradali" && ( $subtype != "buca" || $subtype != "lavori_in_corso")){ 
 					if($status == "open") {
@@ -86,39 +87,39 @@ if($result->num_rows){
 				}
 			}
 			
+
 			$address=calcola_indirizzo($lat_med, $lng_med);
 			ChromePhp::log($address);
 			break;
+
 			//Array Events
-			 $list_events[] = array(
-						'event_id'=>'ltw1324_'.$event_id,
-						'type'=>array("type"=> $type,"subtype"=>$subtype), 
-						'description'=> $list_descr[$event_id],
-						'start_time'=> intval($start_time), 
-						'freshness'=> intval($freshness), 
-						'status'=> $status,
-						"reliability"=>floatval($reliability),
-						'number_of_notifications'=> intval($notifications),
-						'locations'=> $coordinate[$event_id]
-						);
-	}
+			$list_events[] = array(
+				'event_id'=>'ltw1324_'.$event_id,
+				'type'=>array("type"=> $type,"subtype"=>$subtype), 
+				'description'=> $list_descr[$event_id],
+				'start_time'=> intval($start_time), 
+				'freshness'=> intval($freshness), 
+				'status'=> $status,
+				"reliability"=>floatval($reliability),
+				'number_of_notifications'=> intval($notifications),
+				'locations'=> $coordinate[$event_id]
+			);
+		}
+	}//if end
 
-}//if end
+	//risoluzione degli skeptikal
+	gestisci_skeptical_aperti();
 
-//risoluzione degli skeptikal
-
-gestisci_skeptical_aperti();
-
-//Returns the json
-$messaggio = "Messaggio di servizio";
-$server = "http://ltw1324.web.cs.unibo.it";
-$result = array('request_time' => time(),
+	//Returns the json
+	$messaggio = "Messaggio di servizio";
+	$server = "http://ltw1324.web.cs.unibo.it";
+	$result = array('request_time' => time(),
 								'result' => $messaggio,
 								'from_server'=> $server,
 								'events' => $list_events);
-header('Content-Type: application/json; charset=utf-8');
+	header('Content-Type: application/json; charset=utf-8');
 
-return json_encode($result);
+	return json_encode($result);
 }
 
 function calcola_indirizzo($lat, $lng){
@@ -161,126 +162,124 @@ function calcola_indirizzo($lat, $lng){
 */
 function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
 
-global $new_events;
-global $l_events;
+	global $new_events;
+	global $l_events;
 
-$handles = array();
-$result = array();
-
-
-$m_curl = curl_multi_init();
-
-//ServerList
-$ris = file_get_contents('../data/server.json','r'); 
-$array = json_decode($ris, true); 
+	$handles = array();
+	$result = array();
 
 
-	foreach($array['server'] as $url)
-	{
+	$m_curl = curl_multi_init();
+
+	//ServerList
+	$ris = file_get_contents('../data/server.json','r'); 
+	$array = json_decode($ris, true); 
+
+
+	foreach($array['server'] as $url){
 	
-	$urls = $url."/richieste?scope=".$scope."&type=".$type."&subtype=".$subtype."&lat=".$lat."&lng=".$lng."&radius=".$radius."&timemin=".$timeMin."&timemax=".$timeMax."&status=".$status;
+		$urls = $url."/richieste?scope=".$scope."&type=".$type."&subtype=".$subtype."&lat=".$lat."&lng=".$lng."&radius=".$radius."&timemin=".$timeMin."&timemax=".$timeMax."&status=".$status;
 
-	$cURL = curl_init();
+		$cURL = curl_init();
 
-	$opt = array(
-			  			CURLOPT_URL => $urls,
-			  		   CURLOPT_HEADER => FALSE,
-			  			CURLOPT_RETURNTRANSFER => TRUE,
-			 		 	CURLOPT_TIMEOUT => 5,
-					   CURLOPT_FAILONERROR => TRUE,
-					 //CURLOPT_HTTPHEADER => array('Accept: application/json')
-			);	
-
+		$opt = array(
+			CURLOPT_URL => $urls,
+			CURLOPT_HEADER => FALSE,
+			CURLOPT_RETURNTRANSFER => TRUE,
+		 	CURLOPT_TIMEOUT => 5,
+			CURLOPT_FAILONERROR => TRUE,
+			//CURLOPT_HTTPHEADER => array('Accept: application/json')
+		);	
 		curl_setopt_array($cURL, $opt);
-		 			curl_multi_add_handle($m_curl, $cURL);
-		 			$handles[] = $cURL;
+		curl_multi_add_handle($m_curl, $cURL);
+		$handles[] = $cURL;
 	}
-
 	$running = null;
 	
 	do {
 		curl_multi_exec($m_curl, $running);
-	} while ($running > 0);
+	}while ($running > 0);
 
 	for($i = 0; $i < count($handles); $i++) {
-    		if ($handles[$i]) {
+    	if ($handles[$i]) {
 			$out = curl_multi_getcontent($handles[$i]);
-    			if ($out) $result[] = $out;
+    		if ($out)
+				$result[] = $out;
 		}
-    		curl_multi_remove_handle($m_curl, $handles[$i]);
-		}
+    	curl_multi_remove_handle($m_curl, $handles[$i]);
+	}
 			
-			//Local Events	
-			$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status),true);
+	//Local Events	
+	$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status),true);
 
-			foreach ($result as $r) {
-			$json = json_decode($r,true);
-					foreach($json['events'] as $event){
-					//passo ogni evento remoto e lo confronto con i dati locali. 	
-					 compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
-					}
-			}
-			//Merge Local with Remote Events 
-			$l_events['events'] = array_merge($l_events['events'], $new_events); 
-			//print_r($l_events);
+	foreach ($result as $r) {
+		$json = json_decode($r,true);
+		foreach($json['events'] as $event){
+			//passo ogni evento remoto e lo confronto con i dati locali. 	
+			 compareLocal($event,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);				
+		}
+	}
+	//Merge Local with Remote Events 
+	$l_events['events'] = array_merge($l_events['events'], $new_events); 
+	//print_r($l_events);
 			
-			echo json_encode($l_events);
+	echo json_encode($l_events);
 }
 
 
 /*
 * Funzione confronta un evento remoto con tutti gli eventi locali. Se è presente aggrega altrimenti aggiunge
 */
-function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status)
-{
-global $l_events;
-global $new_events;
-$found = false;
-
-	foreach($l_events['events'] as &$v)
-	{
-
-  //calcolo di longitudine e latitudine media per gli eventi
-	$sum  = 0;
-	$sum1 = 0;
-	$i    = 0;
-
-	foreach($v['locations'] as $value) {
-		$sum  += $value['lat'];
-		$sum1 += $value['lng'];
-		$i++;	
-	}
-
-	$l_lat = $sum/$i;
-	$l_lng = $sum1/$i;
+function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
 	
-	$sum  = 0;
-	$sum1 = 0;
-	$i    = 0;
+	global $l_events;
+	global $new_events;
+	$found = false;
 
-	foreach($evento['locations'] as $value) {
-		$sum  += $value['lat'];
-		$sum1 += $value['lng'];
-		$i++;
-	}
-	if($i != 0){
-		$r_lat = $sum/$i;
-		$r_lng = $sum1/$i;
-   	}
-   $dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
+	foreach($l_events['events'] as &$v){
+
+		//calcolo di longitudine e latitudine media per gli eventi
+		$sum  = 0;
+		$sum1 = 0;
+		$i    = 0;
+
+		foreach($v['locations'] as $value) {
+			$sum  += $value['lat'];
+			$sum1 += $value['lng'];
+			$i++;	
+		}
+
+		$l_lat = $sum/$i;
+		$l_lng = $sum1/$i;
 	
-	//$timeOK=True;
-	//checktime -48h+
-	//if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = True;
-	//	else $timeOK = False;
+		$sum  = 0;
+		$sum1 = 0;
+		$i    = 0;
+
+		foreach($evento['locations'] as $value) {
+			$sum  += $value['lat'];
+			$sum1 += $value['lng'];
+			$i++;
+		}
+		if($i != 0){
+			$r_lat = $sum/$i;
+			$r_lng = $sum1/$i;
+	   	}
+		$dist = distance($l_lat,$l_lng,$r_lat,$r_lng); //calcola distanza
+	
+		//$timeOK=True;
+		//checktime -48h+
+		//if(abs($timeMax - $evento['freshness']) < 172800) $timeOK = True;
+		//	else $timeOK = False;
 		
 		if(!$found){	
 	
 			$eventArea = setDistEvent($v['type']['type'],$v['type']['subtype']);
 
-			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi AGGREGO
-			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype'])
-			{
+			//se la distanza dell'evento remoto con gli eventi locali è < 100 metri e tipo e sottotipo sono gli stessi
+			//AGGREGO
+			if($dist <= $eventArea && $v['type']['type'] == $evento['type']['type'] && $v['type']['subtype'] == $evento['type']['subtype']){
+				
 				//print "Sto aggregando";
 				$found = true;
 		
@@ -295,9 +294,9 @@ $found = false;
 	
 			}
 		}
-	}//Se alla fine del ciclo l'evento remoto non corrisponde a nessuno locale lo aggiungo ad una nuova lista eventi
-
- if(!$found) $new_events[] = $evento;
+	}
+	//Se alla fine del ciclo l'evento remoto non corrisponde a nessuno locale lo aggiungo ad una nuova lista eventi
+	if(!$found) $new_events[] = $evento;
 
 }
 

@@ -7,8 +7,8 @@ if ((!$_SERVER['REQUEST_METHOD'] == 'GET')) {
 	exit;
 }
 
-//verifico i parametri della query
-if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) and isset($_GET['lat'])and isset($_GET['lng'])and isset($_GET['radius'])and isset($_GET['timemin'])and isset($_GET['timemax'])and isset($_GET['status'])) {
+	//verifico i parametri della query
+	if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) and isset($_GET['lat'])and isset($_GET['lng'])and isset($_GET['radius'])and isset($_GET['timemin'])and isset($_GET['timemax'])and isset($_GET['status'])) {
         $scope = $_GET['scope'];
         $type = $_GET['type'];
         $subtype = $_GET['subtype'];
@@ -18,6 +18,7 @@ if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) a
         $timeMin = $_GET['timemin'];
         $timeMax = $_GET['timemax'];
         $status = $_GET['status'];
+
 			if($scope == "local"){
 			     getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
 			}
@@ -25,8 +26,10 @@ if (isset($_GET['scope']) and isset($_GET['type']) and isset($_GET['subtype']) a
                             getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);    
                         }
 
-} else{ 
-echo alert("406 Not acceptable:mi vincoli della richiesta non sono soddisfacibili");
+
+	} 
+	else{ 
+		echo alert("406 Not acceptable:mi vincoli della richiesta non sono soddisfacibili");
 }
 
 

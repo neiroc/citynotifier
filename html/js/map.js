@@ -270,9 +270,9 @@ function getPin(type, subtype, status){
 }//#########################################################################################################
 
 //###################################################################################################################################
-//funzione che effettua la ricerca
-function search() {
-	
+//funzione generale di ricerca
+function search(){
+
 	clearOverlays();
 	//prendo tipo
 	type = $('#searchType').val();
@@ -295,10 +295,19 @@ function search() {
 	//prendo raggio di ricerca
 	radius = radiusWidget.get('distance')*1000;
 	//trasformo data in unixtime
-   var unixdata = data_converter(data) + 3600;
-   var now = Math.round((new Date()).getTime() / 1000 + 3600); 
+	var unixdata = data_converter(data) + 3600;
+	var now = Math.round((new Date()).getTime() / 1000 + 3600);
 
+	search_local(type,subtype,status,lat,lng,radius,unixdata, now);
+	//search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
 
+	window.setTimeout("search();", 6000000);
+}
+
+//funzione che effettua la ricerca locale
+function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
+	console.log("sono dentro la local")
+	
 	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
   
 	$.ajax({
@@ -310,14 +319,13 @@ function search() {
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
 				//console.log("i="+i);
-				if(src.locations.length){//aggiungo un controllo. alcuni server mandano eventi senza locations!!
+				
 				//mid point
 				media = average(data.events[i]);
 				//console.log(media.lat);
 				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-		      id_count++;
-		      }
+				id_count++;
 			});
 			//console.log(data);
 			//console.log(markersArray[0]);
@@ -328,9 +336,44 @@ function search() {
 		} //chiudi function data
 	});//fine chiamata ajax
 	radius = radius / 1000;
-
-	window.setTimeout("search();", 6000000);
 }
+
+//effettua ricerche remote
+function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
+	
+	console.log("sono dentro la remote")
+
+	var url = "richieste?scope=remote&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
+  
+	$.ajax({
+		url: url,
+		type: 'GET',
+		data: $(this).serialize(),
+		dataType:'json',
+		success: function(data){
+			//for each event add a Marker 
+			$(data.events).each(function(i, src) {
+				//console.log("i="+i);
+				if(src.locations.length){//aggiungo un controllo. alcuni server mandano eventi senza locations!!
+					//mid point
+					media = average(data.events[i]);
+					//console.log(media.lat);
+					showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
+					showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
+				  id_count++;
+		    	}
+			});
+			//console.log(data);
+			//console.log(markersArray[0]);
+			//console.log(data.events);
+			if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
+			
+		
+		} //chiudi function data
+	});//fine chiamata ajax
+	radius = radius / 1000;
+}
+
 
 //Setta gli indirizzi degli eventi in tabella ricorsivamente
 function setTableAddress(events, actual, last, timeout, table_count) {
