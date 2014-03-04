@@ -8,7 +8,7 @@ $l_events = array();
 $new_events = array();
 
 //getRemoteEvents(local,all,all,44.49895,11.341896,50,1385856000,1389312000,all);
-//echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all);
+echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
 //http://localhost/richieste?scope=local&type=emergenze_sanitarie&subtype=ferito&lat=44.524966819292565&lng=11.523284912109375&radius=2000&timemin=1388534400&timemax=1393590048&status=all
 /*
 * Prendi Eventi Locali
@@ -88,9 +88,9 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 			}
 			
 
-			//$address=calcola_indirizzo($lat_med, $lng_med);
+			$address=calcola_indirizzo($lat_med, $lng_med);
 			//ChromePhp::log($address);
-			//break;
+			break;
 
 			//Array Events
 			$list_events[] = array(
@@ -118,19 +118,15 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 								'from_server'=> $server,
 								'events' => $list_events);
 	header('Content-Type: application/json; charset=utf-8');
-	if($mode==True){
-		echo json_encode($result);
-	}
-	else{
+
 		return json_encode($result);
-	}
+
 }
 
 function calcola_indirizzo($lat, $lng){
 
-	//$reverseurl = "http://maps.googleapis.com/maps/api/geocode/xml?latlng=".$lat.",".$lng."&sensor=false&location_type=APPROXIMATE";{0}->{'address_components'}->{0}->
 	$reverseurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&language=it&result_type=street_address&sensor=true&key=AIzaSyA6xA6H345Svd58sdTUNpRU5rT5NsA2jPo";
-	//ChromePhp::log($reverseurl);
+
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,$reverseurl);
 	curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -141,22 +137,15 @@ function calcola_indirizzo($lat, $lng){
 
 	$aux=json_decode($result);
 	
-	$indirizzo=$aux->{'results'};
+	$strada=$aux->results[0]->address_components[1]->short_name;
+	$civico=$aux->results[0]->address_components[0]->short_name;
+	$città=$aux->results[0]->address_components[4]->short_name;
     
+	$indirizzo=$strada.",".$civico.",".$città;
 
-	ChromePhp::log($aux->{'results'}->{'address_components'}->{'1'}->{'short_name'});
-  //echo 'Nome: '.$p[elemento][Nome];
- 
-
-
-	ChromePhp::log($aux);
-	//ChromePhp::log($indirizzo[0]);
+	ChromePhp::log($indirizzo);
 
 	return $indirizzo;
-
-	
-
-
 }
 
 
