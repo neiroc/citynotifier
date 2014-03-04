@@ -13,7 +13,7 @@ $new_events = array();
 /*
 * Prendi Eventi Locali
 */
-function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
+function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status,$mode){
 	$list_events = array();
 	
 	//Connect to DB
@@ -88,9 +88,9 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 			}
 			
 
-			$address=calcola_indirizzo($lat_med, $lng_med);
-			ChromePhp::log($address);
-			break;
+			//$address=calcola_indirizzo($lat_med, $lng_med);
+			//ChromePhp::log($address);
+			//break;
 
 			//Array Events
 			$list_events[] = array(
@@ -118,8 +118,12 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 								'from_server'=> $server,
 								'events' => $list_events);
 	header('Content-Type: application/json; charset=utf-8');
-
-	return json_encode($result);
+	if($mode==True){
+		echo json_encode($result);
+	}
+	else{
+		return echo json_encode($result);
+	}
 }
 
 function calcola_indirizzo($lat, $lng){
@@ -210,7 +214,7 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 	}
 			
 	//Local Events	
-	$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status),true);
+	$l_events = json_decode(getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status,False),true);
 
 	foreach ($result as $r) {
 		$json = json_decode($r,true);

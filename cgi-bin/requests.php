@@ -20,7 +20,7 @@ if ((!$_SERVER['REQUEST_METHOD'] == 'GET')) {
         $status = $_GET['status'];
 
 			if($scope == "local"){
-			     getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);
+			     getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status,True);
 			}
                         else{
                             getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);    
