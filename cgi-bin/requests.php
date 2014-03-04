@@ -29,7 +29,7 @@ if ((!$_SERVER['REQUEST_METHOD'] == 'GET')) {
 
 	} 
 	else{ 
-		echo alert("406 Not acceptable:mi vincoli della richiesta non sono soddisfacibili");
+		echo "406 Not acceptable:mi vincoli della richiesta non sono soddisfacibili";
 }
 
 

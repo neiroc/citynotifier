@@ -293,22 +293,23 @@ function search(){
 	var lng = lastLongitude;
 
 	//prendo raggio di ricerca
-	radius = radiusWidget.get('distance')*1000;
+	radius = radiusWidget.get('distance');
 	//trasformo data in unixtime
 	var unixdata = data_converter(data) + 3600;
 	var now = Math.round((new Date()).getTime() / 1000 + 3600);
 
 	search_local(type,subtype,status,lat,lng,radius,unixdata, now);
 	search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
-	radius = radius / 1000;
+	
 
 	window.setTimeout("search();", 6000000);
 }
 
 //funzione che effettua la ricerca locale
 function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
-	console.log("sono dentro la local")
 	
+	radius = radius * 1000;
+
 	var url = "richieste?scope=local&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
   
 	$.ajax({
@@ -336,14 +337,14 @@ function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
 		
 		} //chiudi function data
 	});//fine chiamata ajax
+	radius = radius / 1000;
 
 }
 
 //effettua ricerche remote
 function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
-	
-	//console.log("sono dentro la remote")
 
+	radius = radius * 1000;
 	var url = "richieste?scope=remote&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
   
 	$.ajax({
@@ -373,6 +374,7 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 		
 		} //chiudi function data
 	});//fine chiamata ajax
+	radius = radius / 1000;
 
 }
 
