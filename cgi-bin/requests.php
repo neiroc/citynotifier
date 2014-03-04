@@ -19,12 +19,12 @@ if ((!$_SERVER['REQUEST_METHOD'] == 'GET')) {
         $timeMax = $_GET['timemax'];
         $status = $_GET['status'];
 
-			if($scope == "local"){
-			     getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status,True);
-			}
-                        else{
-                            getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);    
-                        }
+		if($scope == "local"){
+		     getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status,True);
+		}
+        else{
+        	getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status);    
+        }
 
 
 	} 

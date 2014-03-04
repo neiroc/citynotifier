@@ -5,6 +5,12 @@ $(document).ready(function() {
 		}
 		else{
 
+			var date = $('#datepickerid').val();
+	
+			//trasformo data in unixtime
+			var unixdata = data_converter(date) + 3600;
+			var now = Math.round((new Date()).getTime() / 1000 + 3600);
+			
 			var segnalazionej = {
 
 				type : {
@@ -62,7 +68,11 @@ $(document).ready(function() {
 							successAlert(call.result);
 						
 						}
-						search();
+						var tipo = segnalazionej.type.type;
+						var sottotipo = segnalazionej.type.subtype;
+						var llat = segnalazionej.lat;
+						var llng = segnalazionej.lng;
+						search_local(tipo, sottotipo, 'all', llat, llng, radius, unixdata, now);
 					}
 					else {
 					

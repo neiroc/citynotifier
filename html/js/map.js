@@ -293,13 +293,13 @@ function search(){
 	var lng = lastLongitude;
 
 	//prendo raggio di ricerca
-	radius = radiusWidget.get('distance')*1000;
+	radius = radiusWidget.get('distance');
 	//trasformo data in unixtime
 	var unixdata = data_converter(data) + 3600;
 	var now = Math.round((new Date()).getTime() / 1000 + 3600);
 
 	search_local(type,subtype,status,lat,lng,radius,unixdata, now);
-	search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
+	//search_remote(type,subtype,status,lat,lng,radius,unixdata, now);
 
 	window.setTimeout("search();", 6000000);
 }
@@ -341,7 +341,7 @@ function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
 //effettua ricerche remote
 function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 	
-	console.log("sono dentro la remote")
+	//console.log("sono dentro la remote")
 
 	var url = "richieste?scope=remote&type="+ type + "&subtype="+ subtype + "&lat="+ lat + "&lng="+ lng+"&radius=" + radius +"&timemin="+ unixdata + "&timemax="+ now + "&status="+status;
   

@@ -7,6 +7,12 @@ var partsArray = id.split('_');
 	if(partsArray[0] =="ltw1324") 
 		id = partsArray[1];
 
+	var date = $('#datepickerid').val();
+	
+	//trasformo data in unixtime
+	var unixdata = data_converter(date) + 3600;
+	var now = Math.round((new Date()).getTime() / 1000 + 3600);
+
 	var notificaj = {
 				
 		id_evento : id, 
@@ -62,7 +68,7 @@ var partsArray = id.split('_');
 					successAlert(call.result);
 					
 				}
-				search();
+				search_local(tipo, sottotipo, status, lat, lng, radius, unixdata, now);
 			}
 			else {
 				
