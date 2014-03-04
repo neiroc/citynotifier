@@ -89,7 +89,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 			}
 			
 
-			$address=calcola_indirizzo($lat_med, $lng_med);
+			//$address=calcola_indirizzo($lat_med, $lng_med);
 			//ChromePhp::log($address);
 			
 
@@ -150,7 +150,7 @@ function calcola_indirizzo($lat, $lng){
     
 	$indirizzo=$strada.",".$civico.",".$città;
 
-	ChromePhp::log($indirizzo);
+	//ChromePhp::log($indirizzo);
 
 	return $indirizzo;
 }

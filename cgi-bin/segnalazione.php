@@ -52,7 +52,7 @@ if($id_utente!=Null){
 					break;
 				}
 				case "tornado" : {
-					$radius = 500 ;
+					$radius = 700 ;
 					break;
 				}
 				case "neve" : {
@@ -72,22 +72,23 @@ if($id_utente!=Null){
 					break;
 				}
 				case "concerto" : {
-					$radius = 50 ;
+					$radius = 70 ;
 					break;
 				}
 
 				default:{
-					$radius = 20 ;
+					$radius = 30 ;
 				}
 			}
 		
 
 			//controllo se esiste l'evento
 
-			$query = "SELECT Evento.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento WHERE type ='".$type."' AND subtype ='".$subtype."' AND NOT (status ='archved') GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 1";
+			$query = "SELECT Evento.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento WHERE type ='".$type."' AND subtype ='".$subtype."' AND NOT (status ='archived') GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 1;";
+	ChromePhp::log($query);
 
 			$rispostadb = mysqli_query($con,$query);
-			
+			ChromePhp::log($rispostadb);
 
 			if($row = mysqli_fetch_array($rispostadb)) {   
 
