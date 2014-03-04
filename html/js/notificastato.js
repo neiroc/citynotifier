@@ -68,7 +68,12 @@ var partsArray = id.split('_');
 					successAlert(call.result);
 					
 				}
-				search_local(tipo, sottotipo, status, lat, lng, radius, unixdata, now);
+				var tpo = notificaj.tipo;
+				var subtipo = notificaj.sottotipo;
+				var stat = notificaj.status;
+				var llat = notificaj.lat;
+				var llng = notificaj.lng
+				search_local(tpo, subtipo, stat, llat, llng, radius, unixdata, now);
 			}
 			else {
 				
