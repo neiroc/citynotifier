@@ -91,7 +91,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 
 			$address=calcola_indirizzo($lat_med, $lng_med);
 			//ChromePhp::log($address);
-			break;
+			
 
 			//Array Events
 			$list_events[] = array(
@@ -118,9 +118,15 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 								'result' => $messaggio,
 								'from_server'=> $server,
 								'events' => $list_events);
-	header('Content-Type: application/json; charset=utf-8');
+	//header('Content-Type: application/json; charset=utf-8');
 
-	return json_encode($result);
+	if($mode==True){
+		echo json_encode($result);
+	}
+	else{
+		return json_encode($result);
+	}	
+
 
 }
 
