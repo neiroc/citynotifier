@@ -320,13 +320,12 @@ function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
 		success: function(data){
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
-				//console.log("i="+i);
-				
 				//mid point
 				media = average(data.events[i]);
 				//console.log(media.lat);
 				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
-				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
+				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);				
+				//$("#tableEventAddress"+id_count).html(data.events[id_count].address);
 				id_count++;
 			});
 			//console.log(data);
@@ -363,10 +362,11 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 					//console.log(media.lat);
 					showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 					showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-				  id_count++;
+					//$("#tableEventAddress"+id_count).html(data.events[id_count].address);
+					id_count++;
 		    	}
 			});
-			//console.log(data);
+			
 			//console.log(markersArray[0]);
 			//console.log(data.events);
 			//if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
@@ -379,7 +379,7 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 }
 
 
-//Setta gli indirizzi degli eventi in tabella ricorsivamente
+//Setta gli indirizzi degli eventi in tabella 
 function setTableAddress(events, actual, last, timeout, table_count) {
 	//console.log(actual);
 	//console.log(last);
@@ -450,12 +450,12 @@ function smartClear(data) { //non toglie gli eventi local già ricevuti, che non
 	var json = JSON.stringify(data);
 	var obj = JSON.parse(json);
 	var events = obj.events;
-	//console.log(markersArray[0].title);
 	
 	for (var i = 0; i < events.length; i++) {
     		for (var j = 0; j < markersArray.length; j++) {
 			if ((events[i].event_id == markersArray[j].title)){// && (events[i].number_of_notifications > eventsMarkers[j].num)) {
-				console.log("marker eliminato");		
+				
+				$("#tableEventAddress"+j).html("accorpato");
 				markersArray[j].setMap(null);
 			}
 		}
