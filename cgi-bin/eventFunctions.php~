@@ -10,7 +10,7 @@ $mergedEvents = array();//solo eventi aggregati dalla remot
 
 
 //getRemoteEvents(local,all,all,44.49895,11.341896,1000,1385856000,1389312000,all);
-getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
+//getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
 
 /*
 * Prendi Eventi Locali
@@ -150,7 +150,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 
 function calcola_indirizzo($lat, $lng){
 
-	$reverseurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&language=it&result_type=street_address&sensor=true&key=AIzaSyBsFPIOSCfA69x3_pIW8tylCSuu9PsPJFw";
+	$reverseurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&language=it&result_type=street_address&sensor=true&key=AIzaSyBMYsCK2LxrMPR-IP9bQHushsXfjIx_2IA";
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,$reverseurl);

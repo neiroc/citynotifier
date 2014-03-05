@@ -326,6 +326,7 @@ function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
 				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);				
 				$("#tableEventAddress"+id_count).html(data.events[id_count].address);
+				console.log(id_count);
 				id_count++;
 			});
 			//console.log(data);
@@ -362,8 +363,9 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 					//console.log(media.lat);
 					showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 					showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
-					$("#tableEventAddress"+id_count).html(data.events[id_count].address);
+					$("#tableEventAddress"+id_count).html(data.events[i].address);
 					id_count++;
+					
 		    	}
 			});
 			

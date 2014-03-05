@@ -150,7 +150,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 
 function calcola_indirizzo($lat, $lng){
 
-	$reverseurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&language=it&result_type=street_address&sensor=true&key=AIzaSyBsFPIOSCfA69x3_pIW8tylCSuu9PsPJFw";
+	$reverseurl = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".$lat.",".$lng."&language=it&result_type=street_address&sensor=true&key=AIzaSyDjpQMiRVMxEsASM_ypw0u2iGWtKGfmfTU";
 
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL,$reverseurl);
