@@ -58,6 +58,7 @@ var partsArray = id.split('_');
 				rep=call.reputation;
 				//successAlert(call.reputation);
 				upRep();
+				infowindow.close();
 				
 				if(call.msg){
 

@@ -267,20 +267,19 @@ function getPin(type, subtype, status){
         case "closed" : return mDir + "Closed.png"
         case "skeptical" : return mDir + ".png";
     }
-}//#########################################################################################################
+}
 
-//###################################################################################################################################
 //funzione generale di ricerca
 function search(){
 
 	clearOverlays();
-	//prendo tipo
+	
 	type = $('#searchType').val();
-	//prendo sottotipo
+	
 	subtype = $('#searchSubType').val();
-	//prendo stato 
+ 
 	status = $('#searchStatus').val();
-	//prendo data (devo convertirla in unixtime
+
 	data = $('#datepickerid').val();
 	
 	id_count=0;
@@ -322,19 +321,11 @@ function search_local(type,subtype,status,lat,lng,radius,unixdata, now) {
 			$(data.events).each(function(i, src) {
 				//mid point
 				media = average(data.events[i]);
-				//console.log(media.lat);
 				showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 				showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);				
-				$("#tableEventAddress"+id_count).html(data.events[id_count].address);
-				console.log(id_count);
+				$("#tableEventAddress"+id_count).html(data.events[i].address);
 				id_count++;
-			});
-			//console.log(data);
-			//console.log(markersArray[0]);
-			//console.log(data.events);
-			//if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
-			
-		
+			});		
 		} //chiudi function data
 	});//fine chiamata ajax
 	radius = radius / 1000;
@@ -356,75 +347,21 @@ function search_remote(type,subtype,status,lat,lng,radius,unixdata, now) {
 			smartClear(data); //cancella solo gli eventi locali aggregati dalla remote
 			//for each event add a Marker 
 			$(data.events).each(function(i, src) {
-				//console.log("i="+i);
 				if(src.locations.length){//aggiungo un controllo. alcuni server mandano eventi senza locations!!
 					//mid point
 					media = average(data.events[i]);
-					//console.log(media.lat);
 					showOnMap(media.lat,media.lng,src.event_id,src.type.type,src.type.subtype,src.status,src.reliability,src.start_time,src.freshness,src.description);
 					showOnTable(src.event_id,src.type.subtype,src.type.type,src.freshness,src.status,src.description,src.locations[0].lat,src.locations[0].lng);
 					$("#tableEventAddress"+id_count).html(data.events[i].address);
-					id_count++;
-					
+					id_count++;	
 		    	}
-			});
-			
-			//console.log(markersArray[0]);
-			//console.log(data.events);
-			//if(data.events.length != 0) setTableAddress(data.events, 0, data.events.length - 1, 0, 0);
-			
-		
+			});		
 		} //chiudi function data
 	});//fine chiamata ajax
 	radius = radius / 1000;
 
 }
 
-
-//Setta gli indirizzi degli eventi in tabella 
-function setTableAddress(events, actual, last, timeout, table_count) {
-	//console.log(actual);
-	//console.log(last);
-	geocoder = new google.maps.Geocoder();
-	
-	var llat, llng;
-
-	llat = events[actual].locations[0].lat; 
-	llng = events[actual].locations[0].lng;
-	//console.log(llat);
-	//console.log(llng);
-
-
-	var LatLng = new google.maps.LatLng(llat, llng);
-	
-	geocoder.geocode({'latLng': LatLng}, function(results, status) {
-    		if (status == google.maps.GeocoderStatus.OK) {		
-			if (results[0]) {
-		
-				res = results[0].address_components[1].long_name + " n." +
-				      results[0].address_components[0].long_name + ",<br> " +
-				      results[0].address_components[2].long_name;
-			}
-			else res = "Indirizzo non trovato.";
-		}
-		else { 
-			if ( (timeout < 16) && status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-				setTimeout(function(){ setTableAddress(events, actual, last, (timeout+1), table_count); }, 350);
-				return;
-			}
-			else {
-				/*
-				var ih = $("#tableEventAddress" + (actual + table_count)).html();
-				if (ih == "<img src=\"img/load2.gif\">") res = "Ricerca indirizzo fallita. Causa: " + status;
-				else res = ih;*/
-				console.log("errore");
-			}		
-		}
-		 //console.log(res);
-		$("#tableEventAddress" + (actual + table_count)).html(res);
-		if (actual < last) setTimeout(function(){ setTableAddress(events, actual+1, last, 0, table_count); }, 400);
-	});
-}
 
 //funzione di conversione date to timestamp
 function data_converter(strDate) {
@@ -440,7 +377,7 @@ function crea_eventdescs(descs){
 	$(".event_descs").html("<ul>");
 	
 	for(j=0;j<descs.length;j++){
-		console.log(descs[j]);
+		
 		if(descs[j]!="")
 			$(".event_descs").append("<li>"+descs[j]+"</li>"); 
 			else no_descr++;
@@ -455,8 +392,7 @@ function smartClear(data) { //non toglie gli eventi local già ricevuti, che non
 	
 	for (var i = 0; i < events.length; i++) {
     		for (var j = 0; j < markersArray.length; j++) {
-			if ((events[i].event_id == markersArray[j].title)){// && (events[i].number_of_notifications > eventsMarkers[j].num)) {
-				
+			if ((events[i].event_id == markersArray[j].title)){
 				$("#tableEventAddress"+j).parent().remove();
 				markersArray[j].setMap(null);
 			}
