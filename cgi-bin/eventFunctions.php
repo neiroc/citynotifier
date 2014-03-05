@@ -263,7 +263,6 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 		
 		$address=calcola_indirizzo($m_lat, $m_lng);
 		
-		/Aggiungi indirizzo
 		$v['address'] = $address; 
 	}
 
