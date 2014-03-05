@@ -9,7 +9,7 @@ $new_events = array(); //nuova lista eventi eventi remoti + locali aggregati
 $mergedEvents = array();//solo eventi aggregati dalla remot
 
 
-//getRemoteEvents(local,all,all,44.49895,11.341896,1000,1385856000,1389312000,all);
+getRemoteEvents(local,all,all,44.49895,11.341896,1000,1385856000,1389312000,all);
 //getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
 
 /*
