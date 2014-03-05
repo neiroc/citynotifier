@@ -29,7 +29,7 @@ if($id_utente!=Null){
 		if($con == False){
 			
 			$result['result'] = "errore nell'invio della notifica";
-			$result['errore']= "errore di connessione al db server";
+			$result['errore']= "500 Internal server error: errore di connessione al db server";
 		}
 		else{
 			$radius;
@@ -214,12 +214,12 @@ if($id_utente!=Null){
 	}
 	else{
 		$result['result'] = 'Errore nella segnalazione di un nuovo evento o notifica di evento esistente.';
-		$result['errore'] = 'dati segnalazione non completi';
+		$result['errore'] = '406 Not acceptable: dati segnalazione non completi';
 	}
 }
 else{
 	$result['result'] = 'Errore nella segnalazione di un nuovo evento o notifica di evento esistente.';
-	$result['errore'] = 'utente non riconosciuto';
+	$result['errore'] = '403 Forbidden: utente non riconosciuto';
 }
 
 //recupero reputation

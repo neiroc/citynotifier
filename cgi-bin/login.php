@@ -20,10 +20,10 @@ if(($login->{'username'} != Null)&&($login->{'password'} != Null)){
 $con=connect_db();
 
 if($con == False) {
-	$result['result'] = "Errore di connessione al db server";//risposta negativa
+	$result['result'] = "500 Internal server error: Errore di connessione al db server";//risposta negativa
 	
 	$re = json_encode($result);
-	header('Content-Type: application/json; charset=utf-8');
+	//header('Content-Type: application/json; charset=utf-8');
 	echo $re;
 }
 	
@@ -40,7 +40,7 @@ if(($row = mysqli_fetch_array($risposta))&&($row['username']==$username)&&($row[
 	$result['result'] = "login effettuato con successo";//risposta positiva
 	$result['id_utente'] = $row['id_utente'];
 	$result['reputation'] = $row['reputation'];
-	header('Content-Type: application/json; charset=utf-8');
+	//header('Content-Type: application/json; charset=utf-8');
 	$re = json_encode($result);
 	echo $re;
                            
@@ -51,7 +51,7 @@ else{
             
 	$result['result'] = "Credenziali Errate";//risposta negativa
 	$re = json_encode($result);
-	header('Content-Type: application/json; charset=utf-8');
+	//header('Content-Type: application/json; charset=utf-8');
 	echo $re;
 
 }

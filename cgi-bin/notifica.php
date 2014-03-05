@@ -28,7 +28,7 @@ if($id_utente != Null){
 		if($con == False){
 			
 			$result['result'] = "errore nell'invio della notifica";
-			$result['errore']= "errore di connessione al db server";
+			$result['errore']= "500 Internal server error: errore di connessione al db server";
 		}
 		else{
 
@@ -48,10 +48,10 @@ if($id_utente != Null){
 				$notifications=($row['notifications']);
 				$privilegi = check_privileges($id_utente);
 				
-				if( (($privilegi >1) && ($newstatus=='archived')) || ( ($privilegi >2) && ($newstatus=='closed') && ($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca') || ($row['status']=='problemi_ambientali')) ){
+				if( (($privilegi >1) && ($newstatus=='archived')) || ( ($privilegi >2) && ($newstatus=='closed') && ($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca')) ){
 
 					$result['result'] = "errore nell'invio della notifica";
-					$result['errore']= "privilegi insufficenti";
+					$result['errore']= "403 Forbidden: privilegi insufficenti";
 				}
 				else{
 					
@@ -129,7 +129,7 @@ if($id_utente != Null){
 						else{
 
 							$result['result'] = "Errore nell'invio della notifica";
-							$result['errore'] = "errore di connessione con il db server";
+							$result['errore'] = "500 Internal server error: errore di connessione con il db server";
 						}
 
 					}
@@ -157,7 +157,7 @@ if($id_utente != Null){
 				else{
 
 					$result['result'] = "Errore nell'invio della notifica";
-					$result['errore'] = "errore di connessione con il db server";
+					$result['errore'] = "500 Internal server error: errore di connessione con il db server";
 				}
 
 			}
@@ -166,14 +166,14 @@ if($id_utente != Null){
 	else{
 
 		$result['result'] = "errore nell'invio della notifica";
-		$result['errore']= "dati notifica incompleti";
+		$result['errore']= "406 Not acceptable: dati notifica incompleti";
 	}
 }
 
 else{
 
 	$result['result'] = "errore nell'invio della notifica";
-	$result['errore']= "utente non riconosciuto";
+	$result['errore']= "403 Forbidden: utente non riconosciuto";
 
 }
 

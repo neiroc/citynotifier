@@ -82,7 +82,7 @@ $(document).ready(function() {
 
 				},
 				error: function(e){
-					errorAlert("errore di risposta dal server");
+					errorAlert("500 Internal server error: Errore di risposta dal server");
 				},
 			});
 	}

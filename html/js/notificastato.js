@@ -83,7 +83,7 @@ var partsArray = id.split('_');
 			} 		
 		},
 		error: function(e){
-			errorAlert("errore di risposta dal server");
+			errorAlert("500 Internal server error: Errore di risposta dal server");
 		},
 	});
 	return false; // avoid to execute the actual submit of the form.*/
