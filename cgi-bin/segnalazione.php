@@ -32,6 +32,7 @@ if($id_utente!=Null){
 			$result['errore']= "errore di connessione al db server";
 		}
 		else{
+			$radius;
 			//definisco il radius in base al tipo di evento
 			switch ($subtype){
 
@@ -40,11 +41,19 @@ if($id_utente!=Null){
 					break;
 				}
 				case "lavori_in_corso" : {
-					$radius = 30 ;
+					$radius = 60 ;
 					break;
 				}
 				case "strada_impraticabile" : {
-					$radius = 50;
+					$radius = 100;
+					break;
+				}
+				case "incidente" : {
+					$radius = 100;
+					break;
+				}
+				case "attentato" : {
+					$radius = 200;
 					break;
 				}
 				case "incendio" : {
@@ -52,7 +61,7 @@ if($id_utente!=Null){
 					break;
 				}
 				case "tornado" : {
-					$radius = 700 ;
+					$radius = 1000 ;
 					break;
 				}
 				case "neve" : {
@@ -64,31 +73,31 @@ if($id_utente!=Null){
 					break;
 				}
 				case "partita" : {
-					$radius = 200 ;
+					$radius = 300 ;
 					break;
 				}
 				case "manifestazione" : {
-					$radius =  100;
+					$radius =  200;
 					break;
 				}
 				case "concerto" : {
-					$radius = 70 ;
+					$radius = 100 ;
 					break;
 				}
 
 				default:{
-					$radius = 30 ;
+					$radius = 50 ;
 				}
 			}
 		
 
 			//controllo se esiste l'evento
 
-			$query = "SELECT Evento.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento WHERE type ='".$type."' AND subtype ='".$subtype."' AND NOT (status ='archived') GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 1;";
-	ChromePhp::log($query);
+			$query = "SELECT Evento.*, ( 6371795 * acos( cos( radians($lat) ) * cos( radians( lat_med ) ) * cos( radians( lng_med ) - radians($lng) ) + sin( radians($lat) ) * sin( radians( lat_med ) ) ) ) AS distance FROM Evento WHERE type ='".$type."' AND subtype ='".$subtype."' AND status != 'archived' GROUP BY Evento.id_event HAVING distance < ".$radius." ORDER BY distance LIMIT 0 , 1;";
+	//ChromePhp::log($query);
 
 			$rispostadb = mysqli_query($con,$query);
-			ChromePhp::log($rispostadb);
+	//		ChromePhp::log($rispostadb);
 
 			if($row = mysqli_fetch_array($rispostadb)) {   
 
@@ -128,7 +137,7 @@ if($id_utente!=Null){
 							$result['result'] = "nuova segnalazione aperta con successo / segnalazione di un evento già in memoria avvenuta con successo";
 						}
 					}
-					else{
+					else{ //ChromePhp::log("accorpato");
 						
 						$update_query = "UPDATE Evento SET event_reliability=".$reliability.", notifications = ".$notifications.", lat_med = ".$lat.", lng_med = ".$lng.", last_time = ".$time."  WHERE id_event = ".$id_evento.";";
 						mysqli_query($con,$update_query);
@@ -174,7 +183,7 @@ if($id_utente!=Null){
 			}
 			//altrimenti inserisco(creo) il nuovo evento e la relativa notifica
 			else{
-				
+				//ChromePhp::log("nuovo evento");
 				$stats=get_stats($id_utente);
 				$reliability=(1 + ( $stats['reputation'] * $stats['assiduity']))/2;
 				

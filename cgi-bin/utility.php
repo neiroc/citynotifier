@@ -41,11 +41,19 @@ function setDistEvent($type,$subtype) {
 					break;
 				}
 				case "lavori_in_corso" : {
-					$radius = 30 ;
+					$radius = 60 ;
 					break;
 				}
 				case "strada_impraticabile" : {
-					$radius = 50;
+					$radius = 100;
+					break;
+				}
+				case "incidente" : {
+					$radius = 100;
+					break;
+				}
+				case "attentato" : {
+					$radius = 200;
 					break;
 				}
 				case "incendio" : {
@@ -53,7 +61,7 @@ function setDistEvent($type,$subtype) {
 					break;
 				}
 				case "tornado" : {
-					$radius = 500 ;
+					$radius = 1000 ;
 					break;
 				}
 				case "neve" : {
@@ -65,20 +73,20 @@ function setDistEvent($type,$subtype) {
 					break;
 				}
 				case "partita" : {
-					$radius = 200 ;
+					$radius = 300 ;
 					break;
 				}
 				case "manifestazione" : {
-					$radius =  100;
+					$radius =  200;
 					break;
 				}
 				case "concerto" : {
-					$radius = 50 ;
+					$radius = 100 ;
 					break;
 				}
 
 				default:{
-					$radius = 20 ;
+					$radius = 50 ;
 				}
 			}
 		return $radius;
