@@ -69,13 +69,13 @@ var partsArray = id.split('_');
 					successAlert(call.result);
 					
 				}
-				if (notificaj.status != 'skeptical'){
-					var tpo = notificaj.tipo;
+				if (notificaj.status != 'archived'){
+					var tipo = notificaj.tipo;
 					var subtipo = notificaj.sottotipo;
 					var stat = notificaj.status;
 					var llat = notificaj.lat;
 					var llng = notificaj.lng
-					search_local(tpo, subtipo, stat, llat, llng, radius, unixdata, now);
+					search_local(tipo, subtipo, stat, llat, llng, radius, unixdata, now);
 				}
 			}
 			else {
