@@ -455,7 +455,7 @@ function smartClear(data) { //non toglie gli eventi local già ricevuti, che non
     		for (var j = 0; j < markersArray.length; j++) {
 			if ((events[i].event_id == markersArray[j].title)){// && (events[i].number_of_notifications > eventsMarkers[j].num)) {
 				
-				$("#tableEventAddress"+j).html("accorpato");
+				$("#tableEventAddress"+j).remove();
 				markersArray[j].setMap(null);
 			}
 		}
