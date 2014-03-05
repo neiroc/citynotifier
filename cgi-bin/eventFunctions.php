@@ -66,10 +66,10 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 			$reliability = $row['event_reliability'];
 			$notifications = $row['notifications'];
 
-		 	
+		 	//variabili per geocode
 		 	$lat_med=$row['lat_med'];
 	 		$lng_med=$row['lng_med'];
-	 		//Adds descriptions and locations
+	 		
 
 			 
 		 	//Adds descriptions and locations
@@ -88,23 +88,41 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 				}
 			}
 			
+			if($mode=True){
 
-			//$address=calcola_indirizzo($lat_med, $lng_med);
-			//ChromePhp::log($address);
+				$address=calcola_indirizzo($lat_med, $lng_med);
+				$list_events[] = array(
+					'event_id'=>'ltw1324_'.$event_id,
+					'type'=>array("type"=> $type,"subtype"=>$subtype), 
+					'description'=> $list_descr[$event_id],
+					'start_time'=> intval($start_time), 
+					'freshness'=> intval($freshness), 
+					'status'=> $status,
+					"reliability"=>floatval($reliability),
+					'number_of_notifications'=> intval($notifications),
+					'locations'=> $coordinate[$event_id],
+					'address'=> $indirizzo
+				);
+
+			}
+			else{
 			
+				//ChromePhp::log($address);
+				
 
-			//Array Events
-			$list_events[] = array(
-				'event_id'=>'ltw1324_'.$event_id,
-				'type'=>array("type"=> $type,"subtype"=>$subtype), 
-				'description'=> $list_descr[$event_id],
-				'start_time'=> intval($start_time), 
-				'freshness'=> intval($freshness), 
-				'status'=> $status,
-				"reliability"=>floatval($reliability),
-				'number_of_notifications'=> intval($notifications),
-				'locations'=> $coordinate[$event_id]
-			);
+				//Array Events
+				$list_events[] = array(
+					'event_id'=>'ltw1324_'.$event_id,
+					'type'=>array("type"=> $type,"subtype"=>$subtype), 
+					'description'=> $list_descr[$event_id],
+					'start_time'=> intval($start_time), 
+					'freshness'=> intval($freshness), 
+					'status'=> $status,
+					"reliability"=>floatval($reliability),
+					'number_of_notifications'=> intval($notifications),
+					'locations'=> $coordinate[$event_id]
+				);
+			}	
 		}
 	}//if end
 
