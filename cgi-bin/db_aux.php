@@ -9,8 +9,8 @@ function connect_db(){
 
 	
 
-    //$con=mysqli_connect("localhost","my1323","h7YecW3U9","my1323");
-	$con=mysqli_connect("localhost","maboh","maboh123","techweb");
+    $con=mysqli_connect("localhost","my1323","h7YecW3U9","my1323");
+	//$con=mysqli_connect("localhost","maboh","maboh123","techweb");
 
     // Check connection
     if (mysqli_connect_errno()){

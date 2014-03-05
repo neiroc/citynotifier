@@ -48,7 +48,7 @@ if($id_utente != Null){
 				$notifications=($row['notifications']);
 				$privilegi = check_privileges($id_utente);
 				
-				if( (($privilegi >1) && ($newstatus=='archived')) || ( ($privilegi >2) && ($newstatus=='closed') && ($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca')) ){
+				if( (($privilegi >1) && ($newstatus=='archived')) || ( ($privilegi >2) && ($newstatus=='closed') && (($row['subtype']=='lavori_in_corso') || ($row['subtype']=='buca')) ){
 
 					$result['result'] = "errore nell'invio della notifica";
 					$result['errore']= "403 Forbidden: privilegi insufficenti";

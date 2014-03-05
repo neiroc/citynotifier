@@ -36,7 +36,7 @@ $(document).ready(function() {
 				} 		
 			},
 			error: function(e){
-				errorAlert("errore di connessione al server");
+				errorAlert("500 Internal server error: Errore di connessione al server");
 			},
 		});
 		return false; // avoid to execute the actual submit of the form.

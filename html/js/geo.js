@@ -10,7 +10,7 @@ function geoLocal(){
 	//se il browser supporta geolocalizzazione
 	if (navigator.geolocation){
 		var options={timeout:5000}
-    	navigator.geolocation.getCurrentPosition(showPosition, errorGettingPosition);
+    	navigator.geolocation.getCurrentPosition(showPosition, errorGettingPosition, options);
     }
 	else {
 		errorAlert("Your browser don't support geolocation");
