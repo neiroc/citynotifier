@@ -9,9 +9,9 @@ $new_events = array(); //nuova lista eventi eventi remoti + locali aggregati
 $mergedEvents = array();//solo eventi aggregati dalla remot
 
 
-//getRemoteEvents(local,all,all,44.49895,11.341896,50,1385856000,1389312000,all);
-//echo getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
-//http://localhost/richieste?scope=local&type=emergenze_sanitarie&subtype=ferito&lat=44.524966819292565&lng=11.523284912109375&radius=2000&timemin=1388534400&timemax=1393590048&status=all
+//getRemoteEvents(local,all,all,44.49895,11.341896,1000,1385856000,1389312000,all);
+//getLocalEvents(local,all,all,44.49895,11.341896,50000,1385899200,1393520400,all,True);
+
 /*
 * Prendi Eventi Locali
 */
@@ -69,7 +69,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 		 	//variabili per geocode
 		 	$lat_med=$row['lat_med'];
 	 		$lng_med=$row['lng_med'];
-	 		
+	 		$address=calcola_indirizzo($lat_med, $lng_med);
 
 			 
 		 	//Adds descriptions and locations
@@ -88,9 +88,9 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 				}
 			}
 			
-			if($mode=True){
+			if($mode==True){
 
-				$address=calcola_indirizzo($lat_med, $lng_med);
+				
 				$list_events[] = array(
 					'event_id'=>'ltw1324_'.$event_id,
 					'type'=>array("type"=> $type,"subtype"=>$subtype), 
@@ -101,7 +101,7 @@ function getLocalEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMa
 					"reliability"=>floatval($reliability),
 					'number_of_notifications'=> intval($notifications),
 					'locations'=> $coordinate[$event_id],
-					'address'=> $indirizzo
+					'address'=> $address
 				);
 
 			}
@@ -164,9 +164,9 @@ function calcola_indirizzo($lat, $lng){
 	
 	$strada=$aux->results[0]->address_components[1]->short_name;
 	$civico=$aux->results[0]->address_components[0]->short_name;
-	$città=$aux->results[0]->address_components[4]->short_name;
+	$citta=$aux->results[0]->address_components[4]->short_name;
     
-	$indirizzo=$strada.",".$civico.",".$città;
+	$indirizzo=$strada.",".$civico.",".$citta;
 
 	//ChromePhp::log($indirizzo);
 
@@ -241,13 +241,33 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 		}
 	}
 
-   //print_r($mergedEvents);
-	
 	//Merge Local with Remote Events 
 	
 	$new_events = array_merge($mergedEvents, $new_events); 
-	//print_r($new_events);
-	//print_r($l_events);
+
+	//media coordinate
+	foreach($new_events as &$v){
+	
+		$sum  = 0;
+		$sum1 = 0;
+		$i    = 0;
+		
+		foreach($v['locations'] as $value){
+			$sum  += $value['lat'];
+			$sum1 += $value['lng'];
+			$i++;	
+		}
+
+		$m_lat = $sum/$i;
+		$m_lng = $sum1/$i;
+		
+		$address=calcola_indirizzo($m_lat, $m_lng);
+		
+		/Aggiungi indirizzo
+		$v['address'] = $address; 
+	}
+
+
 	
 	//Return json
 	$messaggio = "Messaggio di servizio";
@@ -263,7 +283,7 @@ function getRemoteEvents($scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeM
 
 
 /*
-* Funzione confronta un evento remoto con tutti gli eventi locali. Se è presente aggrega altrimenti aggiunge NO non aggiunge
+* Funzione confronta un evento remoto con tutti gli eventi locali. Se è presente aggrega altrimenti aggiunge 
 */
 function compareLocal($evento,$scope,$type,$subtype,$lat,$lng,$radius,$timeMin,$timeMax,$status){
 	
